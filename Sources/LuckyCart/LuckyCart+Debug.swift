@@ -16,6 +16,11 @@ import Foundation
 
 public extension LuckyCart {
 
+    /// "auth_key": "ugjArgGw",
+    /// "auth_ts": "1641998862",
+    /// "auth_sign": "dd41953d1890072bce9d352edb4fe00aa15a17bea49b65a2ec0a0c87457553d0",
+    /// "auth_v": "2.0",
+
     static let testAuthorization = LCAuthorization(key: "ugjArgGw", secret: "p#91J#i&00!QkdSPjgGNJq")
     
     static let test: LuckyCart = LuckyCart.init(authorization: LuckyCart.testAuthorization,

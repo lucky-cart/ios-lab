@@ -41,17 +41,12 @@ extension LuckyCartTests {
     ///
     /// function to pass in request completion when called from facadeCall
     
-    func facadeTestCompletion<T: Codable>(_ request: LCRequestName, responseType: T.Type, result: Result<Any,Error>, expectation: XCTestExpectation, success: (T)->Void) {
+    func facadeTestCompletion<T: Codable>(_ request: LCRequestName, responseType: T.Type, result: Result<T,Error>, expectation: XCTestExpectation, success: (T)->Void) {
         switch result {
         case .failure(let error):
             print("\(request.rawValue) test failed \(error)")
             expectation.fulfill()
         case .success(let result):
-            guard let result = result as? T else {
-                expectation.fulfill()
-                XCTFail()
-                return
-            }
             print("----- Received \(responseType)")
             success(result)
             expectation.fulfill()

@@ -55,7 +55,7 @@ extension LCRequestName {
 
 extension LCRequestResponse {
     
-    struct PostCart: Codable {
+    public struct PostCart: Codable {
         var ticket: String
         var mobileUrl: String
         var tabletUrl: String
@@ -113,13 +113,17 @@ extension LCRequestParameters {
             
             let dict = [
                 "auth_ts": signature.timestamp,
+                "auth_key": signature.key,
                 "auth_sign": signature.hex,
+                "auth_nonce": signature.timestamp,
                 "auth_v": auth.version,
                 "cartId": cartId,
                 "shopperId": shopperId,
                 "totalAti": totalAti
             ]
-            return try JSONSerialization.data(withJSONObject: dict, options: [])
+            let json = try JSONSerialization.data(withJSONObject: dict, options: [])
+            print(String(data: json, encoding: .utf8))
+            return json
         }
     }
 }

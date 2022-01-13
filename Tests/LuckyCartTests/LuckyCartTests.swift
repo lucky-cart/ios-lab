@@ -13,6 +13,13 @@ import XCTest
 
 final class LuckyCartTests: XCTestCase {
     
+    func testSignature() throws {
+        let auth = LuckyCart.testAuthorization
+        let signature = auth.computeSignature(timestamp: "1641998862")
+        
+        XCTAssert(signature.hex == "dd41953d1890072bce9d352edb4fe00aa15a17bea49b65a2ec0a0c87457553d0")
+    }
+    
     func testGetGames() throws {
         try facadeCall(.getGames) { name, expectation in
             try LuckyCart.test.getGames { result in
@@ -55,7 +62,7 @@ final class LuckyCartTests: XCTestCase {
         
         try facadeCall(.postCart) { name, expectation in
             try LuckyCart.test.postCart() { result in
-                self.facadeTestCompletion(.postCart, responseType: LCRequestResponse.PostCart.self, result: result, expectation: expectation) { result in
+                self.facadeTestCompletion(.postCart, responseType: LCPostCart.self, result: result, expectation: expectation) { result in
                     print("----- Received PostCart Response")
                     print(result)
                 }

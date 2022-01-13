@@ -23,13 +23,13 @@ struct Model {
     
     // MARK: - Customer and Cart
     
-    struct Customer: Identifiable {
+    struct Customer: Codable, Identifiable {
         public let id: String
     }
 
     /// LCCart
     
-    struct Cart: Identifiable {
+    struct Cart: Codable, Identifiable {
         public let id: String
     }
 
@@ -57,10 +57,7 @@ struct Model {
 
     /// The BannerSpaces as sent by server
 
-    struct BannerSpaces: Codable {
-        var homepage: [String]
-        var categories: [String]
-    }
+    typealias BannerSpaces = [String: [String]]
 
     // MARK: - Banner and BannerAction
 

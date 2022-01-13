@@ -44,6 +44,9 @@ public class LuckyCart: ObservableObject {
     var customer: LCCustomer
     var cart: LCCart
     
+    /// Banner Spaces Cache
+    var bannerSpaces: LCBannerSpaces?
+    
     public init(authorization: LCAuthorization, customer: LCCustomer, cart: LCCart) {
         self.customer = customer
         self.cart = cart

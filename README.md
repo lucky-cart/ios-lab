@@ -18,6 +18,13 @@
 
 The core classes that manage the session
 
+### Workflow 
+
+- 1 - init sdk ( ) < user enters the shop
+- 2 - getBannerSpaces  < user browses 
+- 3 - get Banner Detail < user receives available banners 
+- 4 - sendCart < user checks out
+
 ### Model
 
 The entities as sent by the server
@@ -57,6 +64,8 @@ The public service facade
 - LCBannerSpaces
 - LCBannerAction
 - LCBannerActionType
+
+
 
 ## <font color='#1E72AD'>Installation:</font>
 

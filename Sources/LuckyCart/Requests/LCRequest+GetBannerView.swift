@@ -1,18 +1,17 @@
 //
-//  LCRequest+GetBanner.swift
+//  File.swift
+//  
 //
-//  LuckyCart Framework - (c)2022 Lucky Cart
-//
-//  Created by Tristan Leblanc on 12/01/2022.
+//  Created by Tristan Leblanc on 13/01/2022.
 //
 
 import Foundation
 
-// MARK: - getBanner -
+// MARK: - getBannerView -
 
 extension LCRequestName {
     
-    /// getBanner
+    /// connect
     ///
     /// The name of the request that retrieves banner spaces
     ///
@@ -36,7 +35,7 @@ extension LCRequestName {
     /// }
     /// ```
     
-    static let getBanner = LCRequestName(rawValue: "getBanner",
+    static let getBannerView = LCRequestName(rawValue: "getBannerView",
                                          server: .promo,
                                          path: "",
                                          method: "GET")
@@ -64,7 +63,7 @@ extension LCRequestParameters {
     ///
     /// ```
 
-    struct Banner: LCRequestParametersBase {
+    struct BannerView: LCRequestParametersBase {
         var customerId: String
         var banner: String
     
@@ -81,3 +80,4 @@ extension LCRequestParameters {
     }
 
 }
+

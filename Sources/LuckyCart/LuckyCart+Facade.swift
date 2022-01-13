@@ -13,7 +13,7 @@ extension LuckyCart {
         
     /// postCart
     
-    public func postCart(completion: @escaping LCCompletion) throws {
+    public func postCart(completion: @escaping (Result<LCPostCart, Error>)->Void) throws {
         
         let header = LCRequestParameters.PostCart(cartId: "\(Model.testCart.id)",
                                                   shopperId: "\(Model.testCustomer.id)",
@@ -24,7 +24,7 @@ extension LuckyCart {
                                                                                       body: header)
         
         try network.run(request) { response in
-            guard let response = response as? LCRequestResponse.PostCart else {
+            guard let response = response as? LCPostCart else {
                 completion(.failure(LuckyCart.Err.wrongResponseType))
                 return
             }
@@ -34,7 +34,7 @@ extension LuckyCart {
     
     /// getGames
     
-    public func getGames(completion: @escaping (Result<Any, Error>)->Void) throws {
+    public func getGames(completion: @escaping (Result<[LCGame], Error>)->Void) throws {
         let request: LCRequest<Model.Games> = try network.buildRequest(name: .getGames,
                                                                        parameters: LCRequestParameters.Games(customerId: customer.id, cartId: cart.id),
                                                                        body: nil)
@@ -51,7 +51,7 @@ extension LuckyCart {
     
     /// getBannerSpaces
     
-    public func getBannerSpaces(completion: @escaping LCCompletion) throws {
+    public func getBannerSpaces(completion: @escaping (Result<LCBannerSpaces, Error>)->Void) throws {
         let request: LCRequest<Model.BannerSpaces> = try network.buildRequest(name: .getBannerSpaces,
                                                                               parameters: LCRequestParameters.BannerSpaces(customerId: customer.id),
                                                                               body: nil)
@@ -62,13 +62,14 @@ extension LuckyCart {
                 return
             }
             let bannerSpaces = LCBannerSpaces(response)
+            self.bannerSpaces = bannerSpaces
             completion(.success(bannerSpaces))
         }
     }
     
     /// getBanner
     
-    public func getBanner(banner: String, completion: @escaping LCCompletion) throws {
+    public func getBanner(banner: String, completion: @escaping (Result<LCBanner, Error>)->Void) throws {
         let request: LCRequest<Model.Banner> = try network.buildRequest(name: .getBanner,
                                                                         parameters: LCRequestParameters.Banner(customerId: customer.id, banner: banner),
                                                                         body: nil)

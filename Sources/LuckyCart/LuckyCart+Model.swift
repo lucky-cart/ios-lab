@@ -25,20 +25,24 @@ import SwiftUI
 
 /// LCCustomer
 
-public struct LCCustomer: Codable, Identifiable {
+public struct LCCustomer: Codable, LCEntity, Identifiable {
+    typealias ModelEntity = Model.Customer
+    
     public let id: String
     
-    init(_ entity: Model.Customer) {
+    init(_ entity: ModelEntity) {
         id = entity.id
     }
 }
 
 /// LCCart
 
-public struct LCCart: Codable, Identifiable {
+public struct LCCart: Codable, LCEntity, Identifiable {
+    typealias ModelEntity = Model.Cart
+    
     public let id: String
     
-    init(_ entity: Model.Cart) {
+    init(_ entity: ModelEntity) {
         id = entity.id
     }
 }
@@ -61,7 +65,9 @@ public struct LCLink: Codable {
 
 /// LCGame
 
-public class LCGame: Codable, LCIdentifiable {
+public class LCGame: Codable, LCEntity, LCIdentifiable {
+    typealias ModelEntity = Model.Game
+
     public var code: String
     public var isGamePlayable: Bool
     public var gameResult: LCGameResult
@@ -74,7 +80,7 @@ public class LCGame: Codable, LCIdentifiable {
     
     /// Pass a Cart entity from private to public scope
     
-    init(_ entity: Model.Game) {
+    required init(_ entity: ModelEntity) {
         self.code = entity.code
         self.isGamePlayable = entity.isGamePlayable
         self.gameResult = entity.gameResult
@@ -101,17 +107,36 @@ public struct LCGameResult: RawRepresentable, Codable {
 
 // MARK: - LCBannerSpaces
 
+/// LCBannerSpace
+
+public struct LCBannerSpace: Codable {
+    public var identifier: String
+    public var bannerIds: [String]
+}
+
+protocol LCEntity {
+    associatedtype ModelEntity: Codable
+    
+    init(_ entity: ModelEntity)
+}
+
 /// LCBannerSpaces
 
-public struct LCBannerSpaces: Codable {
-    public var homePage: [String]
-    public var categories: [String]
+public struct LCBannerSpaces: Codable, LCEntity {
     
+    typealias ModelEntity = Model.BannerSpaces
+    
+    public var spaces = [LCBannerSpace]()
+    
+    public subscript (key: String) -> LCBannerSpace? {
+        return spaces.first { $0.identifier == key }
+    }
     /// Init with server model object
     
-    init(_ entity: Model.BannerSpaces) {
-        self.homePage = entity.homepage
-        self.categories = entity.categories
+    init(_ entity: ModelEntity) {
+        entity.forEach { key, value in
+            spaces.append(LCBannerSpace(identifier: key, bannerIds: value))
+        }
     }
 }
 
@@ -119,11 +144,14 @@ public struct LCBannerSpaces: Codable {
 
 /// LCBannerAction
 
-public struct LCBannerAction: Codable {
+public struct LCBannerAction: Codable, LCEntity {
+    
+    typealias ModelEntity = Model.BannerAction
+
     var type: LCBannerActionType
     var ref: String
     
-    init(_ entity: Model.BannerAction) {
+    init(_ entity: ModelEntity) {
         self.type = LCBannerActionType(rawValue: entity.type)
         self.ref = entity.ref
     }
@@ -131,7 +159,7 @@ public struct LCBannerAction: Codable {
 
 /// LCBanner
 
-public struct LCBanner: Codable {
+public struct LCBanner: Codable, LCEntity {
     public var imageUrl: URL
     public var redirectUrl: URL
     public var name: String
@@ -164,4 +192,25 @@ public struct LCBannerActionType: RawRepresentable, Codable {
     public static let boutique = LCBannerActionType(rawValue: "boutique")
 }
 
+
+public struct LCPostCart: Codable, LCEntity {
+
+    var ticket: String
+    var mobileUrl: URL?
+    var tabletUrl: URL?
+    var desktopUrl: URL?
+    var baseMobileUrl: URL?
+    var baseTabletUrl: URL?
+    var baseDesktopUrl: URL?
+    
+    init(_ entity: LCRequestResponse.PostCart) {
+        self.ticket = entity.ticket
+        self.mobileUrl = URL(string: entity.mobileUrl)
+        self.tabletUrl = URL(string: entity.tabletUrl)
+        self.desktopUrl = URL(string: entity.desktopUrl)
+        self.baseMobileUrl = URL(string: entity.baseMobileUrl)
+        self.baseTabletUrl = URL(string: entity.baseTabletUrl)
+        self.baseDesktopUrl = URL(string: entity.baseDesktopUrl)
+    }
+}
 
