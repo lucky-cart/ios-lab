@@ -1,6 +1,7 @@
 //
-//  File.swift
-//  
+//  LCRequest+GetBanner.swift
+//
+//  LuckyCart Framework - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 13/01/2022.
 //
@@ -71,7 +72,7 @@ extension LCRequestParameters {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing
             }
-            return "\(authKey)/\(customerId)/\(banner)/mobile/homepage/banner"
+            return "\(authKey)/\(customerId)/banner/mobile/homepage/\(banner)"
         }
 
         func parametersString(for request: LCRequestBase) throws -> String {

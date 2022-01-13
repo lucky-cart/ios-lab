@@ -109,10 +109,17 @@ public struct LCGameResult: RawRepresentable, Codable {
 
 /// LCBannerSpace
 
-public struct LCBannerSpace: Codable {
+public struct LCBannerSpace: Codable, Identifiable {
+    public var id: String { get { identifier } set { identifier = newValue }}
     public var identifier: String
     public var bannerIds: [String]
+    
+    // Banners Cache
+    
+    public var banners = [String: LCBanner]()
 }
+
+/// LCEntity
 
 protocol LCEntity {
     associatedtype ModelEntity: Codable
@@ -148,8 +155,8 @@ public struct LCBannerAction: Codable, LCEntity {
     
     typealias ModelEntity = Model.BannerAction
 
-    var type: LCBannerActionType
-    var ref: String
+    public var type: LCBannerActionType
+    public var ref: String
     
     init(_ entity: ModelEntity) {
         self.type = LCBannerActionType(rawValue: entity.type)
@@ -159,7 +166,12 @@ public struct LCBannerAction: Codable, LCEntity {
 
 /// LCBanner
 
-public struct LCBanner: Codable, LCEntity {
+public struct LCBanner: Codable, LCEntity, Identifiable {
+    
+    public var id = UUID()
+    
+    public var identifier: String?
+
     public var imageUrl: URL
     public var redirectUrl: URL
     public var name: String
