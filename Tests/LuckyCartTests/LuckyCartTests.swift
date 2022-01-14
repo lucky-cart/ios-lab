@@ -13,11 +13,27 @@ import XCTest
 
 final class LuckyCartTests: XCTestCase {
     
+    /// testSignature
+    ///
+    /// Test then signature encoding algorithm
+    
     func testSignature() throws {
         let auth = LuckyCart.testAuthorization
         let signature = auth.computeSignature(timestamp: "1641998862")
         
         XCTAssert(signature.hex == "dd41953d1890072bce9d352edb4fe00aa15a17bea49b65a2ec0a0c87457553d0")
+    }
+    
+    /// testTicketComposer
+    ///
+    /// Test the ticket composer
+    func testTicketComposer() throws {
+        
+        let composer = LCTicketComposer.test
+        
+        let dict = try composer.makeDictionary()
+        
+        print(dict)
     }
     
     func testGetGames() throws {

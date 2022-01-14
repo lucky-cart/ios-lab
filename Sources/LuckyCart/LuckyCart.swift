@@ -31,6 +31,9 @@ public class LuckyCart: ObservableObject {
         static let wrongResponseType = Err(rawValue: "wrongResponseType")
         static let authKeyMissing = Err(rawValue: "authKeyMissing")
         static let authorizationMissing = Err(rawValue: "authorizationMissing")
+        
+        static let ticketComposerKeyAlreadyPresent = Err(rawValue: "ticketComposer.keyAlreadyPresent")
+
     }
 
     /// network

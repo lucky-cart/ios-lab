@@ -12,20 +12,21 @@
 - tvOS    : .v14
 - watchOS : .v8
 
-## <font color='#1E72AD'>Description:</font>
+## <font color='#1E72AD'>Scheme:</font>
+
+![LuckyCart Scheme](LuckyCartScheme.jpg)
+	
+## <font color='#1E72AD'>Private Part</font>
 
 ### Networking
 
 The core classes that manage the session
 
-### Workflow 
+### Server API
 
-- 1 - init sdk ( ) < user enters the shop
-- 2 - getBannerSpaces  < user browses 
-- 3 - get Banner Detail < user receives available banners 
-- 4 - sendCart < user checks out
+The requests set to communicate with LuckyCart API
 
-### Model
+### Server Model
 
 The entities as sent by the server
     
@@ -37,15 +38,9 @@ The entities as sent by the server
 - BannerAction
 - Banner
 
-### Requests
+## <font color='#1E72AD'>Public Part</font>
 
-The API requests swift definitions
-
-### LuckyCart
-
-The public service facade
-
-#### Errors
+### Errors
 
 - cantFormURL
 - unknownRequestName
@@ -53,7 +48,7 @@ The public service facade
 - authKeyMissing
 - authorizationMissing
 
-#### Client Model
+### Client Model
 
 - LCCustomer
 - LCCart
@@ -65,7 +60,22 @@ The public service facade
 - LCBannerAction
 - LCBannerActionType
 
+### Ticket Composer
 
+A tool that assists framework user to create ticket JSON.
+
+
+### Sequencer
+
+A tool that manage the current experience stage.
+
+- connecting
+- browsing
+- checkingOut
+- browsingGames
+- playing
+
+ 
 
 ## <font color='#1E72AD'>Installation:</font>
 

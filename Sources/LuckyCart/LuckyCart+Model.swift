@@ -9,6 +9,24 @@
 import Foundation
 import SwiftUI
 
+/// LCTypes
+///
+/// The common types used in LuckyCart framework.
+/// These types are used either on client and server side
+///
+/// We choose a struct here to allow extension in modules
+
+protocol LCIdentifiable: Identifiable {
+    var code: String { get set }
+}
+
+extension LCIdentifiable {
+    public var id: String {
+        get { code }
+        set { code = newValue }
+    }
+}
+
 /// Client Model
 ///
 /// The server model describes the Lucky cart entities as created/stored on device
