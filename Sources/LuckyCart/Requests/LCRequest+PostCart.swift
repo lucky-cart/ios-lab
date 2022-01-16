@@ -95,6 +95,8 @@ extension LCRequestParameters {
         var shopperId: String
         var totalAti: String
         
+        // The json dictionary to send in ticket json
+        var ticketComposer: LCTicketComposer
         
         func pathExtension(for request: LCRequestBase) throws -> String {
             return "/cart/ticket.json"
@@ -111,7 +113,7 @@ extension LCRequestParameters {
             
             let signature = auth.computeSignature()
             
-            let dict = [
+            var dict: [String: Any] = [
                 "auth_ts": signature.timestamp,
                 "auth_key": signature.key,
                 "auth_sign": signature.hex,
@@ -121,8 +123,12 @@ extension LCRequestParameters {
                 "shopperId": shopperId,
                 "totalAti": totalAti
             ]
+
+            try ticketComposer.append(to: &dict)
+            
             let json = try JSONSerialization.data(withJSONObject: dict, options: [])
-            print(String(data: json, encoding: .utf8))
+            let dataString = String(data: json, encoding: .utf8) ?? "<no valid utf8 data>"
+            print("[luckycart.network.postCart] Ticket Json :\r--->\r \(dataString)\r<---\r")
             return json
         }
     }

@@ -29,6 +29,8 @@ public class LuckyCart: ObservableObject {
         static let cantFormURL = Err(rawValue: "cantFormURL")
         static let unknownRequestName = Err(rawValue: "unknownRequestName")
         static let wrongResponseType = Err(rawValue: "wrongResponseType")
+        static let cantCastDataToResponseType = Err(rawValue: "cantCastDataToResponseType")
+        static let emptyResponse = Err(rawValue: "emptyResponse")
         static let authKeyMissing = Err(rawValue: "authKeyMissing")
         static let authorizationMissing = Err(rawValue: "authorizationMissing")
         
@@ -44,15 +46,32 @@ public class LuckyCart: ObservableObject {
     
     let network: LCNetwork
     
+    /// customer: The LuckyCart customer
     var customer: LCCustomer
+    
+    /// customer: The LuckyCart cart
     var cart: LCCart
     
     /// Banner Spaces Cache
     var bannerSpaces: LCBannerSpaces?
     
-    public init(authorization: LCAuthorization, customer: LCCustomer, cart: LCCart) {
+    /// Games Cache
+    var games: [LCGame]?
+    
+    var ticketComposerClosure: ()-> LCTicketComposer
+    
+    public var ticketComposer: LCTicketComposer? {
+        ticketComposerClosure()
+    }
+    
+    public init(authorization: LCAuthorization,
+                customer: LCCustomer,
+                cart: LCCart,
+                ticketComposerClosure: @escaping ()-> LCTicketComposer) {
         self.customer = customer
         self.cart = cart
         self.network = LCNetwork(authorization: authorization)
+        self.ticketComposerClosure = ticketComposerClosure
     }
+    
 }

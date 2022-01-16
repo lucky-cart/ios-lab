@@ -56,7 +56,13 @@ struct Model {
     // MARK: - Banner Spaces
 
     /// The BannerSpaces as sent by server
-
+    ///
+    /// A banner ids dictionary keyed by LCBannerSpaceIdentifier
+    ///
+    /// LCBannerSpaceIdentifier is a string that can be freely created
+    ///
+    /// However, a collection of sample names and formats for banner spaces identification
+    
     typealias BannerSpaces = [String: [String]]
 
     // MARK: - Banner and BannerAction

@@ -43,15 +43,23 @@ internal class LCNetwork {
     ///
     /// Completion is called with the decoded object, passed as generic Codable
     
-    func run(_ request: LCRequestBase, completion: @escaping (Codable)->Void) throws {
+    func run<T>(_ request: LCRequest<T>, completion: @escaping (Result<T, Error>)->Void) throws {
+        print("[luckycart.network] - Run [\(request.method)] \(try request.url().absoluteString)")
         let urlRequest = try request.makeURLRequest()
         let task = URLSession(configuration: URLSessionConfiguration.default).dataTask(with: urlRequest) { data, response, error in
-            guard let data = data else { return }
+            guard let data = data else {
+                completion(.failure(LuckyCart.Err.emptyResponse))
+                return
+            }
             do {
-                completion(try request.response(data: data))
+                guard let castedData = try request.response(data: data) as? T else {
+                    completion(.failure(LuckyCart.Err.cantCastDataToResponseType))
+                    return
+                }
+                completion(.success(castedData))
             }
             catch {
-                print(error)
+                completion(.failure(error))
             }
         }
         task.resume()

@@ -1,6 +1,7 @@
 //
-//  File.swift
-//  
+//  LCRequest+GetBannerView.swift
+//
+//  LuckyCart Framework - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 13/01/2022.
 //

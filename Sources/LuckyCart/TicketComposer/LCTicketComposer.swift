@@ -1,6 +1,7 @@
 //
 //  LCTicketComposer.swift
-//  
+//
+//  LuckyCart Framework - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 14/01/2022.
 //
@@ -8,10 +9,10 @@
 import Foundation
 
 public struct LCTicketComposer: LCTicketComposerEntity {
-    var customer: Customer
-    var order: Order
-    var metaData: MetaData
-    var cart: Cart
+    public var customer: Customer
+    public var order: Order
+    public var metaData: MetaData
+    public var cart: Cart
 
     func makeDictionary() throws -> [String: Any] {
         var out = [String: Any]()

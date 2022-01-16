@@ -40,7 +40,6 @@ extension LCRequestName {
                                                server: .promo,
                                                path: "",
                                                method: "GET")
-    
 }
 
 extension LCRequestParameters {

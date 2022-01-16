@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  LuckyCart+Debug.swift
 //
 //  LuckyCart Framework - (c)2022 Lucky Cart
 //
@@ -25,7 +25,18 @@ public extension LuckyCart {
     
     static let test: LuckyCart = LuckyCart.init(authorization: LuckyCart.testAuthorization,
                                 customer: LuckyCart.testCustomer,
-                                cart: LuckyCart.testCart)
+                                cart: LuckyCart.testCart) {
+        
+        let metadata = ["luckyCoupon": "1584"]
+        
+        
+        var tc = LCTicketComposer(customer: LCTicketComposer.testCustomer,
+                                  cart: LCTicketComposer.testCart,
+                                  order: LCTicketComposer.testOrder,
+                                  metaData: LCTicketComposer.MetaData(dictionary: metadata))
+        
+        return tc
+    }
     
     static let testGame = LCGame(Model.testGame)
     

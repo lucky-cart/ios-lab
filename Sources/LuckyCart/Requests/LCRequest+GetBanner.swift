@@ -66,18 +66,16 @@ extension LCRequestParameters {
 
     struct Banner: LCRequestParametersBase {
         var customerId: String
-        var banner: String
+        var banner: LCBannerIdentifier
     
         func pathExtension(for request: LCRequestBase) throws -> String {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing
             }
-            return "\(authKey)/\(customerId)/banner/mobile/homepage/\(banner)"
+            return "\(authKey)/\(customerId)/banner/mobile/homepage/\(banner.rawValue)"
         }
 
-        func parametersString(for request: LCRequestBase) throws -> String {
-            return ""
-        }
+        func parametersString(for request: LCRequestBase) throws -> String { "" }
     }
 
 }

@@ -1,5 +1,5 @@
 //
-//  ClientModel.swift
+//  LuckyCart+Model.swift
 //
 //  LuckyCart Framework - (c)2022 Lucky Cart
 //
@@ -26,43 +26,6 @@ extension LCIdentifiable {
         set { code = newValue }
     }
 }
-
-/// LCStage
-///
-/// The current stage in LuckyCartSequence
-///
-
-public struct LCStage: RawRepresentable, Codable, Equatable {
-    public var rawValue: String
-    
-    public init(rawValue: String) {
-        self.rawValue = rawValue
-    }
-    
-    /// LuckyCart is connecting
-    public static let connecting = LCStage(rawValue: "connecting")
-    
-    /// The user is connected, and browses the app
-    public static let browsing = LCStage(rawValue: "browsing")
-    
-    /// The user is checking out ( time to request extra information if needed )
-    public static let checkingOut = LCStage(rawValue: "checkingOut")
-    
-    /// The user has checked out and received the list of games.
-    /// Now is browsing.
-    /// The way the game are presented is up to the framework client.
-    ///
-    public static let browsingGames = LCStage(rawValue: "browsingGames")
-
-    /// If a game is selected, stage is set to `playing`.
-    /// When the game is closed, stage is set back to browsing games.
-    /// If there is no more game available, stage is set to `allGamesPlayed`
-    public static let playing = LCStage(rawValue: "playing")
-    
-    /// Nothing more to earn for the user
-    public static let allGamesPlayed = LCStage(rawValue: "allGamesPlayed")
-}
-
 
 /// Client Model
 ///
@@ -165,13 +128,9 @@ public struct LCGameResult: RawRepresentable, Codable {
 /// LCBannerSpace
 
 public struct LCBannerSpace: Codable, Identifiable {
-    public var id: String { get { identifier } set { identifier = newValue }}
-    public var identifier: String
-    public var bannerIds: [String]
-    
-    // Banners Cache
-    
-    public var banners = [String: LCBanner]()
+    public var id: UUID = UUID()
+    public var identifier: LCBannerSpaceIdentifier
+    public var bannerIds: [LCBannerIdentifier]
 }
 
 /// LCEntity
@@ -188,16 +147,34 @@ public struct LCBannerSpaces: Codable, LCEntity {
     
     typealias ModelEntity = Model.BannerSpaces
     
-    public var spaces = [LCBannerSpace]()
+    public var spaces = [LCBannerSpaceIdentifier: LCBannerSpace]()
+
+    public var banners = [LCBannerIdentifier: LCBanner]()
     
-    public subscript (key: String) -> LCBannerSpace? {
-        return spaces.first { $0.identifier == key }
+    public var sortedSpaces: [LCBannerSpace] {
+        return Array(spaces.values).sorted { lhs, rhs in
+            return lhs.identifier.rawValue < rhs.identifier.rawValue
+        }
     }
+    /// subscript by LCBannerSpaceIdentifier
+    ///
+    /// Allow usage of brackets on banner spaces object
+    /// ```
+    /// let homePageBanners = myBannerSpaces[.homepage]
+    /// ```
+    
+    public subscript (key: LCBannerSpaceIdentifier) -> LCBannerSpace? {
+        return spaces[key]
+    }
+
     /// Init with server model object
     
     init(_ entity: ModelEntity) {
         entity.forEach { key, value in
-            spaces.append(LCBannerSpace(identifier: key, bannerIds: value))
+            let spaceIdentifier = LCBannerSpaceIdentifier(key)
+            spaces[spaceIdentifier] = LCBannerSpace(identifier: spaceIdentifier, bannerIds: value.map {
+                LCBannerIdentifier($0)
+            })
         }
     }
 }
@@ -225,7 +202,7 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
     
     public var id = UUID()
     
-    public var identifier: String?
+    public var identifier: LCBannerIdentifier?
 
     public var imageUrl: URL
     public var redirectUrl: URL

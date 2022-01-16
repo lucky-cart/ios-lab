@@ -1,6 +1,7 @@
 //
-//  File.swift
-//  
+//  LCTicketComposer+Debug.swift
+//
+//  LuckyCart Framework - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 14/01/2022.
 //
@@ -9,18 +10,18 @@ import Foundation
 
 #if DEBUG
 
-extension LCTicketComposer {
+public extension LCTicketComposer {
     
     static let test = LCTicketComposer(customer: LCTicketComposer.testCustomer,
                                        cart: LCTicketComposer.testCart,
                                        order: LCTicketComposer.testOrder,
                                        metaData: LCTicketComposer.testMetaData)
     
-    static let testCustomer = Customer(customerId: "41410788", email: "vincentoliveira@luckycart.com", firstName: "VINCENT", lastName: "OLIVEIRA")
+    static let testCustomer = Customer(customerClientId: "41410788", email: "vincentoliveira@luckycart.com", firstName: "VINCENT", lastName: "OLIVEIRA")
     
     static let testOrder = Order(shippingMethod: LCShippingMethod.pickUp, shopId: "A75710", device: "ios-test-optin")
     static let testProduct = ProductOrder(id: "14917412", quantity: "1.00", ttc: "12.0", ht: "10.0")
-    static let testCart = Cart(cartId: "cart_1234", currency: "EUR", ttc: "12.0", ht: "10.0", products: [ LCTicketComposer.testProduct])
+    static let testCart = Cart(cartClientId: "client_cart_5c1e51fda", currency: "EUR", ttc: "12.0", ht: "10.0", products: [ LCTicketComposer.testProduct])
     
     static let testMetaData = MetaData(dictionary: ["loyaltyCart" : ""])
     

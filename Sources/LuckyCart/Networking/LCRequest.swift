@@ -63,7 +63,7 @@ struct LCRequestName: RawRepresentable, Equatable, CustomStringConvertible {
 /// Parameters structs that are passed to request must conform to this protocol
 
 protocol LCRequestParametersBase {
-        
+    
     func pathExtension(for request: LCRequestBase) throws -> String
     func parametersString(for request: LCRequestBase) throws -> String
 }
@@ -201,10 +201,15 @@ internal struct LCRequest<T: Codable>: LCRequestBase {
     func response(data: Data) throws -> Codable {
 #if DEBUG
         let s = String(data: data, encoding: .utf8) ?? "<Wrong String Data - Should be .utf8>"
-        print("Make LuckyCart response with data :\r\(s)")
+        print("[LuckyCart.Network] - Make `\(T.self)` response with data :\r--->\r\(s)\r<---\r")
 #endif
         
-        return try JSONDecoder().decode(T.self, from: data)
+        let response = try JSONDecoder().decode(T.self, from: data)
+        
+#if DEBUG
+        print("[LuckyCart.Network] - Response :\r--->\r\(response)\r<---\r")
+#endif
+        return response
     }
 }
 

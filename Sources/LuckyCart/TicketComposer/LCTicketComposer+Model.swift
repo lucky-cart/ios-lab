@@ -1,6 +1,7 @@
 //
 //  LCTicketComposer+Model.swift
-//  
+//
+//  LuckyCart Framework - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 14/01/2022.
 //
@@ -15,6 +16,7 @@ extension LCTicketComposerEntity {
     func append(to dictionary: inout [String: Any]) throws {
         for (key,value) in try makeDictionary() {
             if dictionary[key] != nil {
+                print("[luckycart.ticketComposer] Key `\(key)` already set")
                 throw LuckyCart.Err.ticketComposerKeyAlreadyPresent
             }
             dictionary[key] = value
@@ -38,7 +40,7 @@ public extension LCTicketComposer {
         var shopId: String
         var device: String
         
-        func makeDictionary() throws -> [String : Any] {
+        public func makeDictionary() throws -> [String : Any] {
             [
                 "shippingMethod": shippingMethod.rawValue,
                 "shopId": shopId,
@@ -58,14 +60,14 @@ public extension LCTicketComposer {
     
     struct Customer: LCTicketComposerEntity {
         
-        var customerId: String
+        var customerClientId: String
         var email: String
         var firstName: String
         var lastName: String
         
-        func makeDictionary() throws -> [String : Any] {
+        public func makeDictionary() throws -> [String : Any] {
             [
-                "customerId": customerId,
+                "customerClientId": customerClientId,
                 "email": email,
                 "firstName": firstName,
                 "lastName" : lastName
@@ -87,7 +89,7 @@ public extension LCTicketComposer {
         var ttc: String
         var ht: String
         
-        func makeDictionary() throws -> [String : Any] {
+        public func makeDictionary() throws -> [String : Any] {
             [
                 "quantity": quantity,
                 "ttc": ttc,
@@ -121,15 +123,15 @@ public extension LCTicketComposer {
     /// - products: [ <ProductOrder> ]
     
     struct Cart: LCTicketComposerEntity {
-        var cartId: String
+        var cartClientId: String
         var currency: String
         var ttc: String
         var ht: String
         var products: [ProductOrder]
         
-        func makeDictionary() throws -> [String : Any] {
+        public func makeDictionary() throws -> [String : Any] {
             [
-                "cartId": cartId,
+                "cartClientId": cartClientId,
                 "currency": currency,
                 "ttc": ttc,
                 "ht": ht,
@@ -143,8 +145,21 @@ public extension LCTicketComposer {
     /// Free Dictionary encodable as json
 
     struct MetaData: LCTicketComposerEntity {
-        func makeDictionary() throws -> [String : Any] {
+        public func makeDictionary() throws -> [String : Any] {
             return dictionary
+        }
+        
+        public subscript (key: String) -> Any? {
+            get {
+                return dictionary[key]
+            }
+            set {
+                dictionary[key] = newValue
+            }
+        }
+        
+        mutating public func set(key: String, value: Any) {
+            dictionary[key] = value
         }
         
         var dictionary: [String: Any]

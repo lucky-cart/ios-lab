@@ -21,24 +21,29 @@ extension Model {
                                      mobileGameImage: URL(string: "https://api.luckycart.com/replacement/QLWG-SHYR-MGBZ-SLXK/mobile/image")!
     )
     
-    static let testBannerSpaces = [
-        "homepage" : ["banner"] ,
+    static let testBannerSpaces:  [String : [String]] = [
+        LCBannerSpaceIdentifier.homePage.rawValue : ["banner"] ,
         "categories": ["banner_100",
                        "banner_200",
                        "search_100",
                        "search_200"
                       ]]
-        
-        static let testCustomer = Model.Customer(id: "customer_1234")
-        
-        static let testCart = Model.Cart(id: "cart_1234")
-        
-        static let testBanner = Model.Banner(image_url: URL( string: "\(promoMatchingURLTest)/image?meta=61bb057807879bee01ed5298&test=true&noCache1641942555414")!,
-                                             redirect_url: URL(string: "\(promoMatchingURLTest)/jump?meta=61bb057807879bee01ed5298&test=true")!,
-                                             name: "QA ITW Assessment",
-                                             campaign: "61bb057807879bee01ed5298",
-                                             space: "61d6c677baa1676dd46bfee6",
-                                             action: Model.BannerAction(type: "boutique", ref: ""))
-        
-        static let promoMatchingURLTest = "https://promomatching.luckycart.com/61d6c677baa1676dd46bfee6/customer_1234"
-        }
+    
+    static let testCustomer = Model.Customer(id: "customer_1234")
+    
+    static let testCart = Model.Cart(id: "cart_1234")
+    
+    static let testBanner = Model.Banner(image_url: URL( string: "\(promoMatchingURLTest)/image?meta=61bb057807879bee01ed5298&test=true&noCache1641942555414")!,
+                                         redirect_url: URL(string: "\(promoMatchingURLTest)/jump?meta=61bb057807879bee01ed5298&test=true")!,
+                                         name: "QA ITW Assessment",
+                                         campaign: "61bb057807879bee01ed5298",
+                                         space: "61d6c677baa1676dd46bfee6",
+                                         action: Model.BannerAction(type: "boutique", ref: ""))
+    
+    static let promoMatchingURLTest = "https://promomatching.luckycart.com/61d6c677baa1676dd46bfee6/customer_1234"
+}
+
+extension LuckyCart {
+    static var testAuthKey = "ugjArgGw"
+    static var testSecret = "p#91J#i&00!QkdSPjgGNJq"
+}
