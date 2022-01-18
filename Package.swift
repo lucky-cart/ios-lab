@@ -7,8 +7,8 @@ let package = Package(
     name: "LuckyCart",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v11),
-        .iOS(.v13),
+        .macOS(.v12),
+        .iOS(.v15),
         .tvOS(.v14),
         .watchOS(.v8)
     ],
