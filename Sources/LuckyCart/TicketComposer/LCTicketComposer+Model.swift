@@ -36,9 +36,15 @@ public extension LCTicketComposer {
     /// - cart: <Cart> [ <ProductOrder> ]
     
     struct Order: LCTicketComposerEntity {
-        var shippingMethod: LCShippingMethod
-        var shopId: String
-        var device: String
+        public var shippingMethod: LCShippingMethod
+        public var shopId: String
+        public var device: String
+        
+        public init(shippingMethod: LCShippingMethod, shopId: String, device: String) {
+            self.shippingMethod = shippingMethod
+            self.shopId = shopId
+            self.device = device
+        }
         
         public func makeDictionary() throws -> [String : Any] {
             [
@@ -60,10 +66,20 @@ public extension LCTicketComposer {
     
     struct Customer: LCTicketComposerEntity {
         
-        var customerClientId: String
-        var email: String
-        var firstName: String
-        var lastName: String
+        public var customerClientId: String
+        public var email: String
+        public var firstName: String
+        public var lastName: String
+        
+        public init(customerClientId: String,
+                    email: String,
+                    firstName: String,
+                    lastName: String) {
+            self.customerClientId = customerClientId
+            self.email = email
+            self.firstName = firstName
+            self.lastName = lastName
+        }
         
         public func makeDictionary() throws -> [String : Any] {
             [
@@ -84,11 +100,20 @@ public extension LCTicketComposer {
     /// - id: "14917412"
     
     struct ProductOrder: LCTicketComposerEntity {
-        var id: String
-        var quantity: String
-        var ttc: String
-        var ht: String
+        public var id: String
+        public var quantity: String
+        public var ttc: String
+        public var ht: String
         
+        public init(id: String,
+                    quantity: String,
+                    ttc: String,
+                    ht: String) {
+            self.id = id
+            self.quantity = quantity
+            self.ttc = ttc
+            self.ht = ht
+        }
         public func makeDictionary() throws -> [String : Any] {
             [
                 "quantity": quantity,
@@ -106,11 +131,11 @@ public extension LCTicketComposer {
             self.rawValue = rawValue
         }
         
-        static let pickUp = LCShippingMethod(rawValue: "pickup")
-        static let localShipping = LCShippingMethod(rawValue: "shipping.local")
-        static let internationalShipping = LCShippingMethod(rawValue: "shipping.international")
-        static let sameDayDelivery = LCShippingMethod(rawValue: "sameDayDelivery")
-        static let digitalDelivery = LCShippingMethod(rawValue: "digitalDelivery")
+        public static let pickUp = LCShippingMethod(rawValue: "pickup")
+        public static let localShipping = LCShippingMethod(rawValue: "shipping.local")
+        public static let internationalShipping = LCShippingMethod(rawValue: "shipping.international")
+        public static let sameDayDelivery = LCShippingMethod(rawValue: "sameDayDelivery")
+        public static let digitalDelivery = LCShippingMethod(rawValue: "digitalDelivery")
     }
     
     /// Cart
@@ -123,11 +148,23 @@ public extension LCTicketComposer {
     /// - products: [ <ProductOrder> ]
     
     struct Cart: LCTicketComposerEntity {
-        var cartClientId: String
-        var currency: String
-        var ttc: String
-        var ht: String
-        var products: [ProductOrder]
+        public var cartClientId: String
+        public var currency: String
+        public var ttc: String
+        public var ht: String
+        public var products: [ProductOrder]
+        
+        public init(cartClientId: String,
+             currency: String,
+             ttc: String,
+             ht: String,
+             products: [ProductOrder]) {
+            self.cartClientId = cartClientId
+            self.currency = currency
+            self.ttc = ttc
+            self.ht = ht
+            self.products = products
+        }
         
         public func makeDictionary() throws -> [String : Any] {
             [
@@ -145,6 +182,13 @@ public extension LCTicketComposer {
     /// Free Dictionary encodable as json
 
     struct MetaData: LCTicketComposerEntity {
+        
+        public var dictionary: [String: Any]
+
+        public init(dictionary: [String: Any]) {
+            self.dictionary = dictionary
+        }
+        
         public func makeDictionary() throws -> [String : Any] {
             return dictionary
         }
@@ -162,6 +206,5 @@ public extension LCTicketComposer {
             dictionary[key] = value
         }
         
-        var dictionary: [String: Any]
     }
 }

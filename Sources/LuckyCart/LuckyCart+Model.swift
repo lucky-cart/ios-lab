@@ -143,12 +143,20 @@ protocol LCEntity {
 
 /// LCBannerSpaces
 
-public struct LCBannerSpaces: Codable, LCEntity {
+public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
     
     typealias ModelEntity = Model.BannerSpaces
     
+    /// spaces
+    ///
+    /// The loaded spaces.
+    
     public var spaces = [LCBannerSpaceIdentifier: LCBannerSpace]()
 
+    /// banners
+    ///
+    /// The loaded banners.
+    
     public var banners = [LCBannerIdentifier: LCBanner]()
     
     public var sortedSpaces: [LCBannerSpace] {
@@ -156,6 +164,16 @@ public struct LCBannerSpaces: Codable, LCEntity {
             return lhs.identifier.rawValue < rhs.identifier.rawValue
         }
     }
+
+    public var description: String {
+        
+        let lines: [String] = spaces.map { key, bannerSpace in
+            let bannerids = bannerSpace.bannerIds.map { "`\($0)`" }
+            return "`\(key.rawValue)` : \(bannerids.joined(separator: ", "))"
+        }
+        return lines.joined(separator: "\r")
+    }
+
     /// subscript by LCBannerSpaceIdentifier
     ///
     /// Allow usage of brackets on banner spaces object
@@ -204,16 +222,14 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
     
     public var identifier: LCBannerIdentifier?
 
-    public var imageUrl: URL
-    public var redirectUrl: URL
+    public var link: LCLink
     public var name: String
     public var campaign: String
     public var space: String
     public var action: LCBannerAction
     
     init(_ entity: Model.Banner) {
-        self.imageUrl = entity.image_url
-        self.redirectUrl = entity.redirect_url
+        self.link = LCLink(url: entity.redirect_url, imageUrl: entity.image_url)
         self.name = entity.name
         self.campaign = entity.campaign
         self.space = entity.space
@@ -237,7 +253,7 @@ public struct LCBannerActionType: RawRepresentable, Codable {
 }
 
 
-public struct LCPostCart: Codable, LCEntity {
+public struct LCPostCartResponse: Codable, LCEntity {
 
     var ticket: String
     var mobileUrl: URL?

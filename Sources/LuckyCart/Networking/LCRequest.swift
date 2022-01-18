@@ -201,13 +201,13 @@ internal struct LCRequest<T: Codable>: LCRequestBase {
     func response(data: Data) throws -> Codable {
 #if DEBUG
         let s = String(data: data, encoding: .utf8) ?? "<Wrong String Data - Should be .utf8>"
-        print("[LuckyCart.Network] - Make `\(T.self)` response with data :\r--->\r\(s)\r<---\r")
+        print("[luckycart.network] - Make `\(T.self)` response with UTF8 data :\r---->\r\(s)\r<----\r")
 #endif
         
         let response = try JSONDecoder().decode(T.self, from: data)
         
 #if DEBUG
-        print("[LuckyCart.Network] - Response :\r--->\r\(response)\r<---\r")
+        print("[LuckyCart.Network] - ====>\rParsed Response \r\(T.self):\r\(response)\r<====\r")
 #endif
         return response
     }

@@ -29,27 +29,18 @@ final class LuckyCartFlowTests: XCTestCase {
             
             print(" === 2 Get Banners")
             
-            try luckyCart.getBannerSpaces { result in
-                switch result {
-                case .failure(let error):
-                    XCTFail("GetBannerSpaces Failed - \(error.localizedDescription)")
-                    bannerSpacesExpectation.fulfill()
-                    expectation.fulfill()
-                case .success(let bannerSpaces):
-                    print("GetBannerSpaces Succeed")
-                    bannerSpaces.spaces.forEach { space in
-                        print("==> Space `\(space.identifier)`")
-                        space.bannerIds.forEach { bannerId in
-                            print("  ==> Banner `\(bannerId)`")
-                        }
-                    }
-                    
-                    bannerSpacesExpectation.fulfill()
-                }
-            }
+            luckyCart.loadBannerSpaces(failure: { error in
+                XCTFail("GetBannerSpaces Failed - \(error.localizedDescription)")
+                bannerSpacesExpectation.fulfill()
+                expectation.fulfill()
+            }, success: { bannerSpaces in
+                print("GetBannerSpaces Succeed")
+                bannerSpacesExpectation.fulfill()
+
+            })
             
             
-            XCTWaiter.wait(for: [bannerSpacesExpectation], timeout: 10)
+            _ = XCTWaiter.wait(for: [bannerSpacesExpectation], timeout: 10)
             
             print(" === 3 - Check banner for View Identifier 'homepage'")
             
@@ -58,16 +49,13 @@ final class LuckyCartFlowTests: XCTestCase {
                 if let firstId = bannerSpace.bannerIds.first {
                     
                     
-                    try luckyCart.getBanner(banner: firstId) { result in
-                        switch result {
-                        case .failure(let error):
-                            XCTFail("GetBanner Failed - \(error.localizedDescription)")
-                            bannerSpacesExpectation.fulfill()
-                            expectation.fulfill()
-                        case .success(let banner):
-                            print("GetBanner Succeed")
-                            
-                        }
+                    luckyCart.banner(with: firstId) { error in
+                        XCTFail("GetBanner Failed - \(error.localizedDescription)")
+                        bannerSpacesExpectation.fulfill()
+                        expectation.fulfill()
+                    } success: { bnner in
+                        print("GetBanner Succeed")
+                        expectation.fulfill()
                     }
                 }
                 else {
@@ -75,11 +63,7 @@ final class LuckyCartFlowTests: XCTestCase {
                 }
             }
         }
-        catch {
-            XCTFail("Test Flow Failed : \(error.localizedDescription)")
-            expectation.fulfill()
-        }
         
-        XCTWaiter.wait(for: [expectation], timeout: 10)
+        _ = XCTWaiter.wait(for: [expectation], timeout: 10)
     }
 }

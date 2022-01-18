@@ -23,10 +23,17 @@ public struct LCTicketComposer: LCTicketComposerEntity {
         return out
     }
     
-    init(customer: Customer, cart: Cart, order: Order, metaData: MetaData) {
+    public init(customer: Customer, cart: Cart, order: Order, metaData: MetaData) {
         self.customer = customer
         self.order = order
         self.cart = cart
         self.metaData = metaData
+    }
+    
+    public static func priceString(_ price: Double) -> String{
+        let f = NumberFormatter()
+        f.maximumFractionDigits = 2
+        f.minimumFractionDigits = 2
+        return f.string(for: price) ?? "\(price)"
     }
 }

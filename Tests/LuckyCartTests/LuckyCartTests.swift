@@ -27,6 +27,7 @@ final class LuckyCartTests: XCTestCase {
     /// testTicketComposer
     ///
     /// Test the ticket composer
+    
     func testTicketComposer() throws {
         
         let composer = LCTicketComposer.test
@@ -37,8 +38,8 @@ final class LuckyCartTests: XCTestCase {
     }
     
     func testGetGames() throws {
-        try facadeCall(.getGames) { name, expectation in
-            try LuckyCart.test.getGames { result in
+        facadeCall(.getGames) { name, expectation in
+            LuckyCart.test.getGames { result in
                 self.facadeTestCompletion(name, responseType: [LCGame].self, result: result, expectation: expectation) { result in
                     result.forEach { game in
                         print("-- Game code : \(game.code) --")
@@ -52,8 +53,8 @@ final class LuckyCartTests: XCTestCase {
     }
     
     func testGetBannerSpaces() throws {
-        try facadeCall(.getBannerSpaces) { name, expectation in
-            try LuckyCart.test.getBannerSpaces { result in
+        facadeCall(.getBannerSpaces) { name, expectation in
+            LuckyCart.test.getBannerSpaces { result in
                 self.facadeTestCompletion(name, responseType: LCBannerSpaces.self, result: result, expectation: expectation) { result in
                     print("----- Received Banner Spaces")
                     print(result)
@@ -63,8 +64,8 @@ final class LuckyCartTests: XCTestCase {
     }
     
     func testGetBanner() throws {
-        try facadeCall(.getBanner) { name, expectation in
-            try LuckyCart.test.getBanner(banner: "banner") { result in
+        facadeCall(.getBanner) { name, expectation in
+            LuckyCart.test.getBanner(bannerIdentifier: "banner") { result in
                 self.facadeTestCompletion(name, responseType: LCBanner.self, result: result, expectation: expectation) { result in
                     print("----- Received Banner")
                     print(result)
@@ -75,10 +76,9 @@ final class LuckyCartTests: XCTestCase {
     
     
     func testPostCart() throws {
-        
-        try facadeCall(.postCart) { name, expectation in
-            try LuckyCart.test.postCart() { result in
-                self.facadeTestCompletion(.postCart, responseType: LCPostCart.self, result: result, expectation: expectation) { result in
+        facadeCall(.postCart) { name, expectation in
+            LuckyCart.test.postCart(ticketComposer: LCTicketComposer.test) { result in
+                self.facadeTestCompletion(.postCart, responseType: LCPostCartResponse.self, result: result, expectation: expectation) { result in
                     print("----- Received PostCart Response")
                     print(result)
                 }

@@ -14,6 +14,7 @@ import Combine
 /// The framework facade exposing public Lucky Cart APIs
 
 public class LuckyCart: ObservableObject {
+    public static var shared: LuckyCart!
     
     /// Err
     ///
@@ -57,21 +58,19 @@ public class LuckyCart: ObservableObject {
     
     /// Games Cache
     var games: [LCGame]?
-    
-    var ticketComposerClosure: ()-> LCTicketComposer
-    
-    public var ticketComposer: LCTicketComposer? {
-        ticketComposerClosure()
-    }
+
+    public var ticketComposer: LCTicketComposer?        // Generates the ticket that will be sent to LuckyCart
+    // Fill the structures with your information here
     
     public init(authorization: LCAuthorization,
                 customer: LCCustomer,
-                cart: LCCart,
-                ticketComposerClosure: @escaping ()-> LCTicketComposer) {
+                cart: LCCart) {
+        if LuckyCart.shared != nil {
+            fatalError("LuckyCart already initialized")
+        }
         self.customer = customer
         self.cart = cart
         self.network = LCNetwork(authorization: authorization)
-        self.ticketComposerClosure = ticketComposerClosure
+        LuckyCart.shared = self
     }
-    
 }

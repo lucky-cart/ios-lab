@@ -68,7 +68,7 @@ extension LCRequestParameters {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing
             }
-            return "\(authKey)/\(customerId))/banners/mobile/list"
+            return "\(authKey)/\(customerId)/banners/mobile/list"
         }
 
         func parametersString(for request: LCRequestBase) throws -> String {
