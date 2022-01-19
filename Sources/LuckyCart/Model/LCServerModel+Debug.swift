@@ -29,7 +29,7 @@ extension Model {
                        "search_200"
                       ]]
     
-    static let testCustomer = Model.Customer(id: "customer_1234")
+    static let testCustomer = Model.Customer(id: "customer1234")
     
     static let testCart = Model.Cart(id: "cart_1234")
     
