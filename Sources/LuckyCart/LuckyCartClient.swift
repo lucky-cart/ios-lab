@@ -13,10 +13,6 @@ public protocol LuckyCartClient {
     
     /// Starts the LuckyCart framework
     func initLuckyCart()
-
-    /// Send the ticket to LuckyCart
-    func checkOut(failure: @escaping (Error)->Void,
-                  success: @escaping (LCPostCartResponse)->Void)
     
     /// Returns the client meta data
     var metaDataForLuckyCart: LCTicketComposer.MetaData { get }
