@@ -9,6 +9,30 @@
 import XCTest
 @testable import LuckyCart
 
+extension Dictionary {
+    
+    func string(_ key: Any?, fallback: String = "<nil>") -> String {
+        guard let key = key as? String, let dict = self as? [String: Any?] else {
+            return "<wrong key>"
+        }
+        
+        guard let str = dict[key] as? String else {
+            return fallback
+        }
+        return str
+    }
+    
+    func test(name: String, key: String, match: String) {
+        print("\(name).\(key) = \(string(key))")
+        XCTAssert(string(key) == match)
+    }
+    
+    func testNotNil(name: String, key: String) {
+        print("\(name).\(key) = \(string(key))")
+        XCTAssert(string(key) != "<nil>")
+    }
+}
+
 /// Public Requests Tests
 
 final class LuckyCartTests: XCTestCase {
@@ -32,9 +56,46 @@ final class LuckyCartTests: XCTestCase {
         
         let composer = LCTicketComposer.test
         
-        let dict = try composer.makeDictionary()
+        let parameters = LCRequestParameters.PostCart(ticketComposer: composer)
         
-        print(dict)
+        // We create a request to inspect the final body ( ticket composer info + authorization )
+        let request: LCRequest<Model.PostCartResponse> = try LCNetwork(authorization: LuckyCart.testAuthorization).buildRequest(name: .postCart,
+                                                                                      parameters: nil,
+                                                                                      body: parameters)
+        let dict = try parameters.dictionary(for: request)
+        
+        dict.testNotNil(name: "dict", key: Keys.auth_ts)
+        dict.testNotNil(name: "dict", key: Keys.auth_sign)
+        dict.testNotNil(name: "dict", key: Keys.auth_nonce)
+        
+        dict.test(name: "dict", key: Keys.auth_key, match: LuckyCart.testAuthKey)
+        dict.test(name: "dict", key: Keys.auth_v, match: "2.0")
+        
+        dict.test(name: "dict", key: Keys.customerId, match: LuckyCart.testCustomer.id)
+        dict.test(name: "dict", key: Keys.customerClientId, match: "41410788")
+        dict.test(name: "dict", key: Keys.email, match: "vincentoliveira@luckycart.com")
+        dict.test(name: "dict", key: Keys.lastName, match: "OLIVEIRA")
+        dict.test(name: "dict", key: Keys.firstName, match: "VINCENT")
+        
+        dict.test(name: "dict", key: Keys.cartId, match: LuckyCart.testCart.id)
+        dict.test(name: "dict", key: Keys.cartClientId, match: "client_cart_5c1e51fda")
+        
+        dict.test(name: "dict", key: Keys.totalAti, match: "12.00")
+        dict.test(name: "dict", key: Keys.loyaltyCart, match: "")
+        dict.test(name: "dict", key: Keys.currency, match: "EUR")
+        dict.test(name: "dict", key: Keys.ht, match: "10.00")
+        
+        dict.test(name: "dict", key: Keys.shopId, match: "A75710")
+        dict.test(name: "dict", key: Keys.shippingMethod, match: "pickup")
+        dict.test(name: "dict", key: Keys.device, match: "ios-test-optin")
+        
+        if let products = dict[Keys.products] as? [String: String] {
+            products.test(name: "products", key: Keys.quantity, match: "1.00")
+            products.test(name: "products", key: Keys.ttc, match: "12.00")
+            products.test(name: "products", key: Keys.ht, match: "10.00")
+            products.test(name: "products", key: Keys.id, match: "14917412")
+        }
+
     }
     
     func testGetGames() throws {
@@ -46,7 +107,7 @@ final class LuckyCartTests: XCTestCase {
                         print(game.isGamePlayable ? "Playable" : "Not PLayable")
                         print(game.gameResult.rawValue)
                     }
-
+                    
                 }
             }
         }
@@ -81,6 +142,13 @@ final class LuckyCartTests: XCTestCase {
                 self.facadeTestCompletion(.postCart, responseType: LCPostCartResponse.self, result: result, expectation: expectation) { result in
                     print("----- Received PostCart Response")
                     print(result)
+                    XCTAssert(result.baseDesktopUrl == LuckyCart.testPostCartResponse.baseDesktopUrl)
+                    XCTAssert(result.baseMobileUrl == LuckyCart.testPostCartResponse.baseMobileUrl)
+                    XCTAssert(result.baseTabletUrl == LuckyCart.testPostCartResponse.baseTabletUrl)
+                    XCTAssert(result.mobileUrl == LuckyCart.testPostCartResponse.mobileUrl)
+                    XCTAssert(result.tabletUrl == LuckyCart.testPostCartResponse.tabletUrl)
+                    XCTAssert(result.desktopUrl == LuckyCart.testPostCartResponse.desktopUrl)
+                    XCTAssert(result.ticket == LuckyCart.testPostCartResponse.ticket)
                 }
             }
         }

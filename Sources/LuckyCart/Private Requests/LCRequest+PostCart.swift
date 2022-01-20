@@ -8,6 +8,47 @@
 
 import Foundation
 
+typealias Keys = PostCartBodyKeys
+
+struct PostCartBodyKeys {
+    
+    static let auth_key = "auth_key"
+    
+    // Auth
+    static let auth_ts = "auth_ts"
+    static let auth_v = "auth_v"
+    static let auth_sign = "auth_sign"
+    static let auth_nonce = "auth_nonce"
+    
+    // Customer
+    static let customerClientId = "customerClientId"
+    static let lastName = "lastName"
+    static let firstName = "firstName"
+    static let email = "email"
+    
+    // Cart
+    static let cartId = "cartId"
+    static let cartClientId = "cartClientId"
+    static let totalAti = "totalAti"
+    static let currency = "currency"
+    static let products = "products"
+
+    static let loyaltyCart = "loyaltyCart" // Is this a custom tag sample, or a real model key
+    
+    // Product
+    static let quantity = "quantity"
+    static let id = "id"
+    static let ht = "ht"
+    static let ttc = "ttc"
+    
+    // Order
+    static let shopId = "shopId"
+    static let shippingMethod = "shippingMethod"
+    static let customerId = "customerId"
+    
+    static let device = "device" // Any defined format for this?
+}
+
 // MARK: - postCart -
 
 extension LCRequestName {
@@ -15,6 +56,8 @@ extension LCRequestName {
     /// Post Cart
     ///
     /// The name of the request that posts a cart
+    /// Parameters are used to pass authorization in body
+    /// All other ticket parameters are append to body by the ticketComposer
     ///
     /// Scheme:
     /// ```
@@ -28,9 +71,6 @@ extension LCRequestName {
     ///     "auth_ts": "{{timestamp}}",
     ///     "auth_sign": "{{sign}}",
     ///     "auth_v": "2.0",
-    ///     "cartId": "cart_1234",
-    ///     "shopperId": "{{customer_id}}",
-    ///     "totalAti": 123.45
     /// }
     /// ```
     ///
@@ -53,9 +93,13 @@ extension LCRequestName {
     
 }
 
-extension LCRequestResponse {
+extension Model {
     
-    public struct PostCart: Codable {
+    /// PostCartResponse
+    ///
+    /// The data structure received after a successful cart upload
+    
+    public struct PostCartResponse: Codable {
         var ticket: String
         var mobileUrl: String
         var tabletUrl: String
@@ -67,7 +111,7 @@ extension LCRequestResponse {
 }
 
 extension LCRequestParameters {
-
+    
     /// PostCart
     ///
     /// Parameters structure to pass to a `postCart` request
@@ -87,13 +131,9 @@ extension LCRequestParameters {
     /// ```
     ///
     /// ```
-
-
+    
+    
     struct PostCart: LCRequestParametersBase {
-        
-        var cartId: String
-        var shopperId: String
-        var totalAti: String
         
         // The json dictionary to send in ticket json
         var ticketComposer: LCTicketComposer
@@ -101,32 +141,35 @@ extension LCRequestParameters {
         func pathExtension(for request: LCRequestBase) throws -> String {
             return "/cart/ticket.json"
         }
-
+        
         func parametersString(for request: LCRequestBase) throws -> String {
             return ""
         }
         
-        func json(for request: LCRequestBase) throws -> Data {
+        
+        func dictionary(for request: LCRequestBase) throws -> [String: Any] {
             guard let auth = request.connection.authorization else {
                 throw LuckyCart.Err.authorizationMissing
             }
             
             let signature = auth.computeSignature()
             
-            var dict: [String: Any] = [
-                "auth_ts": signature.timestamp,
-                "auth_key": signature.key,
-                "auth_sign": signature.hex,
-                "auth_nonce": signature.timestamp,
-                "auth_v": auth.version,
-                "cartId": cartId,
-                "shopperId": shopperId,
-                "totalAti": totalAti
+            var out: [String: Any] = [
+                Keys.auth_ts: signature.timestamp,
+                Keys.auth_key: signature.key,
+                Keys.auth_sign: signature.hex,
+                Keys.auth_nonce: signature.timestamp,
+                Keys.auth_v: auth.version
             ]
-
-            try ticketComposer.append(to: &dict)
             
-            let json = try JSONSerialization.data(withJSONObject: dict, options: [])
+            try ticketComposer.append(to: &out)
+            
+            return out
+        }
+
+        func json(for request: LCRequestBase) throws -> Data {
+            let dictionary = try self.dictionary(for: request)
+            let json = try JSONSerialization.data(withJSONObject: dictionary, options: [])
             let dataString = String(data: json, encoding: .utf8) ?? "<no valid utf8 data>"
             print("[luckycart.network.postCart] Ticket Json :\r--->\r \(dataString)\r<---\r")
             return json

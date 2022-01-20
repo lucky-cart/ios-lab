@@ -35,7 +35,7 @@ public struct LCAuthorization {
         // TODO: Finish Encryption and move in private part
         
         let date = Date()
-        let timestamp = timestamp ?? "\(Int(date.timeIntervalSinceReferenceDate / 1000))"
+        let timestamp = timestamp ?? "\(Int(date.timeIntervalSinceReferenceDate))"
         
         let secretString = "p#91J#i&00!QkdSPjgGNJq"
         let key = SymmetricKey(data: secretString.data(using: .utf8)!)

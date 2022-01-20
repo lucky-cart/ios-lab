@@ -21,11 +21,15 @@ public extension LuckyCart {
     /// "auth_sign": "dd41953d1890072bce9d352edb4fe00aa15a17bea49b65a2ec0a0c87457553d0",
     /// "auth_v": "2.0",
 
-    static let testAuthorization = LCAuthorization(key: "ugjArgGw", secret: "p#91J#i&00!QkdSPjgGNJq")
+    static let testAuthorization = LCAuthorization(key: testAuthKey, secret: testSecret)
+    internal static let testSignature = testAuthorization.computeSignature(timestamp: "664354523")
     
-    static let test: LuckyCart = LuckyCart.init(authorization: LuckyCart.testAuthorization,
+    static var test: LuckyCart {
+        LuckyCart.shared ?? LuckyCart.init(authorization: LuckyCart.testAuthorization,
                                 customer: LuckyCart.testCustomer,
                                 cart: LuckyCart.testCart)
+    }
+    
     static let testGame = LCGame(Model.testGame)
     
     static let testCustomer = LCCustomer(Model.testCustomer)
@@ -36,6 +40,7 @@ public extension LuckyCart {
     
     static let testBanner = LCBanner(Model.testBanner)
     
+    static let testPostCartResponse = LCPostCartResponse(Model.testPostCartResponse)
 }
 
 // MARK: - Private test objects

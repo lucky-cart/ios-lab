@@ -9,18 +9,18 @@
 import Foundation
 
 
+/// First version requests
+///
+///
 internal extension LuckyCart {
 
     /// postCart
     
     func postCart(ticketComposer: LCTicketComposer, completion: @escaping (Result<LCPostCartResponse, Error>)->Void) {
         
-        let header = LCRequestParameters.PostCart(cartId: "\(Model.testCart.id)",
-                                                  shopperId: "\(Model.testCustomer.id)",
-                                                  totalAti: "123.45",
-                                                  ticketComposer: ticketComposer)
+        let header = LCRequestParameters.PostCart(ticketComposer: ticketComposer)
         do {
-            let request: LCRequest<LCRequestResponse.PostCart> = try network.buildRequest(name: .postCart,
+            let request: LCRequest<Model.PostCartResponse> = try network.buildRequest(name: .postCart,
                                                                                           parameters: nil,
                                                                                           body: header)
             try network.run(request) { response in
@@ -144,4 +144,35 @@ internal extension LuckyCart {
         
     }
     
+}
+
+/// Load all banners sequentially
+///
+/// This request is never called from facade - it can be used in tests, to present lists of banners
+
+extension LuckyCart {
+    
+    /// Load all banners
+    ///
+    /// All banners definitions for a given space are loaded as soon as a banner space view is displayed
+    
+    public func loadAllBanners(for spaceIdentifier: LCBannerSpaceIdentifier,
+                               failure: @escaping (Error)->Void,
+                               success: @escaping (LCBanner)->Void) {
+        loadBannerSpaces(failure: failure) { bannerSpaces in
+            bannerSpaces[spaceIdentifier]?.bannerIds.forEach { identifier in
+                self.getBanner(bannerIdentifier: identifier) { result in
+                    switch result {
+                    case .failure(let error):
+                        print("[luckycart.load.banners] GetBanner(`\(identifier)`) Error:\r\(error.localizedDescription)")
+                        failure(error)
+                    case .success(let banner):
+                        print("[luckycart.load.banners] GetBanner(`\(identifier)`) succeed:\r\(banner)")
+                        success(banner)
+                    }
+                }
+            }
+        }
+    }
+
 }

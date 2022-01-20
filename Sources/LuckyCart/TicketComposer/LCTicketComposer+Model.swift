@@ -65,16 +65,22 @@ public extension LCTicketComposer {
     /// - lastName: "OLIVEIRA"
     
     struct Customer: LCTicketComposerEntity {
-        
+        /// The Lucky Cart customer id
+        public var customerId: String
+        /// The customer id in client system
         public var customerClientId: String
+        
+        /// Customer information
         public var email: String
         public var firstName: String
         public var lastName: String
         
-        public init(customerClientId: String,
+        public init(customer: LCCustomer,
+                    customerClientId: String,
                     email: String,
                     firstName: String,
                     lastName: String) {
+            self.customerId = customer.id
             self.customerClientId = customerClientId
             self.email = email
             self.firstName = firstName
@@ -83,10 +89,11 @@ public extension LCTicketComposer {
         
         public func makeDictionary() throws -> [String : Any] {
             [
-                "customerClientId": customerClientId,
-                "email": email,
-                "firstName": firstName,
-                "lastName" : lastName
+                Keys.customerId: customerId,
+                Keys.customerClientId: customerClientId,
+                Keys.email: email,
+                Keys.firstName: firstName,
+                Keys.lastName : lastName
             ]
         }
     }
@@ -148,17 +155,32 @@ public extension LCTicketComposer {
     /// - products: [ <ProductOrder> ]
     
     struct Cart: LCTicketComposerEntity {
+        
+        /// The LuckyCart Id
+        public var cartId: String
+        
+        /// The cart Id in client system
         public var cartClientId: String
+        
+        /// The currency set for this cart ( "EUR" )
         public var currency: String
-        public var ttc: String
+        
+        /// The total price, all taxes included
+        public var ttc: String // Key in dict is "totalAti"
+        
+        /// The total price, without taxes
         public var ht: String
+        
+        /// The product orders ( Product, Quantity )
         public var products: [ProductOrder]
         
-        public init(cartClientId: String,
-             currency: String,
-             ttc: String,
-             ht: String,
-             products: [ProductOrder]) {
+        public init(cart: LCCart,
+                    cartClientId: String,
+                    currency: String,
+                    ttc: String,
+                    ht: String,
+                    products: [ProductOrder]) {
+            self.cartId = cart.id
             self.cartClientId = cartClientId
             self.currency = currency
             self.ttc = ttc
@@ -168,11 +190,12 @@ public extension LCTicketComposer {
         
         public func makeDictionary() throws -> [String : Any] {
             [
-                "cartClientId": cartClientId,
-                "currency": currency,
-                "ttc": ttc,
-                "ht": ht,
-                "products" : try products.map { try $0.makeDictionary() }
+                Keys.cartId: cartId,
+                Keys.cartClientId: cartClientId,
+                Keys.currency: currency,
+                Keys.totalAti: ttc,
+                Keys.ht: ht,
+                Keys.products : try products.map { try $0.makeDictionary() }
             ]
         }
     }

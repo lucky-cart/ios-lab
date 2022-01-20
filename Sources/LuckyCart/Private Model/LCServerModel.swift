@@ -25,6 +25,8 @@ struct Model {
     
     struct Customer: Codable, Identifiable {
         public let id: String
+        
+        static let guest = Customer(id: "unknown")
     }
 
     /// LCCart

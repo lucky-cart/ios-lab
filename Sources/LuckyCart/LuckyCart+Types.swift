@@ -1,5 +1,5 @@
 //
-//  LCTypes.swift
+//  LuckyCart+Types.swift
 //
 //  LuckyCart Framework - (c)2022 Lucky Cart
 //
@@ -27,6 +27,7 @@ public extension LCIdentifier where RawValue == String {
     
     /// append
     /// Append characters to the identifier
+    
     func byAppending(_ string: String) -> LCBannerSpaceIdentifier {
         return LCBannerSpaceIdentifier(rawValue: "\(rawValue).\(Self.transform(string))")
     }
@@ -40,7 +41,6 @@ public extension LCIdentifier where RawValue == String {
     }
     
 }
-
 
 /// LCBannerSpaceIdentifier
 ///

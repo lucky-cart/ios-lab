@@ -48,9 +48,15 @@ public struct LCCustomer: Codable, LCEntity, Identifiable {
     
     public let id: String
     
+    public init(id: String) {
+        self.id = id
+    }
+    
     init(_ entity: ModelEntity) {
         id = entity.id
     }
+
+    static let guest = LCCustomer(Model.Customer.guest)
 }
 
 /// LCCart
@@ -60,6 +66,10 @@ public struct LCCart: Codable, LCEntity, Identifiable {
     
     public let id: String
     
+    public init(id: String) {
+        self.id = id
+    }
+
     init(_ entity: ModelEntity) {
         id = entity.id
     }
@@ -263,7 +273,7 @@ public struct LCPostCartResponse: Codable, LCEntity {
     var baseTabletUrl: URL?
     var baseDesktopUrl: URL?
     
-    init(_ entity: LCRequestResponse.PostCart) {
+    init(_ entity: Model.PostCartResponse) {
         self.ticket = entity.ticket
         self.mobileUrl = URL(string: entity.mobileUrl)
         self.tabletUrl = URL(string: entity.tabletUrl)

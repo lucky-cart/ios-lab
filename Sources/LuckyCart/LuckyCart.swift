@@ -48,9 +48,18 @@ public class LuckyCart: ObservableObject {
     let network: LCNetwork
     
     /// customer: The LuckyCart customer
-    var customer: LCCustomer
+    ///
+    /// if customer is nil, a lucky cart guest customer will be used in requests
     
-    /// customer: The LuckyCart cart
+    @Published public private(set) var customer: LCCustomer
+    
+    /// The internal current customer value
+    private var __customer: LCCustomer?
+    
+    /// cart
+    ///
+    /// The LuckyCart cart
+    
     var cart: LCCart
     
     /// Banner Spaces Cache
@@ -72,5 +81,18 @@ public class LuckyCart: ObservableObject {
         self.cart = cart
         self.network = LCNetwork(authorization: authorization)
         LuckyCart.shared = self
+    }
+    
+    
+    func setUserId(_ id: String?) {
+        guard let id = id else {
+            __customer = nil
+            return
+        }
+        __customer = LCCustomer(id: id)
+    }
+    
+    func setGuestUser() {
+        __customer = nil
     }
 }

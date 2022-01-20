@@ -57,6 +57,5 @@ class LCConnection {
     
     static func promo(authorization: LCAuthorization) -> LCConnection {
         return LCConnection(server: .promo, authorization: authorization)
-    }
-    
+    }    
 }

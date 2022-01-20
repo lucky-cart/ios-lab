@@ -168,9 +168,11 @@ extension LCRequestBase {
     
     func makeURLRequest() throws -> URLRequest {
         var urlRequest = URLRequest(url: try url())
+        urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
         urlRequest.httpMethod = name.method
         if let body = self.body as? LCRequestParameters.PostCart {
             urlRequest.httpBody = try body.json(for: self)
+            urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         }
         return urlRequest
     }

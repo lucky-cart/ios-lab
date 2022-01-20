@@ -41,6 +41,14 @@ extension Model {
                                          action: Model.BannerAction(type: "boutique", ref: ""))
     
     static let promoMatchingURLTest = "https://promomatching.luckycart.com/61d6c677baa1676dd46bfee6/customer_1234"
+                                                                              
+    static let testPostCartResponse = PostCartResponse(ticket: "QLWG-SHYR-MGBZ-SLXK",
+                                                       mobileUrl: "https://api.luckycart.com/replacement/QLWG-SHYR-MGBZ-SLXK/mobile/url",
+                                                       tabletUrl: "https://api.luckycart.com/replacement/QLWG-SHYR-MGBZ-SLXK/tablet/url",
+                                                       desktopUrl: "https://api.luckycart.com/replacement/QLWG-SHYR-MGBZ-SLXK/desktop/url",
+                                                       baseMobileUrl: "https://go.luckycart.com/mobile/QLWG-SHYR-MGBZ-SLXK",
+                                                       baseTabletUrl: "https://go.luckycart.com/tablet/QLWG-SHYR-MGBZ-SLXK",
+                                                       baseDesktopUrl: "https://go.luckycart.com/lc__team__qa/NX5PDN/play/QLWG-SHYR-MGBZ-SLXK")
 }
 
 extension LuckyCart {
