@@ -135,6 +135,9 @@ extension LCRequestParameters {
     
     struct PostCart: LCRequestParametersBase {
         
+        var cart: LCCart
+        var customer: LCCustomer
+
         // The json dictionary to send in ticket json
         var ticketComposer: LCTicketComposer
         
@@ -159,7 +162,9 @@ extension LCRequestParameters {
                 Keys.auth_key: signature.key,
                 Keys.auth_sign: signature.hex,
                 Keys.auth_nonce: signature.timestamp,
-                Keys.auth_v: auth.version
+                Keys.auth_v: auth.version,
+                Keys.cartId: cart.id,
+                Keys.customerId: customer.id,
             ]
             
             try ticketComposer.append(to: &out)

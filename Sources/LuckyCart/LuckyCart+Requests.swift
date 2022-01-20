@@ -18,7 +18,9 @@ internal extension LuckyCart {
     
     func postCart(ticketComposer: LCTicketComposer, completion: @escaping (Result<LCPostCartResponse, Error>)->Void) {
         
-        let header = LCRequestParameters.PostCart(ticketComposer: ticketComposer)
+        let header = LCRequestParameters.PostCart(cart: cart,
+                                                  customer: customer,
+                                                  ticketComposer: ticketComposer)
         do {
             let request: LCRequest<Model.PostCartResponse> = try network.buildRequest(name: .postCart,
                                                                                           parameters: nil,

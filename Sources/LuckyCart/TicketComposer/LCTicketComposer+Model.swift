@@ -65,8 +65,6 @@ public extension LCTicketComposer {
     /// - lastName: "OLIVEIRA"
     
     struct Customer: LCTicketComposerEntity {
-        /// The Lucky Cart customer id
-        public var customerId: String
         /// The customer id in client system
         public var customerClientId: String
         
@@ -75,12 +73,10 @@ public extension LCTicketComposer {
         public var firstName: String
         public var lastName: String
         
-        public init(customer: LCCustomer,
-                    customerClientId: String,
+        public init(customerClientId: String,
                     email: String,
                     firstName: String,
                     lastName: String) {
-            self.customerId = customer.id
             self.customerClientId = customerClientId
             self.email = email
             self.firstName = firstName
@@ -89,7 +85,6 @@ public extension LCTicketComposer {
         
         public func makeDictionary() throws -> [String : Any] {
             [
-                Keys.customerId: customerId,
                 Keys.customerClientId: customerClientId,
                 Keys.email: email,
                 Keys.firstName: firstName,
@@ -156,9 +151,6 @@ public extension LCTicketComposer {
     
     struct Cart: LCTicketComposerEntity {
         
-        /// The LuckyCart Id
-        public var cartId: String
-        
         /// The cart Id in client system
         public var cartClientId: String
         
@@ -174,13 +166,11 @@ public extension LCTicketComposer {
         /// The product orders ( Product, Quantity )
         public var products: [ProductOrder]
         
-        public init(cart: LCCart,
-                    cartClientId: String,
+        public init(cartClientId: String,
                     currency: String,
                     ttc: String,
                     ht: String,
                     products: [ProductOrder]) {
-            self.cartId = cart.id
             self.cartClientId = cartClientId
             self.currency = currency
             self.ttc = ttc
@@ -190,7 +180,6 @@ public extension LCTicketComposer {
         
         public func makeDictionary() throws -> [String : Any] {
             [
-                Keys.cartId: cartId,
                 Keys.cartClientId: cartClientId,
                 Keys.currency: currency,
                 Keys.totalAti: ttc,

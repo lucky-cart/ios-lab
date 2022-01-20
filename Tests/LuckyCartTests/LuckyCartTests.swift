@@ -56,7 +56,9 @@ final class LuckyCartTests: XCTestCase {
         
         let composer = LCTicketComposer.test
         
-        let parameters = LCRequestParameters.PostCart(ticketComposer: composer)
+        let parameters = LCRequestParameters.PostCart(cart: LuckyCart.testCart,
+                                                      customer:  LuckyCart.testCustomer,
+                                                      ticketComposer: composer)
         
         // We create a request to inspect the final body ( ticket composer info + authorization )
         let request: LCRequest<Model.PostCartResponse> = try LCNetwork(authorization: LuckyCart.testAuthorization).buildRequest(name: .postCart,
