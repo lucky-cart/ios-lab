@@ -66,7 +66,7 @@ public struct LCCart: Codable, LCEntity, Identifiable {
     
     public let id: String
     
-    public init(id: String) {
+    public init(id: String = UUID().uuidString) {
         self.id = id
     }
 

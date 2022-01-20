@@ -27,9 +27,11 @@ extension LuckyCart {
             switch result {
             case .failure(let error):
                 print("[luckycart.checkout] CheckOut Error:\r\(error.localizedDescription)")
+                self.lastCheckOutResponse = nil
                 failure(error)
             case .success(let response):
                 print("[luckycart.checkout] CheckOut succeed:---->\r\(response)\r<----\r")
+                self.lastCheckOutResponse = response
                 success(response)
             }
         }

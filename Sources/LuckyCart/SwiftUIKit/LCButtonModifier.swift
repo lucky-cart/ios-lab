@@ -12,11 +12,16 @@ public struct LCButtonModifier: ViewModifier {
 
     var color: Color = .blue
     
+    public init(color: Color = .blue) {
+        self.color = color
+    }
+    
     public func body(content: Content) -> some View {
             content
             .buttonStyle(PlainButtonStyle())
-            .fixedSize()
-            .padding(7)
+            .padding([.leading, .trailing], 16)
+            .padding([.top, .bottom], 8)
+            .font(.callout)
             .frame(minWidth: 80)
             .foregroundColor(.white)
             .background(color)

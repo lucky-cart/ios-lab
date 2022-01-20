@@ -28,13 +28,16 @@ internal extension LuckyCart {
             try network.run(request) { response in
                 switch response {
                 case .success(let result):
+                    self.lastError = nil
                     completion(.success(LCPostCartResponse(result)))
                 case .failure(let error):
+                    self.lastError = error
                     completion(.failure(error))
                 }
             }
         }
         catch {
+            self.lastError = error
             completion(.failure(error))
         }
     }
@@ -60,14 +63,17 @@ internal extension LuckyCart {
                 case .success(let result):
                     let games = result.games.map { LCGame($0) }
                     // Cache available games
+                    self.lastError = nil
                     self.games = games
                     completion(.success(games))
                 case .failure(let error):
+                    self.lastError = error
                     completion(.failure(error))
                 }
             }
         }
         catch {
+            self.lastError = error
             completion(.failure(error))
         }
     }
@@ -94,14 +100,17 @@ internal extension LuckyCart {
                 switch response {
                 case .success(let result):
                     let bannerSpaces = LCBannerSpaces(result)
+                    self.lastError = nil
                     self.bannerSpaces = bannerSpaces
                     completion(.success(bannerSpaces))
                 case .failure(let error):
+                    self.lastError = error
                     completion(.failure(error))
                 }
             }
         }
         catch {
+            self.lastError = error
             completion(.failure(error))
         }
         
@@ -132,15 +141,19 @@ internal extension LuckyCart {
                     var banner = LCBanner(result)
                     // Identifier is not returned by server, so we set the identifier here
                     banner.identifier = bannerIdentifier
+                    self.lastError = nil
+
                     // Cache the result
                     self.bannerSpaces?.banners[bannerIdentifier] = banner
                     completion(.success(banner))
                 case .failure(let error):
+                    self.lastError = error
                     completion(.failure(error))
                 }
             }
         }
         catch {
+            self.lastError = error
             completion(.failure(error))
         }
         
@@ -158,7 +171,7 @@ extension LuckyCart {
     ///
     /// All banners definitions for a given space are loaded as soon as a banner space view is displayed
     
-    public func loadAllBanners(for spaceIdentifier: LCBannerSpaceIdentifier,
+    private func loadAllBanners(for spaceIdentifier: LCBannerSpaceIdentifier,
                                failure: @escaping (Error)->Void,
                                success: @escaping (LCBanner)->Void) {
         loadBannerSpaces(failure: failure) { bannerSpaces in
@@ -166,9 +179,11 @@ extension LuckyCart {
                 self.getBanner(bannerIdentifier: identifier) { result in
                     switch result {
                     case .failure(let error):
-                        print("[luckycart.load.banners] GetBanner(`\(identifier)`) Error:\r\(error.localizedDescription)")
+                            self.lastError = error
+                            print("[luckycart.load.banners] GetBanner(`\(identifier)`) Error:\r\(error.localizedDescription)")
                         failure(error)
                     case .success(let banner):
+                        self.lastError = nil
                         print("[luckycart.load.banners] GetBanner(`\(identifier)`) succeed:\r\(banner)")
                         success(banner)
                     }

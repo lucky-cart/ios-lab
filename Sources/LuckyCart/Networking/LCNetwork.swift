@@ -34,7 +34,7 @@ internal class LCNetwork {
     lazy var promoMatching: LCConnection = {
         return LCConnection.promo(authorization: authorization)
     }()
-
+    
     // MARK: - Run Requests
     
     /// run
@@ -47,19 +47,33 @@ internal class LCNetwork {
         print("[luckycart.network] - Run [\(request.method)] \(try request.url().absoluteString)")
         let urlRequest = try request.makeURLRequest()
         let task = URLSession(configuration: URLSessionConfiguration.default).dataTask(with: urlRequest) { data, response, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+                return
+            }
             guard let data = data else {
-                completion(.failure(LuckyCart.Err.emptyResponse))
+                DispatchQueue.main.async {
+                    completion(.failure(LuckyCart.Err.emptyResponse))
+                }
                 return
             }
             do {
                 guard let castedData = try request.response(data: data) as? T else {
-                    completion(.failure(LuckyCart.Err.cantCastDataToResponseType))
+                    DispatchQueue.main.async {
+                        completion(.failure(LuckyCart.Err.cantCastDataToResponseType))
+                    }
                     return
                 }
-                completion(.success(castedData))
+                DispatchQueue.main.async {
+                    completion(.success(castedData))
+                }
             }
             catch {
-                completion(.failure(error))
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
             }
         }
         task.resume()

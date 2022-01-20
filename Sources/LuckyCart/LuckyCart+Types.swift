@@ -28,8 +28,12 @@ public extension LCIdentifier where RawValue == String {
     /// append
     /// Append characters to the identifier
     
-    func byAppending(_ string: String) -> LCBannerSpaceIdentifier {
-        return LCBannerSpaceIdentifier(rawValue: "\(rawValue).\(Self.transform(string))")
+    func byAppending(_ string: String) -> Self {
+        Self(rawValue: "\(rawValue)\(Self.transform(string))")!
+    }
+    
+    func byAppendingComponent(_ string: String) -> Self {
+        Self(rawValue: "\(rawValue).\(Self.transform(string))")!
     }
     
     var description: String {
@@ -84,7 +88,7 @@ public struct LCBannerIdentifier: LCIdentifier {
 
     /// The identifier to use for a generic identifier
     
-    public static let generic = LCBannerSpaceIdentifier(rawValue: "generic")
+    public static let banner = LCBannerIdentifier(rawValue: "banner")
 }
 
 /// LCBannerSpaceIdentifier

@@ -5,64 +5,112 @@
 
 - Connection Layer and server model
 - Public API facade and client model
- 
-## <font color='#1E72AD'>Availability:</font>
 
-- macOS   : .v11
-- iOS     : .v13
-- tvOS    : .v14
-- watchOS : .v8
+## <font color='#10409F'>Public API</font>
 
-## <font color='#1E72AD'>Installation:</font>
 
-### Swift Package:
+###LuckyCart.swift
 
- Add the <b>LuckyCart</b> Package using xCode
+### LuckyCart+Facade.swift
 
-### CocoaPods:
+### LuckyCart+Model.swift
 
- ```
- pod 'LuckyCart'
- ``` 
- 
-## <font color='#1E72AD'>Use in Client Application:</font>
+### LuckyCart+Requests.swift
 
-1 - Start LuckyCart 
+### LuckyCart+Types.swift
+### LuckyCartClient.swift
+
+## <font color='#707080'>TicketComposer</font>
+
+### LCTicketComposer.swift
+
+### LCTicketComposer+Model.swift
+
+## <font color='#10409F'>Private API</font>
+
+## <font color='#707080'>Networking</font>
+
+### LCAuthorization.swift
+
+### LCNetwork.swift
+
+### LCRequest.swift
+
+### LCServer.swift
+
+## <font color='#707080'>Private Model</font>
+
+### LCServerModel.swift
+
+## <font color='#707080'>Requests</font>
+
+### LCRequest+GetBanner.swift
+
+### LCRequest+GetBannerSpaces.swift
+
+### LCRequest+GetBannerView.swift
+
+### LCRequest+GetGames.swift
+
+### LCRequest+PostCart.swift
+
+
+## <font color='#10409F'>SwiftUIKit</font>
+
+### LCBannerView.swift
+
+### LCButtonModifier.swift
+
+A button style provided by LuckyCart framework.
+This button is used for all interactions in sheets, but can also be used by client application.
 
 ```
-// 1 - Configure and start LuckyCart engine
-    
-let auth = LCAuthorization(key: <authKey>, secret: <secret>)
-let luckyCartCustomer = LCCustomer(<id>)
-let luckyCartCart = LCCart(<id>)
-    
-let luckyCart = LuckyCart(authorization: LCAuthorization, 
-                          customer: LCCustomer, 
-                          cart: LCCart,
-                          ticketComposerClosure: {
-                          
-                              // Generates the ticket that will be sent to LuckyCart
+Button("Close") {
+    // Action
+}
+.modifier(LCButtonModifier(color: .blue))
+```
+![Image](docImages/button.png)
 
-                              // Fill the structures with your information here
+### LCDebugLensModifier.swift
 
-                              let customer = LCTicketComposer.LCCustomer()
-                              let order = LCTicketComposer.Order()
-                              let cart = LCTicketComposer.Cart()
+Displays the LuckyCart errors over the client application interface.<br>To enable it ( only in DEBUG mode ), apply the view modifier to the view you want to host error banner. Typically the window root view.
 
-                              // Add any extra information here
-                              let metaData = LCTicketComposer.MetaData()
-                              
-                              return LCTicketComposer(customer: customer, 
-                                                              order: order, 
-                                                              metaData: metaData, 
-                                                              cart: cart)
-                            })
-                            
+```swift
+@main
+struct MyShoppingApp: App {
 
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+            .modifier(LCDebugLensModifier())
+        }
+    }
+}
 ```
 
+![Image](docImages/debugLensModifierScreenshot.png)
 
-## <font color='#1E72AD'>Author:</font>
+### LCGameView.swift
+
+### LCLinkView.swift
+
+### LCViewProtocols.swift
+
+### LCWebView.swift
+
+### View+Window.swift
+
+## <font color='#10409F'>Debug Extensions</font>
+
+### LuckyCart+Debug.swift
+
+### LCServerModel+Debug.swift
+
+### LCTicketComposer+Debug.swift
+
+
+--
 
 ©2022 Lucky Cart
 
