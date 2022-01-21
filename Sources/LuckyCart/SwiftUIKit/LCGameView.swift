@@ -15,7 +15,7 @@ public struct LCGameView: View {
         
     public init(game: Binding<LCGame>) {
         _game = game
-        print("Display link view game ( \(game.id) - Playable : \(game.isGamePlayable) - Result : \(game.gameResult)")
+        print("[luckycart.gameview] Display link view game ( \(game.id) - Playable : \(game.isGamePlayable) - Result : \(game.gameResult)")
     }
     
     public var body: some View {

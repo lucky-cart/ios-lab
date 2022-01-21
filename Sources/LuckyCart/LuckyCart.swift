@@ -92,6 +92,7 @@ public class LuckyCart: ObservableObject {
     /// Opens a new cart
     
     public func newCart(with id: String = UUID().uuidString) {
+        clearCache()
         self.cart = LCCart(id: id)
     }
     
