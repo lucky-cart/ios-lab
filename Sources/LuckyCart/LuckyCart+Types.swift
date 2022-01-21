@@ -17,10 +17,6 @@ public protocol LCIdentifier : RawRepresentable, Codable, Hashable, CustomString
     
     var rawValue: String { get }
     
-    /// transform
-    /// Apply a transformation to the input string ( remove spaces, lowercase, … )
-    static func transform(_ string: String) -> String
-
 }
 
 public extension LCIdentifier where RawValue == String {
@@ -44,6 +40,11 @@ public extension LCIdentifier where RawValue == String {
         return Self.identifier + rawValue
     }
     
+    /// Returns a lowercased string and replace spaces by underscores
+    static func transform(_ string: String) -> String {
+        string.lowercased().replacingOccurrences(of: " ", with: "_")
+    }
+
 }
 
 /// LCBannerSpaceIdentifier
@@ -58,11 +59,6 @@ public struct LCBannerIdentifier: LCIdentifier {
     
     public let rawValue: String
 
-    /// Returns a lowercased string and replace spaces by underscores
-    static public func transform(_ string: String) -> String {
-        string.lowercased().replacingOccurrences(of: " ", with: "_")
-    }
-        
     /// Create a new identifier
     ///
     /// If the passed string is "Product 5314", the identifier will be `product_5314`
@@ -77,14 +73,8 @@ public struct LCBannerIdentifier: LCIdentifier {
         self.rawValue = Self.transform(rawValue)
     }
     
-    init(_ string: String) {
-        self.init(rawValue: string)
-    }
-
-    
-    public init(stringLiteral value: String) {
-        self.init(rawValue: value)
-    }
+    public init(_ string: String) { self.init(rawValue: string) }
+    public init(stringLiteral value: String) { self.init(rawValue: value) }
 
     /// The identifier to use for a generic identifier
     
@@ -100,7 +90,7 @@ public struct LCBannerIdentifier: LCIdentifier {
 
 public struct LCBannerSpaceIdentifier: LCIdentifier {
     
-    public static let identifier: String = "bannerSpace"
+    public static let identifier: String = "bannerspace"
 
     public let rawValue: String
 
@@ -123,14 +113,8 @@ public struct LCBannerSpaceIdentifier: LCIdentifier {
         self.rawValue = Self.transform(rawValue)
     }
     
-    
-    public init(stringLiteral value: String) {
-        self.init(rawValue: value)
-    }
-
-    init(_ string: String) {
-        self.init(rawValue: string)
-    }
+    public init(_ string: String) { self.init(rawValue: string) }
+    public init(stringLiteral value: String) { self.init(rawValue: value) }
 
     /// Some pre-defined spaces identifier
     
@@ -172,4 +156,42 @@ public struct LCBannerSpaceIdentifier: LCIdentifier {
     /// The identifier to use for an advert view
     
     public static let advert = LCBannerSpaceIdentifier(rawValue: "advert")
+}
+
+/// LCBoutiqueViewIdentifier
+///
+/// An identifier used to identify 'boutique' views.
+/// A 'boutique' view is a view that can be opened by a banner action.
+///
+/// This identifier is used by the app to determine which view to open when a banner is selected by the user.
+
+public struct LCBoutiqueViewIdentifier: LCIdentifier {
+    public static var identifier: String = "view"
+    
+    public let rawValue: String
+
+        
+    /// Create a new identifier
+    ///
+    /// If the passed string is "Coffee Offers", the identifier will be `coffee_offers`
+    ///
+    /// ```
+    /// print(LCViewIdentifier.boutique.byAppending("Coffee Offers"))
+    ///
+    /// // result identifier = "boutique.coffee_offers"
+    /// ```
+    
+    public init(rawValue: String) {
+        self.rawValue = Self.transform(rawValue)
+    }
+    
+    public init(_ string: String) { self.init(rawValue: string) }
+    public init(stringLiteral value: String) { self.init(rawValue: value) }
+
+    public static let homepage = LCBoutiqueViewIdentifier(rawValue: "homepage")
+    
+    public static let categories = LCBoutiqueViewIdentifier(rawValue: "categories")
+    
+    public static let boutique = LCBoutiqueViewIdentifier(rawValue: "boutique")
+
 }

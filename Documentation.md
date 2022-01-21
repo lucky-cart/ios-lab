@@ -1,65 +1,151 @@
 
 # <font color='#10409F'>Lucky Cart</font>
 
-<b>Lucky Cart Connection engine and Swift API</b>
+<b>Lucky Cart Public API</b>
 
-- Connection Layer and server model
-- Public API facade and client model
+## <font color='#707080'>Public API</font>
 
-## <font color='#10409F'>Public API</font>
+The public API Calls ( Defined in `LuckyCart+Facade`
+
+### <font color='#007F00'>Check Out</font>
+
+Sends the ticket in LuckyCart format
+
+```
+
+checkOut(ticketComposer: myTicketComposer,
+                         failure: { error in },
+                         success: { postCartResponse in })
+```    
+    
+### <font color='#007F00'>Load games</font>
+
+Games are usually loaded just after the check out
+
+```
+loadGames(failure: { error in },
+          success: { games in })
+```          
+    
+### <font color='#007F00'>Load banner spaces</font>
+
+Banner spaces are loaded as soon as the LuckyCart instance is created.
+    
+```
+loadBannerSpaces(failure: { error in },
+                 success: { bannerSpaces in })
+```
+              
+### <font color='#007F00'>Load a banner</font>
+
+Banner spaces are loaded as soon as the LuckyCart instance is created.
+
+```    
+banner(with identifier: myBannerIdentifier,
+       failure: { error in },
+       success: { banner in })
+```
+
+## <font color='#707080'>Public Model</font>
+
+### <font color='#007F00'>LCCustomer</font>
+
+- id: String
+
+- static guest `LCCustomer(Model.Customer.guest)`
+
+### <font color='#007F00'>LCCart</font>
+
+- id: String
+
+### <font color='#007F00'>LCLink</font>
+
+Wraps a link to an url and an optional image url
+
+- url: URL
+- imageUrl: URL?
+
+### <font color='#007F00'>LCGame</font>
+
+- code `String`
+- isGamePlayable `Bool
+- gameResult `LCGameResult
+- desktopLink `LCLink
+- mobileLink `LCLink
+
+### <font color='#007F00'>LCGameResult</font>
+    
+- static notPlayed = LCGameResult(rawValue: "not-played")
+
+### <font color='#007F00'>LCBannerSpaces</font>
+
+- id `UUID`
+- identifier `LCBannerSpaceIdentifier`
+- bannerIds `[LCBannerIdentifier]`
+
+### <font color='#007F00'>LCEntity</font>
+
+### <font color='#007F00'>LCBannerSpaces</font>
+
+- spaces `[LCBannerSpaceIdentifier: LCBannerSpace]`
+- banners `[LCBannerIdentifier: LCBanner]`
+    
+- sortedSpaces `[LCBannerSpace]` { get }
+- var description `String` { get }
+
+    
+- subscript (key: `LCBannerSpaceIdentifier`) -> `LCBannerSpace?`
+
+### <font color='#007F00'>LCBannerAction</font>
+- type `LCBannerActionType`
+- ref `String
+
+### <font color='#007F00'>LCBanner</font>
+
+- id `UUID`
+- identifier `LCBannerIdentifier?`
+
+- link `LCLink`
+- name `String`
+- campaign `String`
+- space `String`
+- action `LCBannerAction`
+    
+### <font color='#007F00'>LCBannerActionType</font>
+
+- rawValue `String`
+    
+- static boutique `LCBannerActionType(rawValue: "boutique")`
 
 
-###LuckyCart.swift
+### <font color='#007F00'>LCPostCartResponse</font>
 
-### LuckyCart+Facade.swift
+- ticket `String`
+- mobileUrl `URL?`
+- tabletUrl `URL?`
+- desktopUrl `URL?`
+- baseMobileUrl `URL?`
+- baseTabletUrl `URL?`
+- baseDesktopUrl `URL?`
 
-### LuckyCart+Model.swift
+### <font color='#707080'>LuckyCart+Types</font>
 
-### LuckyCart+Requests.swift
-
-### LuckyCart+Types.swift
-### LuckyCartClient.swift
+### <font color='#707080'>LuckyCartClient</font>
 
 ## <font color='#707080'>TicketComposer</font>
 
-### LCTicketComposer.swift
+### <font color='#007F00'>LCTicketComposer</font>
 
-### LCTicketComposer+Model.swift
-
-## <font color='#10409F'>Private API</font>
-
-## <font color='#707080'>Networking</font>
-
-### LCAuthorization.swift
-
-### LCNetwork.swift
-
-### LCRequest.swift
-
-### LCServer.swift
-
-## <font color='#707080'>Private Model</font>
-
-### LCServerModel.swift
-
-## <font color='#707080'>Requests</font>
-
-### LCRequest+GetBanner.swift
-
-### LCRequest+GetBannerSpaces.swift
-
-### LCRequest+GetBannerView.swift
-
-### LCRequest+GetGames.swift
-
-### LCRequest+PostCart.swift
+### <font color='#007F00'>LCTicketComposer+Model</font>
 
 
 ## <font color='#10409F'>SwiftUIKit</font>
 
-### LCBannerView.swift
+### <font color='#007F00'>LCBannerView</font>
 
-### LCButtonModifier.swift
+A view that displays a LuckyCart banner. It simply displays the banner link in a link view.
+
+### <font color='#007F00'>LCButtonModifier</font>
 
 A button style provided by LuckyCart framework.
 This button is used for all interactions in sheets, but can also be used by client application.
@@ -72,7 +158,7 @@ Button("Close") {
 ```
 ![Image](docImages/button.png)
 
-### LCDebugLensModifier.swift
+### <font color='#007F00'>LCDebugLensModifier</font>
 
 Displays the LuckyCart errors over the client application interface.<br>To enable it ( only in DEBUG mode ), apply the view modifier to the view you want to host error banner. Typically the window root view.
 
@@ -91,23 +177,48 @@ struct MyShoppingApp: App {
 
 ![Image](docImages/debugLensModifierScreenshot.png)
 
-### LCGameView.swift
+### <font color='#007F00'>LCGameView</font>
 
-### LCLinkView.swift
+A view that displays a LuckyCart game. It simply displays the game link in a link view.
 
-### LCViewProtocols.swift
+### <font color='#007F00'>LCLinkView</font>
 
-### LCWebView.swift
+A view that display a link `LCLink`.<br>
+The link image can be clicked/tapped which, by default, opens the link in a web view `LCWebView`
 
-### View+Window.swift
+### <font color='#007F00'>LCViewProtocols</font>
 
-## <font color='#10409F'>Debug Extensions</font>
+The view protocols that client app can use to integrate LuckyCart.
 
-### LuckyCart+Debug.swift
+- BannerSpaceView - Make your view conform to this protocol to load and display LuckyCart banners
+   - bannerSpaceId `LCBannerSpaceIdentifier`
+   - bannerIds `[LCBannerIdentifier]`
+   - banners `[LCBanner]`
 
-### LCServerModel+Debug.swift
+#### <font color='#007F00'>GamesView</font>
 
-### LCTicketComposer+Debug.swift
+Make your view conform to this protocol to load and display LuckyCart games
+
+- GamesView 
+	- games `[LCGame]`	
+
+#### <font color='#007F00'>Boutique View</font>
+
+Make your view conform to this protocol to display a "Boutique View".<br>
+A Boutique View is a custom view provided by client application that can be accessed via LuckCart banners.
+
+- LCBoutiqueView
+	- identifier `LCBoutiqueViewIdentifier`
+
+### <font color='#007F00'>LCWebView</font>
+
+A swiftui ios/macos web view.
+
+### <font color='#007F00'>View+Window</font>
+
+Opens the target view in a new Mac OS window.
+
+- openNewWindow(title: delegate: geometry: style: )
 
 
 --

@@ -14,8 +14,16 @@ public protocol BannerSpaceView: View {
     var banners: [LCBanner] { get set }
 }
 
-/// Make your view conform to this protocol to display LuckyCart views
-///
+/// Make your view conform to this protocol to display LuckyCart games
+
 public protocol GamesView: View {
     var games: [LCGame] { get set }
+}
+
+
+/// Make your view conform to this protocol to display a "Boutique View"
+/// A Boutique View is a custom view provided by client application.
+
+public protocol BoutiqueView: View {
+    var identifier: LCBoutiqueViewIdentifier { get set }
 }

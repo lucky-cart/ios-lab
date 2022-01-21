@@ -185,6 +185,7 @@ extension LCRequestBase {
 ///
 /// LCRequest is type constrained by the response Type.
 /// This is necessary to determine the type of entity to decode with received data
+
 internal struct LCRequest<T: Codable>: LCRequestBase {
     var connection: LCConnection
     

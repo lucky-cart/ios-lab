@@ -15,13 +15,14 @@ import Foundation
 /// Client model test entitites
 
 public extension LuckyCart {
+    static var testAuthKey = "ugjArgGw"
+    static var testSecret = "p#91J#i&00!QkdSPjgGNJq"
+}
 
-    /// "auth_key": "ugjArgGw",
-    /// "auth_ts": "1641998862",
-    /// "auth_sign": "dd41953d1890072bce9d352edb4fe00aa15a17bea49b65a2ec0a0c87457553d0",
-    /// "auth_v": "2.0",
+public extension LuckyCart {
 
     static let testAuthorization = LCAuthorization(key: testAuthKey, secret: testSecret)
+    
     internal static let testSignature = testAuthorization.computeSignature(timestamp: "664354523")
     
     static var test: LuckyCart {

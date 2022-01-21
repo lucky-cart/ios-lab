@@ -26,7 +26,11 @@ extension View {
         return window
     }
     
-    public func openNewWindow(title: String, delegate: NSWindowDelegate, geometry: NSRect = NSRect(x: 20, y: 20, width: 640, height: 480), style:NSWindow.StyleMask = [.titled, .closable, .miniaturizable, .resizable]) {
+    /// opens the target view in a new Mac OS window
+    public func openNewWindow(title: String,
+                              delegate: NSWindowDelegate,
+                              geometry: NSRect = NSRect(x: 20, y: 20, width: 640, height: 480),
+                              style:NSWindow.StyleMask = [.titled, .closable, .miniaturizable, .resizable]) {
         self.newWindowInternal(title: title, geometry: geometry, style: style, delegate: delegate).contentView = NSHostingView(rootView: self)
     }
 }

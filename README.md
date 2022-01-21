@@ -2,8 +2,9 @@
 
 <b>Lucky Cart Connection engine and Swift API</b>
 
-- Connection Layer and server model
-- Public API facade and client model
+[Connection Layer and server model Documentation](PrivateDocumentation.md)
+
+[Public API and client model Documentation](Documentation.md)
  
 ## <font color='#1E72AD'>Availability:</font>
 
@@ -65,17 +66,12 @@ The entities as sent by the server
 A tool that assists framework user to create ticket JSON.
 
 
-### Sequencer
+### Debug
+#### LuckyCart.swift
+#### LuckyCart+Facade.swift#### LuckyCart+Model.swift#### LuckyCart+Requests.swift#### LuckyCart+Types.swift#### LuckyCartClient.swift### Networking#### LCAuthorization.swift#### LCNetwork.swift#### LCRequest.swift#### LCServer.swift### Private Model
+#### LCServerModel.swift### Private Requests#### LCRequest+GetBanner.swift#### LCRequest+GetBannerSpaces.swift#### LCRequest+GetBannerView.swift#### LCRequest+GetGames.swift#### LCRequest+PostCart.swift
+### SwiftUIKit#### LCBannerView.swift#### LCButtonModifier.swift#### LCDebugLensModifier.swift#### LCGameView.swift#### LCLinkView.swift#### LCViewProtocols.swift#### LCWebView.swift#### View+Window.swift### TicketComposer#### LCTicketComposer.swift#### LCTicketComposer+Model.swift
 
-A tool that manage the current experience stage.
-
-- connecting
-- browsing
-- checkingOut
-- browsingGames
-- playing
-
- 
 
 ## <font color='#1E72AD'>Installation:</font>
 
