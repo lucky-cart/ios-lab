@@ -18,7 +18,7 @@ extension LCRequestName {
     ///
     /// Scheme:
     /// ```
-    /// https://promomatching.luckycart.com/{{auth_key}}/{{customer_id}}/banner/mobile/homepage/banner
+    /// https://promomatching.luckycart.com/{{auth_key}}/{{customer_id}}/banner/mobile/{bannerSpaceIdentifier}/{banner_id}
     /// ```
     ///
     /// Results:
@@ -57,7 +57,7 @@ extension LCRequestParameters {
     /// ```
     /// path extension:
     /// ```
-    /// \(authKey)/\(customerId)/\(banner)/mobile/homepage/banner
+    /// {authKey}{customerId}/banner/mobile/{bannerspace_id}/{banner_id}
     /// ```
     /// url parameters:
     /// ```
@@ -66,13 +66,14 @@ extension LCRequestParameters {
 
     struct Banner: LCRequestParametersBase {
         var customerId: String
+        var bannerSpace: LCBannerSpaceIdentifier
         var banner: LCBannerIdentifier
-    
+
         func pathExtension(for request: LCRequestBase) throws -> String {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing
             }
-            return "\(authKey)/\(customerId)/banner/mobile/homepage/\(banner.rawValue)"
+            return "\(authKey)/\(customerId)/banner/mobile/\(bannerSpace.rawValue)/\(banner.rawValue)"
         }
 
         func parametersString(for request: LCRequestBase) throws -> String { "" }
