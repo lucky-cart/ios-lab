@@ -46,8 +46,8 @@ internal extension LuckyCart {
     ///
     /// Will return cached version if available
     
-    func getGames(completion: @escaping (Result<[LCGame], Error>)->Void) {
-        if let cachedGames = games {
+    func getGames(reload: Bool = false, completion: @escaping (Result<[LCGame], Error>)->Void) {
+        if let cachedGames = games, reload == false {
             print("[luckycart.cache] Return cached games")
             completion(Result.success(cachedGames))
             return
@@ -57,7 +57,6 @@ internal extension LuckyCart {
             let request: LCRequest<Model.Games> = try network.buildRequest(name: .getGames,
                                                                            parameters: LCRequestParameters.Games(customerId: customer.id, cartId: cart.id),
                                                                            body: nil)
-            
             try network.run(request) { response in
                 switch response {
                 case .success(let result):

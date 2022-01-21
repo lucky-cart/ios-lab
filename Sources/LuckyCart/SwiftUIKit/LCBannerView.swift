@@ -17,6 +17,7 @@ public struct LCBannerView: View {
     }
     
     public var body: some View {
-        LCLinkView(link: banner.link, placeHolder: Image("luckyCartBanner"))
+        LCLinkView(link: banner.link)
+        .frame(minWidth:32, maxWidth: 2000,minHeight:32, maxHeight: 360, alignment: .center)
     }
 }

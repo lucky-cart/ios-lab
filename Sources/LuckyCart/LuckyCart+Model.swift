@@ -83,9 +83,12 @@ public struct LCLink: Codable {
     public let url: URL
     public let imageUrl: URL?
     
-    enum CodingKeys: String, CodingKey  {
-        case url
-        case imageUrl
+    public var isEnabled: Bool = true {
+        didSet {
+            if isEnabled == false {
+                print("false")
+            }
+        }
     }
 }
 
@@ -114,9 +117,13 @@ public class LCGame: Codable, LCEntity, LCIdentifiable {
         self.gameResult = entity.gameResult
         
         self.desktopLink = LCLink(url: entity.desktopGameUrl,
-                                  imageUrl: entity.desktopGameImage)
+                                  imageUrl: entity.desktopGameImage,
+                                  isEnabled: entity.isGamePlayable)
+        
+        
         self.mobileLink = LCLink(url: entity.mobileGameUrl,
-                                 imageUrl: entity.mobileGameImage)
+                                 imageUrl: entity.mobileGameImage,
+                                 isEnabled: entity.isGamePlayable)
     }
 }
 
@@ -239,7 +246,7 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
     public var action: LCBannerAction
     
     init(_ entity: Model.Banner) {
-        self.link = LCLink(url: entity.redirect_url, imageUrl: entity.image_url)
+        self.link = LCLink(url: entity.redirect_url, imageUrl: entity.image_url, isEnabled: true)
         self.name = entity.name
         self.campaign = entity.campaign
         self.space = entity.space

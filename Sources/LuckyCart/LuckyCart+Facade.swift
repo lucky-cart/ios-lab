@@ -56,6 +56,13 @@ extension LuckyCart {
         }
     }
     
+    /// Reload the games without completion
+    ///
+    /// Observe the `LuckyCart.games` property to do interface refresh if needed
+    
+    public func reloadGames() {
+        getGames(reload: true) { _ in }
+    }
     /// Load all banner spaces
     ///
     /// Banner spaces are loaded as soon as the LuckyCart instance is created.

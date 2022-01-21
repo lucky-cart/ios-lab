@@ -63,10 +63,10 @@ public class LuckyCart: ObservableObject {
     @Published var lastCheckOutResponse: LCPostCartResponse?
     
     /// Banner Spaces Cache
-    @Published var bannerSpaces: LCBannerSpaces?
+    @Published public internal(set) var bannerSpaces: LCBannerSpaces?
     
     /// Games Cache
-    @Published var games: [LCGame]?
+    @Published public internal(set) var games: [LCGame]?
 
     public var ticketComposer: LCTicketComposer?        // Generates the ticket that will be sent to LuckyCart
     // Fill the structures with your information here
@@ -98,12 +98,19 @@ public class LuckyCart: ObservableObject {
     /// Set current user
     
     public func setUser(_ user: LCCustomer?) {
+        clearCache()
         customer = user ?? LCCustomer.guest
+        newCart()
     }
     
     /// Switch to guest user
     
     public func setGuestUser() {
-        customer = LCCustomer.guest
+        setUser(nil)
+    }
+    
+    func clearCache() {
+        self.bannerSpaces = nil
+        self.games = nil
     }
 }

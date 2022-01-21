@@ -73,14 +73,14 @@ public extension LCTicketComposer {
         public var firstName: String
         public var lastName: String
         
-        public init(customerClientId: String,
-                    email: String,
-                    firstName: String,
-                    lastName: String) {
-            self.customerClientId = customerClientId
-            self.email = email
-            self.firstName = firstName
-            self.lastName = lastName
+        public init(customerClientId: String?,
+                    email: String?,
+                    firstName: String?,
+                    lastName: String?) {
+            self.customerClientId = customerClientId ?? LCCustomer.guest.id
+            self.email = email ?? ""
+            self.firstName = firstName ?? ""
+            self.lastName = lastName ?? ""
         }
         
         public func makeDictionary() throws -> [String : Any] {
