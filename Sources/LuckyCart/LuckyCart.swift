@@ -8,6 +8,7 @@
 //
 
 import Combine
+import Foundation
 
 /// LuckyCart API
 ///
@@ -34,7 +35,6 @@ public class LuckyCart: ObservableObject {
         static let emptyResponse = Err(rawValue: "emptyResponse")
         static let authKeyMissing = Err(rawValue: "authKeyMissing")
         static let authorizationMissing = Err(rawValue: "authorizationMissing")
-        
         static let ticketComposerKeyAlreadyPresent = Err(rawValue: "ticketComposer.keyAlreadyPresent")
     }
 
@@ -89,13 +89,21 @@ public class LuckyCart: ObservableObject {
         LuckyCart.shared = self
     }
     
+    /// Opens a new cart
+    
+    public func newCart(with id: String = UUID().uuidString) {
+        self.cart = LCCart(id: id)
+    }
+    
     /// Set current user
     
-    func setUser(_ user: LCCustomer?) {
+    public func setUser(_ user: LCCustomer?) {
         customer = user ?? LCCustomer.guest
     }
     
-    func setGuestUser() {
+    /// Switch to guest user
+    
+    public func setGuestUser() {
         customer = LCCustomer.guest
     }
 }

@@ -3,9 +3,21 @@
 
 <b>Lucky Cart Public API</b>
 
-## <font color='#707080'>Public API</font>
+## <font color='#707080'>LuckyCart API</font>
+    
+### <font color='#007F00'>newCart(with id: String)</font>
 
-The public API Calls ( Defined in `LuckyCart+Facade`
+Opens a new cart
+        
+### <font color='#007F00'>setUser(_ user: LCCustomer?)</font>
+    
+Set current user
+    
+### <font color='#007F00'>setGuestUser()</font>
+
+Switch to guest user
+    
+## Public Network API Calls ( Defined in `LuckyCart+Facade` )
 
 ### <font color='#007F00'>Check Out</font>
 
