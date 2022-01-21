@@ -122,8 +122,7 @@ public struct LCBannerSpaceIdentifier: LCIdentifier {
     public static let homePage = LCBannerSpaceIdentifier(rawValue: "homepage")
     
     /// The identifier to use for a categories browser
-    public static let categories = LCBannerSpaceIdentifier(rawValue: "category.browser")
-    
+    public static let categories = LCBannerSpaceIdentifier(rawValue: "categories")
     
     /// The identifier to use for a categories browser
     public static let categoryDetail = LCBannerSpaceIdentifier(rawValue: "category.detail")

@@ -126,9 +126,20 @@ final class LuckyCartTests: XCTestCase {
         }
     }
     
-    func testGetBanner() throws {
+    func testGetHomePageBanner() throws {
         facadeCall(.getBanner) { name, expectation in
-            LuckyCart.test.getBanner(bannerIdentifier: "banner") { result in
+            LuckyCart.test.getBanner(bannerSpaceIdentifier: .homePage, bannerIdentifier: "banner") { result in
+                self.facadeTestCompletion(name, responseType: LCBanner.self, result: result, expectation: expectation) { result in
+                    print("----- Received Banner")
+                    print(result)
+                }
+            }
+        }
+    }
+    
+    func testGetCategoriesBanner() throws {
+        facadeCall(.getBanner) { name, expectation in
+            LuckyCart.test.getBanner(bannerSpaceIdentifier: .categories, bannerIdentifier: "banner_100") { result in
                 self.facadeTestCompletion(name, responseType: LCBanner.self, result: result, expectation: expectation) { result in
                     print("----- Received Banner")
                     print(result)

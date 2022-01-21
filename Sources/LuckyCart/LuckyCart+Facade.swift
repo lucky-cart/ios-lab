@@ -79,9 +79,10 @@ extension LuckyCart {
     /// Banner spaces are loaded as soon as the LuckyCart instance is created.
     
     public func banner(with identifier: LCBannerIdentifier,
+                       bannerSpaceIdentifier: LCBannerSpaceIdentifier,
                        failure: @escaping (Error)->Void,
                        success: @escaping (LCBanner)->Void) {
-        getBanner(bannerIdentifier: identifier) { result in
+        getBanner(bannerSpaceIdentifier: bannerSpaceIdentifier, bannerIdentifier: identifier) { result in
             switch result {
             case .failure(let error):
                 print("[luckycart.load.banner] GetBanner `\(identifier.rawValue)` Error:\r\(error.localizedDescription)")
