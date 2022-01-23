@@ -19,6 +19,8 @@ struct LCServer: RawRepresentable {
         self.rawValue = rawValue
     }
     
+    static let any = LCServer(rawValue: "")
+
     static let api = LCServer(rawValue: "https://api.luckycart.com/")
     
     static let promo = LCServer(rawValue: "https://promomatching.luckycart.com/")
@@ -42,12 +44,12 @@ class LCConnection {
     var server: LCServer
     var authorization: LCAuthorization?
     
-    init(server: LCServer, authorization: LCAuthorization) {
+    init(server: LCServer, authorization: LCAuthorization?) {
         self.authorization = authorization
         self.server = server
     }
     
-    func authorize(_ authorization: LCAuthorization) {
+    func authorize(_ authorization: LCAuthorization?) {
         self.authorization = authorization
     }
     
@@ -57,5 +59,12 @@ class LCConnection {
     
     static func promo(authorization: LCAuthorization) -> LCConnection {
         return LCConnection(server: .promo, authorization: authorization)
-    }    
+    }
+    
+    /// Creates a new unauthorized connection to any url.
+    ///
+    /// This type of connection is used to download images or other resources
+    static func any(authorization: LCAuthorization? = nil) -> LCConnection {
+        return LCConnection(server: .any, authorization: nil)
+    }
 }

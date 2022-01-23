@@ -7,24 +7,24 @@
 //
 
 import Foundation
-
+import UIKit
 
 /// First version requests
 ///
 ///
 internal extension LuckyCart {
-
+    
     /// postCart
     
     func postCart(ticketComposer: LCTicketComposer, completion: @escaping (Result<LCPostCartResponse, Error>)->Void) {
         
         let body = LCRequestParameters.PostCart(cart: cart,
-                                                  customer: customer,
-                                                  ticketComposer: ticketComposer)
+                                                customer: customer,
+                                                ticketComposer: ticketComposer)
         do {
             let request: LCRequest<Model.PostCartResponse> = try network.buildRequest(name: .postCart,
-                                                                                          parameters: nil,
-                                                                                          body: body)
+                                                                                      parameters: nil,
+                                                                                      body: body)
             try network.run(request) { response in
                 switch response {
                 case .success(let result):
@@ -80,7 +80,7 @@ internal extension LuckyCart {
     /// getBannerSpaces
     ///
     /// Will return cached version if available
-
+    
     func getBannerSpaces(completion: @escaping (Result<LCBannerSpaces, Error>)->Void) {
         
         if let cachedBannerSpaces = bannerSpaces {
@@ -118,7 +118,7 @@ internal extension LuckyCart {
     /// getBanner
     ///
     /// Will return cached version if available
-
+    
     func getBanner(bannerSpaceIdentifier: LCBannerSpaceIdentifier,
                    bannerIdentifier: LCBannerIdentifier,
                    completion: @escaping (Result<LCBanner, Error>)->Void) {
@@ -143,7 +143,7 @@ internal extension LuckyCart {
                     // Identifier is not returned by server, so we set the identifier here
                     banner.identifier = bannerIdentifier
                     self.lastError = nil
-
+                    
                     // Cache the result
                     self.bannerSpaces?.banners[bannerIdentifier] = banner
                     completion(.success(banner))
@@ -160,28 +160,61 @@ internal extension LuckyCart {
         
     }
     
+    
+    /// getImage
+    ///
+    /// Will return cached version if available
+    
+    func getImage(url: URL, completion: @escaping (Result<UIImage, Error>)->Void) {
+        
+        if let cachedImage = images[url] {
+            print("[luckyCart.getImage] - Returns cached image")
+            completion(.success(cachedImage))
+            return
+        }
+        do {
+            try network.downloadData(url: url) { response in
+                switch response {
+                case .success(let data):
+                    guard let image = UIImage(data: data) else {
+                        completion(.failure(LuckyCart.Err.cantCreateImageWithDownloadedData))
+                        return
+                    }
+                    self.lastError = nil
+                    // Cache the result
+                    self.images[url] = image
+                    completion(.success(image))
+                case .failure(let error):
+                    self.lastError = error
+                    completion(.failure(error))
+                }
+            }
+        }
+        catch {
+            completion(.failure(error))
+        }
+    }
+    
 }
 
-/// Load all banners sequentially
-///
-/// This request is never called from facade - it can be used in tests, to present lists of banners
+// MARK: - Extra Requests
 
 extension LuckyCart {
-    
+
     /// Load all banners
     ///
     /// All banners definitions for a given space are loaded as soon as a banner space view is displayed
     
     private func loadAllBanners(for spaceIdentifier: LCBannerSpaceIdentifier,
-                               failure: @escaping (Error)->Void,
-                               success: @escaping (LCBanner)->Void) {
+                                failure: @escaping (Error)->Void,
+                                success: @escaping (LCBanner)->Void) {
         loadBannerSpaces(failure: failure) { bannerSpaces in
             bannerSpaces[spaceIdentifier]?.bannerIds.forEach { identifier in
                 self.getBanner(bannerSpaceIdentifier: spaceIdentifier, bannerIdentifier: identifier) { result in
                     switch result {
                     case .failure(let error):
-                            self.lastError = error
-                            print("[luckycart.load.banners] GetBanner(`\(identifier)`) Error:\r\(error.localizedDescription)")
+                        self.lastError = error
+                        print("[luckycart.load.banners] GetBanner(`\(identifier)`) Error:\r\(error.localizedDescription)")
                         failure(error)
                     case .success(let banner):
                         self.lastError = nil
@@ -192,5 +225,5 @@ extension LuckyCart {
             }
         }
     }
-
+    
 }

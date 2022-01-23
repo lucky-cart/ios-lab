@@ -89,14 +89,16 @@ extension LuckyCart {
                        bannerSpaceIdentifier: LCBannerSpaceIdentifier,
                        failure: @escaping (Error)->Void,
                        success: @escaping (LCBanner)->Void) {
-        getBanner(bannerSpaceIdentifier: bannerSpaceIdentifier, bannerIdentifier: identifier) { result in
-            switch result {
-            case .failure(let error):
-                print("[luckycart.load.banner] GetBanner `\(identifier.rawValue)` Error:\r\(error.localizedDescription)")
-                failure(error)
-            case .success(let banner):
-                print("[luckycart.load.banner] GetBanner `\(identifier.rawValue)` Succeed :\r\(banner)")
-                success(banner)
+        getBannerSpaces { [weak self] _ in
+            self?.getBanner(bannerSpaceIdentifier: bannerSpaceIdentifier, bannerIdentifier: identifier) { result in
+                switch result {
+                case .failure(let error):
+                    print("[luckycart.load.banner] GetBanner `\(identifier.rawValue)` Error:\r\(error.localizedDescription)")
+                    failure(error)
+                case .success(let banner):
+                    print("[luckycart.load.banner] GetBanner `\(identifier.rawValue)` Succeed :\r\(banner)")
+                    success(banner)
+                }
             }
         }
     }

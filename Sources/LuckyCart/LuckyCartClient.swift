@@ -35,6 +35,6 @@ public extension LuckyCartClient {
                          order: orderForLuckyCart,
                          metaData: metaDataForLuckyCart)
     }
-    
+
 }
 

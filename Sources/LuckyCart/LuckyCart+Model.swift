@@ -82,14 +82,18 @@ public struct LCCart: Codable, LCEntity, Identifiable {
 public struct LCLink: Codable {
     public let url: URL
     public let imageUrl: URL?
-    
-    public var isEnabled: Bool = true {
-        didSet {
-            if isEnabled == false {
-                print("false")
-            }
-        }
+
+    /// image
+    ///
+    /// Published property. Interface can listen to update when image is available
+    public var image: UIImage? = nil
+
+    enum CodingKeys: String, CodingKey {
+        case url
+        case imageUrl
     }
+    
+    public var isEnabled: Bool = true
 }
 
 // MARK: - Game
@@ -129,7 +133,7 @@ public class LCGame: Codable, LCEntity, LCIdentifiable {
 
 /// Game Results
 
-public struct LCGameResult: RawRepresentable, Codable {
+public struct LCGameResult: RawRepresentable, Codable, Equatable {
     
     public var rawValue: String
     
@@ -138,6 +142,8 @@ public struct LCGameResult: RawRepresentable, Codable {
     }
     
     public static let notPlayed = LCGameResult(rawValue: "not-played")
+    public static let won = LCGameResult(rawValue: "won")
+    public static let lost = LCGameResult(rawValue: "lost")
 }
 
 // MARK: - LCBannerSpaces

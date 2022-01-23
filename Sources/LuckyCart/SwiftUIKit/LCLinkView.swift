@@ -10,7 +10,9 @@ import SwiftUI
 //import LuckyCart
 
 public struct LCLinkView: View {
-    var link: LCLink
+    
+    @State var link: LCLink
+    
     @State var isOpen: Bool = false
     
     /// The handler that gets called when the user closes the game view.
@@ -22,7 +24,7 @@ public struct LCLinkView: View {
     
     
     public init(link: LCLink, didClose: ((Double)->Void)? = nil, placeHolder: Image? = nil) {
-        self.link = link
+        self._link = State(initialValue: link)
         self.didClose = didClose
         self.placeHolder = placeHolder
     }
@@ -30,23 +32,17 @@ public struct LCLinkView: View {
     public var body: some View {
         ZStack(alignment: .center) {
             
-            AsyncImage(url: link.imageUrl) { phase in
-                if let image = phase.image {
-                    image.resizable()
-                } else if let _ = phase.error {
-                    Image("luckyCartBanner").resizable()
-                } else {
-                    Image("luckyCartBanner").resizable().opacity(0.0)
+                if let image = link.image  {
+                    Image(uiImage: image).resizable()
                 }
-            }.grayscale(link.isEnabled ? 0.0 : 0.8)
-            
-            if link.isEnabled {
+
+                if link.isEnabled {
                 Button("") {
                     isOpen = true
                 }.scaledToFill()
                     .sheet(isPresented: $isOpen, content: {
                         let openDate = Date()
-
+                        
                         VStack {
                             LCWebView(request: URLRequest(url: link.url))
                             Button("Close") {
@@ -58,9 +54,27 @@ public struct LCLinkView: View {
                     })
             }
         }
+        .grayscale(link.isEnabled ? 0.0 : 0.8)
+        .opacity(computeOpacity())
         .scaledToFit()
         .cornerRadius(10)
-        .opacity(link.isEnabled ? 1.0 : 0.4)
+        .task {
+            guard link.image == nil, let imageURL = link.imageUrl else { return }
+            LuckyCart.shared.getImage(url: imageURL) { response in
+                switch response {
+                case .failure(let error):
+                    print("[luckycart.linkView] Error \(error)")
+                case .success(let image):
+                    link.image = image
+                }
+            }
+        }
+    }
+    
+    func computeOpacity() -> Double {
+        if link.image == nil { return 0 }
+        if link.isEnabled { return 1.0 }
+        return 0.5
     }
 }
 

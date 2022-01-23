@@ -78,4 +78,29 @@ internal class LCNetwork {
         }
         task.resume()
     }
+    
+    func downloadData(url: URL, completion: @escaping (Result<Data, Error>)->Void) throws {
+        let urlRequest = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad)
+        print("[luckycart.network] - Download Data \(url.absoluteString)")
+        
+        let task = URLSession(configuration: URLSessionConfiguration.default).dataTask(with: urlRequest) { data, response, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+                return
+            }
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    completion(.failure(LuckyCart.Err.emptyResponse))
+                }
+                return
+            }
+            
+            DispatchQueue.main.async {
+                completion(.success(data))
+            }
+        }
+        task.resume()
+    }
 }

@@ -9,6 +9,7 @@
 
 import Combine
 import Foundation
+import UIKit
 
 /// LuckyCart API
 ///
@@ -36,6 +37,8 @@ public class LuckyCart: ObservableObject {
         static let authKeyMissing = Err(rawValue: "authKeyMissing")
         static let authorizationMissing = Err(rawValue: "authorizationMissing")
         static let ticketComposerKeyAlreadyPresent = Err(rawValue: "ticketComposer.keyAlreadyPresent")
+        
+        static let cantCreateImageWithDownloadedData = Err(rawValue: "cantCreateImageWithDownloadedData")
     }
 
     /// network
@@ -66,9 +69,13 @@ public class LuckyCart: ObservableObject {
     @Published public internal(set) var bannerSpaces: LCBannerSpaces?
     
     /// Games Cache
+    ///
+    /// Value is published to trigger updates when games are reloaded ( to update game results )
     @Published public internal(set) var games: [LCGame]?
 
-    public var ticketComposer: LCTicketComposer?        // Generates the ticket that will be sent to LuckyCart
+    /// Images Cache
+    public var images: [URL: UIImage] = [:]
+    
     // Fill the structures with your information here
     
     /// Initialize the framework
@@ -77,6 +84,7 @@ public class LuckyCart: ObservableObject {
     /// - parameter customer: If customer is nil, then a guest customer is used ( id = 'unknown' )
     /// - parameter cart: Pass a cart id, if cart id is nil then a new cart id is created with standard uuid
     
+    @discardableResult
     public init(authorization: LCAuthorization,
                 customer: LCCustomer? = nil,
                 cart: LCCart? = nil) {
@@ -110,8 +118,19 @@ public class LuckyCart: ObservableObject {
         setUser(nil)
     }
     
+    /// clearCache
+    ///
+    /// Clears all the bannerSpaces and games
+    
     func clearCache() {
         self.bannerSpaces = nil
         self.games = nil
+    }
+    /// clearImagesCache
+    ///
+    /// Clears all the banner images
+    
+    func clearImagesCache() {
+        self.images = [:]
     }
 }
