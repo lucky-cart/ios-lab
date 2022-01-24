@@ -27,8 +27,7 @@ public extension LuckyCart {
     
     static var test: LuckyCart {
         LuckyCart.shared ?? LuckyCart.init(authorization: LuckyCart.testAuthorization,
-                                customer: LuckyCart.testCustomer,
-                                cart: LuckyCart.testCart)
+                                customer: LuckyCart.testCustomer)
     }
     
     static let testGame = LCGame(Model.testGame)

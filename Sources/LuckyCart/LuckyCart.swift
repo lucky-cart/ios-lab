@@ -10,12 +10,27 @@
 import Combine
 import Foundation
 
+
+/// Make your app/manager/controller object conform to this protocol to use LuckyCart
+
+public protocol LuckyCartClient {
+    
+    /// Starts the LuckyCart framework
+    func initLuckyCart()
+    
+    /// Generates the information needed by LuckyCart when checking out
+    func luckyCartTicket(cartId: String) -> LCTicketComposer
+}
+
 /// LuckyCart API
 ///
 /// The framework facade exposing public Lucky Cart APIs
 
 public class LuckyCart: ObservableObject {
+    
     public static var shared: LuckyCart!
+    
+    public var cacheEnabled: Bool = false
     
     /// Err
     ///
@@ -85,30 +100,20 @@ public class LuckyCart: ObservableObject {
     
     @discardableResult
     public init(authorization: LCAuthorization,
-                customer: LCCustomer? = nil,
-                cart: LCCart? = nil) {
+                customer: LCCustomer? = nil) {
         if LuckyCart.shared != nil {
             fatalError("LuckyCart already initialized")
         }
         self.customer = customer ?? LCCustomer.guest
-        self.cart = cart ?? LCCart()
         self.network = LCNetwork(authorization: authorization)
         LuckyCart.shared = self
     }
-    
-    /// Opens a new cart
-    
-    public func newCart(with id: String = UUID().uuidString) {
-        clearCache()
-        self.cart = LCCart(id: id)
-    }
-    
+        
     /// Set current user
     
     public func setUser(_ user: LCCustomer?) {
         clearCache()
         customer = user ?? LCCustomer.guest
-        newCart()
     }
     
     /// Switch to guest user

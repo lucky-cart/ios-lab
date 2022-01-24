@@ -17,7 +17,7 @@ public extension LCTicketComposer {
                                        order: LCTicketComposer.testOrder,
                                        metaData: LCTicketComposer.testMetaData)
     
-    static let testCustomer = Customer(customerClientId: "41410788",
+    static let testCustomer = Customer(id: "customer1234",
                                        email: "vincentoliveira@luckycart.com",
                                        firstName: "VINCENT",
                                        lastName: "OLIVEIRA")
@@ -28,7 +28,7 @@ public extension LCTicketComposer {
     
     static let testProduct = ProductOrder(id: "14917412", quantity: "10.00", ttc: "12.00", ht: "10.00")
    
-    static let testCart = Cart(cartClientId: "client_cart_5c1e51fda", currency: "EUR", ttc: "12.00", ht: "10.00", products: [ LCTicketComposer.testProduct])
+    static let testCart = Cart(id: "cart_1234", currency: "EUR", ttc: "12.00", ht: "10.00", products: [ LCTicketComposer.testProduct])
     
     static let testMetaData = MetaData(dictionary: ["loyaltyCart" : ""])
     

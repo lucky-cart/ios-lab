@@ -8,11 +8,21 @@
 
 import Foundation
 
+/// LCTicketComposerEntity
+///
+/// A sub model of the ticket composer.
+/// All objects must implement a `makeDictionary` to export in JSON
+
 protocol LCTicketComposerEntity {
     func makeDictionary() throws -> [String: Any]
 }
 
 extension LCTicketComposerEntity {
+    
+    /// append
+    ///
+    /// Append the dictionary to a passed dictionary.
+    
     func append(to dictionary: inout [String: Any]) throws {
         for (key,value) in try makeDictionary() {
             if dictionary[key] != nil {
@@ -65,19 +75,19 @@ public extension LCTicketComposer {
     /// - lastName: "OLIVEIRA"
     
     struct Customer: LCTicketComposerEntity {
-        /// The customer id in client system
-        public var customerClientId: String
+        /// The customer id
+        public var id: String
         
         /// Customer information
         public var email: String
         public var firstName: String
         public var lastName: String
         
-        public init(customerClientId: String?,
+        public init(id: String,
                     email: String?,
                     firstName: String?,
                     lastName: String?) {
-            self.customerClientId = customerClientId ?? LCCustomer.guest.id
+            self.id = id
             self.email = email ?? ""
             self.firstName = firstName ?? ""
             self.lastName = lastName ?? ""
@@ -85,7 +95,7 @@ public extension LCTicketComposer {
         
         public func makeDictionary() throws -> [String : Any] {
             [
-                Keys.customerClientId: customerClientId,
+                Keys.customerId: id,
                 Keys.email: email,
                 Keys.firstName: firstName,
                 Keys.lastName : lastName
@@ -126,6 +136,10 @@ public extension LCTicketComposer {
         }
     }
     
+    /// LCShippingMethod
+    ///
+    /// Describes a shipping method
+    
     struct LCShippingMethod: RawRepresentable, Equatable {
         public var rawValue: String
         
@@ -150,9 +164,7 @@ public extension LCTicketComposer {
     /// - products: [ <ProductOrder> ]
     
     struct Cart: LCTicketComposerEntity {
-        
-        /// The cart Id in client system
-        public var cartClientId: String
+        public var id: String
         
         /// The currency set for this cart ( "EUR" )
         public var currency: String
@@ -166,12 +178,12 @@ public extension LCTicketComposer {
         /// The product orders ( Product, Quantity )
         public var products: [ProductOrder]
         
-        public init(cartClientId: String,
+        public init(id: String,
                     currency: String,
                     ttc: String,
                     ht: String,
                     products: [ProductOrder]) {
-            self.cartClientId = cartClientId
+            self.id = id
             self.currency = currency
             self.ttc = ttc
             self.ht = ht
@@ -180,7 +192,7 @@ public extension LCTicketComposer {
         
         public func makeDictionary() throws -> [String : Any] {
             [
-                Keys.cartClientId: cartClientId,
+                Keys.cartId: id,
                 Keys.currency: currency,
                 Keys.totalAti: ttc,
                 Keys.ht: ht,
@@ -214,9 +226,11 @@ public extension LCTicketComposer {
             }
         }
         
+        /// set
+        ///
+        /// Sets a value for the given key
         mutating public func set(key: String, value: Any) {
             dictionary[key] = value
         }
-        
     }
 }

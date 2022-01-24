@@ -10,10 +10,18 @@ import Foundation
 
 public struct LCTicketComposer: LCTicketComposerEntity {
     public var customer: Customer
+    public var cart: Cart
     public var order: Order
     public var metaData: MetaData
-    public var cart: Cart
-
+    
+    public init(customer: Customer, cart: Cart, order: Order, metaData: MetaData) {
+        self.customer = customer
+        self.order = order
+        self.cart = cart
+        self.metaData = metaData
+    }
+    
+    
     public func makeDictionary() throws -> [String: Any] {
         var out = [String: Any]()
         try customer.append(to: &out)
@@ -23,12 +31,9 @@ public struct LCTicketComposer: LCTicketComposerEntity {
         return out
     }
     
-    public init(customer: Customer, cart: Cart, order: Order, metaData: MetaData) {
-        self.customer = customer
-        self.order = order
-        self.cart = cart
-        self.metaData = metaData
-    }
+    /// priceString
+    ///
+    /// Returns a price as string
     
     public static func priceString(_ price: Double) -> String{
         let f = NumberFormatter()

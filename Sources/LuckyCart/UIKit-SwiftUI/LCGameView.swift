@@ -10,21 +10,31 @@ import SwiftUI
 //import LuckyCart
 
 public struct LCGameView: View {
-    
+    @State var cartId: String?
     @Binding var game: LCGame
-        
+    
     public init(game: Binding<LCGame>) {
         self._game = game
         print("[luckycart.gameview] Init game view ( \(game.id) - Playable : \(game.isGamePlayable) - Result : \(game.gameResult)")
     }
     
     public var body: some View {
-        LCLinkView(link: $game.mobileLink,
-                   didClose: { timeInSecondsSpentInGame in
-            print("[luckycart.gameview] User has spent \(timeInSecondsSpentInGame) seconds in game.")
-            LuckyCart.shared.reloadGames()
-        },
-        placeHolder: Image("luckyCartGame"))
+#if os(macOS)
+        let link = $game.desktopLink
+#else
+        let link = $game.mobileLink
+#endif
+        
+        if let cartId = cartId {
+            LCLinkView(link: link,
+                       didClose: { timeInSecondsSpentInGame in
+                print("[luckycart.gameview] User has spent \(timeInSecondsSpentInGame) seconds in game.")
+                LuckyCart.shared.reloadGames(cartId: cartId)
+            },
+                       placeHolder: Image("luckyCartGame"))
+        } else {
+            Text("Cart id not set")
+        }
     }
 }
 
