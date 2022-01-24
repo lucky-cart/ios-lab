@@ -87,7 +87,7 @@ public struct LCLink: Codable {
     /// image
     ///
     /// Published property. Interface can listen to update when image is available
-    public var image: UIImage?
+    public var image: LCImage?
     
     enum CodingKeys: String, CodingKey {
         case url

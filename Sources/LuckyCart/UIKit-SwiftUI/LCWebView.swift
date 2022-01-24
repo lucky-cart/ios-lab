@@ -55,13 +55,15 @@ struct LCWebView : PlatformViewReprentable {
 
 import LuckyCart
 
+// MARK: - TV OS Version
+
 public struct LCWebView: View {
     
     @EnvironmentObject var luckyCart: LuckyCart
     
     var request: URLRequest
     
-    var body: some View {
+    public var body: some View {
         VStack {
             Text("HTML Not supported - Use TVML")
             if let url = request.url?.absoluteString {

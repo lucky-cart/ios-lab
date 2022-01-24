@@ -30,7 +30,7 @@ public struct LCLinkView: View {
         self.placeHolder = placeHolder
         self.displayedImage = link.wrappedValue.image == nil
         ? placeHolder
-        : Image(uiImage: link.wrappedValue.image!)
+        : Image(lcImage: link.wrappedValue.image!)
     }
     
     public var body: some View {
@@ -72,7 +72,7 @@ public struct LCLinkView: View {
                     print("[luckycart.linkView] Error \(error)")
                 case .success(let image):
                     link.image = image
-                    displayedImage = Image(uiImage: image)
+                    displayedImage = Image(lcImage: image)
                 }
             }
         }

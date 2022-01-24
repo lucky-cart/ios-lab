@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 /// First version requests
 ///
@@ -165,7 +164,7 @@ internal extension LuckyCart {
     ///
     /// Will return cached version if available
     
-    func getImage(url: URL, completion: @escaping (Result<UIImage, Error>)->Void) {
+    func getImage(url: URL, completion: @escaping (Result<LCImage, Error>)->Void) {
         
         if let cachedImage = images[url] {
             print("[luckyCart.getImage] - Returns cached image")
@@ -176,7 +175,7 @@ internal extension LuckyCart {
             try network.downloadData(url: url) { response in
                 switch response {
                 case .success(let data):
-                    guard let image = UIImage(data: data) else {
+                    guard let image = LCImage(data: data) else {
                         completion(.failure(LuckyCart.Err.cantCreateImageWithDownloadedData))
                         return
                     }

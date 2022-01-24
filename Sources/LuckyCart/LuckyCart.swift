@@ -1,15 +1,14 @@
 
 //
-// LuckyCart.swift
+//  LuckyCart.swift
 //
-// LuckyCart Framework - (c)2022 Lucky Cart
+//  LuckyCart Framework - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 12/01/2022.
 //
 
 import Combine
 import Foundation
-import UIKit
 
 /// LuckyCart API
 ///
@@ -74,7 +73,7 @@ public class LuckyCart: ObservableObject {
     @Published public internal(set) var games: [LCGame]?
 
     /// Images Cache
-    public var images: [URL: UIImage] = [:]
+    public var images: [URL: LCImage] = [:]
     
     // Fill the structures with your information here
     

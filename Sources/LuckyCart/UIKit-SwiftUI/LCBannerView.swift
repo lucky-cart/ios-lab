@@ -18,6 +18,6 @@ public struct LCBannerView: View {
     
     public var body: some View {
         LCLinkView(link: .constant(banner.link))
-        .frame(minWidth:32, maxWidth: 2000,minHeight:32, maxHeight: 360, alignment: .center)
+        .frame(minWidth:32, maxWidth: 2000, minHeight:32, maxHeight: 360, alignment: .center)
     }
 }

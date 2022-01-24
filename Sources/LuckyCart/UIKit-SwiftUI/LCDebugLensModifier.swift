@@ -28,19 +28,26 @@ public struct LCDebugLensModifier: ViewModifier {
                         VStack(spacing: 16) {
                             Label("LuckyCart Error", systemImage: "exclamationmark.triangle").font(.headline)
                             Text(message).font(.caption)
+#if os(tvOS)
+                            Button("Close") {
+                                self.message = nil
+                            }
+#endif
                         }
-                        .onTapGesture {
-                            self.message = nil
-                        }
-                        .padding(16)
                     }
-                    .foregroundColor(.white)
-                    .background(color.opacity(0.9))
-                    .cornerRadius(8)
-                    .shadow(radius: 12)
+#if !os(tvOS)
+                    .onTapGesture {
+                        self.message = nil
+                    }
+#endif
                     .padding(16)
-                    Spacer()
                 }
+                .foregroundColor(.white)
+                .background(color.opacity(0.9))
+                .cornerRadius(8)
+                .shadow(radius: 12)
+                .padding(16)
+                Spacer()
             }
 #endif
         }

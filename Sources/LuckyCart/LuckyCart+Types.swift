@@ -9,7 +9,6 @@
 import Foundation
 
 /// LuckyCart object identifiers
-///
 
 public protocol LCIdentifier : RawRepresentable, Codable, Hashable, CustomStringConvertible, ExpressibleByStringLiteral {
     

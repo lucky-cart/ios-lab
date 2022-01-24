@@ -14,7 +14,7 @@ public struct LCTicketComposer: LCTicketComposerEntity {
     public var metaData: MetaData
     public var cart: Cart
 
-    func makeDictionary() throws -> [String: Any] {
+    public func makeDictionary() throws -> [String: Any] {
         var out = [String: Any]()
         try customer.append(to: &out)
         try cart.append(to: &out)
