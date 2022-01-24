@@ -16,13 +16,13 @@ public struct LCGameResultViewModifier: ViewModifier {
     }
  
     public func body(content: Content) -> some View {
-        ZStack {
+        ZStack(alignment: .topTrailing) {
             content
             switch gameResult {
             case .won:
-                Image(systemName: "checkmark.seal.fill").foregroundColor(.red)
+                Image(systemName: "checkmark.seal.fill").foregroundColor(.green).imageScale(.medium)
             case .lost:
-                Image(systemName: "xmark.seal.fill").foregroundColor(.red)
+                Image(systemName: "xmark.seal.fill").foregroundColor(.red).imageScale(.medium)
             default:
                 ZStack {}
             }

@@ -82,18 +82,19 @@ public struct LCCart: Codable, LCEntity, Identifiable {
 public struct LCLink: Codable {
     public let url: URL
     public let imageUrl: URL?
+    public var isEnabled: Bool = true
 
     /// image
     ///
     /// Published property. Interface can listen to update when image is available
-    public var image: UIImage? = nil
-
+    public var image: UIImage?
+    
     enum CodingKeys: String, CodingKey {
         case url
         case imageUrl
+        case isEnabled
     }
     
-    public var isEnabled: Bool = true
 }
 
 // MARK: - Game

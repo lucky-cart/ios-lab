@@ -11,7 +11,7 @@ import SwiftUI
 
 public struct LCLinkView: View {
     
-    @State var link: LCLink
+    @Binding var link: LCLink
     
     @State var isOpen: Bool = false
     
@@ -20,20 +20,24 @@ public struct LCLinkView: View {
     /// The time spent by the user on the view is returned in the callback closure
     var didClose: ((Double)->Void)?
     
-    var placeHolder: Image?
+    @State var placeHolder: Image?
+
+    @State var displayedImage: Image?
     
-    
-    public init(link: LCLink, didClose: ((Double)->Void)? = nil, placeHolder: Image? = nil) {
-        self._link = State(initialValue: link)
+    public init(link: Binding<LCLink>, didClose: ((Double)->Void)? = nil, placeHolder: Image? = nil) {
+        self._link = link
         self.didClose = didClose
         self.placeHolder = placeHolder
+        self.displayedImage = link.wrappedValue.image == nil
+        ? placeHolder
+        : Image(uiImage: link.wrappedValue.image!)
     }
     
     public var body: some View {
         ZStack(alignment: .center) {
             
-                if let image = link.image  {
-                    Image(uiImage: image).resizable()
+                if let image = displayedImage  {
+                    image.resizable()
                 }
 
                 if link.isEnabled {
@@ -54,25 +58,28 @@ public struct LCLinkView: View {
                     })
             }
         }
-        .grayscale(link.isEnabled ? 0.0 : 0.8)
+        .grayscale(link.isEnabled ? 0 : 0.9)
         .opacity(computeOpacity())
         .scaledToFit()
         .cornerRadius(10)
         .task {
-            guard link.image == nil, let imageURL = link.imageUrl else { return }
+            guard link.image == nil, let imageURL = link.imageUrl else {
+                return
+            }
             LuckyCart.shared.getImage(url: imageURL) { response in
                 switch response {
                 case .failure(let error):
                     print("[luckycart.linkView] Error \(error)")
                 case .success(let image):
                     link.image = image
+                    displayedImage = Image(uiImage: image)
                 }
             }
         }
     }
     
     func computeOpacity() -> Double {
-        if link.image == nil { return 0 }
+        if displayedImage == nil { return 0 }
         if link.isEnabled { return 1.0 }
         return 0.5
     }
@@ -82,7 +89,7 @@ public struct LCLinkView: View {
 
 struct LCLinkView_Previews: PreviewProvider {
     static var previews: some View {
-        LCLinkView(link: LuckyCart.testBanner.link, placeHolder: Image("luckyCartBanner"))
+        LCLinkView(link: .constant(LuckyCart.testBanner.link), placeHolder: Image("luckyCartBanner"))
     }
 }
 

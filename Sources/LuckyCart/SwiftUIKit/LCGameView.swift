@@ -11,16 +11,15 @@ import SwiftUI
 
 public struct LCGameView: View {
     
-    @State var game: LCGame
+    @Binding var game: LCGame
         
-    public init(game: LCGame) {
-        _game = State(initialValue: game)
-        print("[luckycart.gameview] Display link view game ( \(game.id) - Playable : \(game.isGamePlayable) - Result : \(game.gameResult)")
+    public init(game: Binding<LCGame>) {
+        self._game = game
+        print("[luckycart.gameview] Init game view ( \(game.id) - Playable : \(game.isGamePlayable) - Result : \(game.gameResult)")
     }
     
     public var body: some View {
-        
-        LCLinkView(link: game.mobileLink,
+        LCLinkView(link: $game.mobileLink,
                    didClose: { timeInSecondsSpentInGame in
             print("[luckycart.gameview] User has spent \(timeInSecondsSpentInGame) seconds in game.")
             LuckyCart.shared.reloadGames()
@@ -33,7 +32,7 @@ public struct LCGameView: View {
 
 struct LCGameView_Previews: PreviewProvider {
     static var previews: some View {
-        LCGameView(game: LuckyCart.testGame)
+        LCGameView(game: .constant(LuckyCart.testGame))
     }
 }
 
