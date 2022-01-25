@@ -9,6 +9,14 @@ import Foundation
 
 // MARK: - getBannerDetails -
 
+/// LCRequestName
+///
+/// Defines the request primitives
+/// - the name ("myrequest")
+/// - the server to use ( api or promomatching )
+/// - the path to access resource from server base
+/// - the method ( "GET", "POST" )
+
 extension LCRequestName {
     
     /// getImaget

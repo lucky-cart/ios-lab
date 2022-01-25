@@ -20,6 +20,7 @@ extension LuckyCart {
     /// Check Out
     ///
     /// Sends the ticket in LuckyCart format
+    
     public func checkOut(ticketComposer: LCTicketComposer,
                          failure: @escaping (Error)->Void,
                          success: @escaping (LCPostCartResponse)->Void) {
@@ -63,6 +64,7 @@ extension LuckyCart {
     public func reloadGames() {
         getGames(reload: true) { _ in }
     }
+    
     /// Load all banner spaces
     ///
     /// Banner spaces are loaded as soon as the LuckyCart instance is created.

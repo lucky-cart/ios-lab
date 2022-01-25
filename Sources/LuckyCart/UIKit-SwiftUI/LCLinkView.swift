@@ -24,9 +24,12 @@ public struct LCLinkView: View {
 
     @State var displayedImage: Image?
     
-    public init(link: Binding<LCLink>, didClose: ((Double)->Void)? = nil, placeHolder: Image? = nil) {
+    var clickAction: ((LCLink)->Bool)?
+    
+    public init(link: Binding<LCLink>, didClose: ((Double)->Void)? = nil, placeHolder: Image? = nil, clickAction: ((LCLink)->Bool)? = nil) {
         self._link = link
         self.didClose = didClose
+        self.clickAction = clickAction
         self.placeHolder = placeHolder
         self.displayedImage = link.wrappedValue.image == nil
         ? placeHolder
@@ -41,8 +44,13 @@ public struct LCLinkView: View {
                 }
 
                 if link.isEnabled {
+                    
                 Button("") {
-                    isOpen = true
+                    // If a click action closure is set, we execute it, else default is to open a sheet
+                    // to display the link.
+                    // We can still open the sheet after executing the action if the click action returns true
+                    self.isOpen = clickAction?(link) ?? true
+                    
                 }.scaledToFill()
                     .sheet(isPresented: $isOpen, content: {
                         let openDate = Date()

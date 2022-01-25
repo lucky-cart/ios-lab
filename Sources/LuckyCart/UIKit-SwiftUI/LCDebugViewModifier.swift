@@ -9,7 +9,9 @@
 
 import SwiftUI
 
-public struct LCDebugLensModifier: ViewModifier {
+/// Adds an overlay to display lucky cart network errors
+
+public struct LCDebugViewModifier: ViewModifier {
     
     var color: Color = .blue
     @State var message: String? = nil
@@ -63,7 +65,7 @@ struct LCDebugLensModifier_Previews: PreviewProvider {
     static var previews: some View {
         Text("Test Debug Lens")
             .padding(50)
-            .modifier(LCDebugLensModifier())
+            .modifier(LCDebugViewModifier())
     }
 }
 

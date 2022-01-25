@@ -19,7 +19,7 @@ public protocol LuckyCartClient {
     func initLuckyCart()
     
     /// Generates the information needed by LuckyCart when checking out
-    func luckyCartTicket(cartId: String) -> LCTicketComposer
+    func luckyCartTicket(cartId: String) throws -> LCTicketComposer
 }
 
 /// LuckyCart API
@@ -50,8 +50,16 @@ public class LuckyCart: ObservableObject {
         static let emptyResponse = Err(rawValue: "emptyResponse")
         static let authKeyMissing = Err(rawValue: "authKeyMissing")
         static let authorizationMissing = Err(rawValue: "authorizationMissing")
+
+        static let customerIdMissing = Err(rawValue: "customerIdMissing")
+        static let cartIdMissing = Err(rawValue: "cartIdMissing")
+
         static let ticketComposerKeyAlreadyPresent = Err(rawValue: "ticketComposer.keyAlreadyPresent")
-        
+        static let ticketComposerCustomerIdDoesNotMatchRequestCustomerId
+        = Err(rawValue: "ticketComposer.customerIdDoesNotMatchRequestCustomerId")
+        static let ticketComposerCartIdDoesNotMatchRequestCartId
+        = Err(rawValue: "ticketComposer.cartIdDoesNotMatchRequestCartId")
+
         static let cantCreateImageWithDownloadedData = Err(rawValue: "cantCreateImageWithDownloadedData")
     }
 
@@ -75,7 +83,7 @@ public class LuckyCart: ObservableObject {
     ///
     /// The LuckyCart cart
     
-    @Published var cart: LCCart
+    @Published var cart: LCCart = LCCart()
     
     @Published var lastCheckOutResponse: LCPostCartResponse?
     
@@ -107,13 +115,22 @@ public class LuckyCart: ObservableObject {
         self.customer = customer ?? LCCustomer.guest
         self.network = LCNetwork(authorization: authorization)
         LuckyCart.shared = self
-    }
         
-    /// Set current user
+    }
+
+    /// Opens a new cart
     
+    public func newCart(with id: String = UUID().uuidString) {
+        clearCache()
+        self.cart = LCCart(id: id)
+    }
+
+    /// Set current user
+
     public func setUser(_ user: LCCustomer?) {
         clearCache()
         customer = user ?? LCCustomer.guest
+        newCart()
     }
     
     /// Switch to guest user

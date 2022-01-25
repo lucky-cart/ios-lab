@@ -10,18 +10,39 @@ import Foundation
 
 // MARK: - getGames -
 
+/// LCRequestName
+///
+/// Defines the request primitives
+/// - the name ("myrequest")
+/// - the server to use ( api or promomatching )
+/// - the path to access resource from server base
+/// - the method ( "GET", "POST" )
+
 extension LCRequestName {
     
-    /// Get Games
+    /// getGames
     ///
-    /// The name of the request that retrieves the list of games for a given customer and cart
+    /// The `getGames` request needs some parameters, passed via a `LCRequestParameters` object
     ///
-    /// Scheme:
+    /// - `LCRequestParametersBase.Games`
+    ///     - customerId
+    ///     - cartId
+    ///
+    /// **Example:**
+    /// ```swift
+    /// let parameters = LCRequestParameters.Games(customerId: myCustomerId, cartId: myCartId)
+    /// let request: LCRequest<Model.Banner> = try network.buildRequest(name: .getBanner, parameters: parameters)
+    /// network.run(request) {
+    ///    // completion(Result<Model.Games, Error>)
+    /// }
+    /// ```
+    ///
+    /// **Scheme:**
     /// ```
     /// https://api.luckycart.com/cart/games?authKey={{auth_key}}&cartId={{cart_id}}&customerId={{customer_id}}
     /// ```
     ///
-    /// Results:
+    /// **Results:**
     /// ```
     /// {
     ///     "games": [
@@ -46,7 +67,25 @@ extension LCRequestName {
 }
 
 extension LCRequestParameters {
+
     
+    /// Games
+    ///
+    /// Parameters structure to prepare parameters for a `getGames` request
+    ///
+    /// - Parameter customerId: The user customer id
+    /// - Parameter cartId: the cart id
+    ///
+    /// **Resource Name:**
+    /// ```
+    /// cart/games
+    /// ```
+    ///
+    /// **Path Extension:**
+    /// ```
+    /// ?authKey={authKey}&cartId={cartId}&customerId={customerId}
+    /// ```
+
     struct Games: LCRequestParametersBase {
         var customerId: String
         var cartId: String

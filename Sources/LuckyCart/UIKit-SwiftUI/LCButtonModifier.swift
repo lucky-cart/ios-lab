@@ -8,6 +8,10 @@
 
 import SwiftUI
 
+/// LCButtonModifier
+///
+/// The view modifier applied to buttons in LuckyCart sheets
+
 public struct LCButtonModifier: ViewModifier {
 
     var color: Color = .blue

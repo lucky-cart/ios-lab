@@ -25,16 +25,12 @@ public struct LCGameView: View {
         let link = $game.mobileLink
 #endif
         
-        if let cartId = cartId {
             LCLinkView(link: link,
                        didClose: { timeInSecondsSpentInGame in
                 print("[luckycart.gameview] User has spent \(timeInSecondsSpentInGame) seconds in game.")
-                LuckyCart.shared.reloadGames(cartId: cartId)
+                LuckyCart.shared.reloadGames()
             },
                        placeHolder: Image("luckyCartGame"))
-        } else {
-            Text("Cart id not set")
-        }
     }
 }
 

@@ -8,20 +8,42 @@
 
 import Foundation
 
-// MARK: - getBannerDetails -
+// MARK: - getBanner -
+
+/// LCRequestName
+///
+/// Defines the request primitives
+/// - the name ("myrequest")
+/// - the server to use ( api or promomatching )
+/// - the path to access resource from server base
+/// - the method ( "GET", "POST" )
 
 extension LCRequestName {
     
-    /// connect
+    /// getBanner
     ///
-    /// The name of the request that retrieves banner spaces
+    /// The `getBanner` request needs some parameters, passed via a `LCRequestParameter` object.
     ///
-    /// Scheme:
+    /// - `LCRequestParametersBase.Banner`
+    ///     - customerId: String
+    ///     - bannerSpace: LCBannerSpaceIdentifier
+    ///     - banner: LCBannerIdentifier
+    ///
+    /// **Example:**
+    /// ```swift
+    /// let parameters = LCRequestParameters.Banner(customerId: customerId, bannerSpace: bannerSpaceId, banner: bannerId)
+    /// let request: LCRequest<Model.Banner> = try network.buildRequest(name: .getBanner, parameters: parameters)
+    /// network.run(request) {
+    ///    // completion(Result<Model.Banner, Error>)
+    /// }
+    /// ```
+    ///
+    /// **Scheme:**
     /// ```
     /// https://promomatching.luckycart.com/{{auth_key}}/{{customer_id}}/banner/mobile/{bannerSpaceIdentifier}/{banner_id}
     /// ```
     ///
-    /// Results:
+    /// **Results:**
     /// ```
     /// {
     ///     "image_url": "https://promomatching.luckycart.com/61d6c677baa1676dd46bfee6/customer_1234/image?meta=61bb057807879bee01ed5298&test=true&noCache1641942555414",
@@ -42,42 +64,40 @@ extension LCRequestName {
                                          method: "GET")
 }
 
+// MARK: - getBanner parameters -
+
 extension LCRequestParameters {
     
     /// Banner
     ///
-    /// Parameters structure to pass to a `getBanner` request
+    /// Parameters structure to prepare parameters for a `getBanner` request
     ///
-    /// - Parameter banner: the banner id
     /// - Parameter customerId: The user customer id
+    /// - Parameter bannerId: the banner id
+    /// - Parameter bannerSpaceId: the banner space id
     ///
-    /// name:
+    /// **Resource Name:**
     /// ```
     /// banner
     /// ```
-    /// path extension:
-    /// ```
-    /// {authKey}{customerId}/banner/mobile/{bannerspace_id}/{banner_id}
-    /// ```
-    /// url parameters:
-    /// ```
     ///
+    /// **Path Extension:**
+    /// ```
+    /// {authKey}{customerId}/{resourceName}/mobile/{bannerspace_id}/{banner_id}
     /// ```
 
     struct Banner: LCRequestParametersBase {
         var customerId: String
-        var bannerSpace: LCBannerSpaceIdentifier
-        var banner: LCBannerIdentifier
+        var bannerSpaceId: LCBannerSpaceIdentifier
+        var bannerId: LCBannerIdentifier
 
         func pathExtension(for request: LCRequestBase) throws -> String {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing
             }
-            return "\(authKey)/\(customerId)/banner/mobile/\(bannerSpace.rawValue)/\(banner.rawValue)"
+            return "\(authKey)/\(customerId)/banner/mobile/\(bannerSpaceId.rawValue)/\(bannerId.rawValue)"
         }
 
         func parametersString(for request: LCRequestBase) throws -> String { "" }
     }
-
 }
-

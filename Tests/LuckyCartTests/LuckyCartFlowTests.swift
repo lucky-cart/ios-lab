@@ -24,8 +24,7 @@ final class LuckyCartFlowTests: XCTestCase {
             print(" === 1 Check In")
             
             let luckyCart = LuckyCart(authorization: LuckyCart.testAuthorization,
-                                      customer: LuckyCart.testCustomer,
-                                      cart: LuckyCart.testCart)
+                                      customer: LuckyCart.testCustomer)
             
             print(" === 2 Get Banners")
             

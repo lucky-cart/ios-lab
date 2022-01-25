@@ -17,9 +17,7 @@ internal extension LuckyCart {
     
     func postCart(ticketComposer: LCTicketComposer, completion: @escaping (Result<LCPostCartResponse, Error>)->Void) {
         
-        let body = LCRequestParameters.PostCart(cart: cart,
-                                                customer: customer,
-                                                ticketComposer: ticketComposer)
+        let body = LCRequestParameters.PostCart(ticketComposer: ticketComposer)
         do {
             let request: LCRequest<Model.PostCartResponse> = try network.buildRequest(name: .postCart,
                                                                                       parameters: nil,
@@ -46,7 +44,7 @@ internal extension LuckyCart {
     /// Will return cached version if available
     
     func getGames(reload: Bool = false, completion: @escaping (Result<[LCGame], Error>)->Void) {
-        if let cachedGames = games, reload == false {
+        if cacheEnabled, let cachedGames = games, reload == false {
             print("[luckycart.cache] Return cached games")
             completion(Result.success(cachedGames))
             return
@@ -82,7 +80,7 @@ internal extension LuckyCart {
     
     func getBannerSpaces(completion: @escaping (Result<LCBannerSpaces, Error>)->Void) {
         
-        if let cachedBannerSpaces = bannerSpaces {
+        if cacheEnabled, let cachedBannerSpaces = bannerSpaces {
             print("[luckycart.cache] Return cached banner spaces")
             completion(Result.success(cachedBannerSpaces))
             return
@@ -122,14 +120,14 @@ internal extension LuckyCart {
                    bannerIdentifier: LCBannerIdentifier,
                    completion: @escaping (Result<LCBanner, Error>)->Void) {
         
-        if let cachedBanner = bannerSpaces?.banners[bannerIdentifier] {
+        if cacheEnabled, let cachedBanner = bannerSpaces?.banners[bannerIdentifier] {
             print("[luckycart.cache] Return cached banner `\(bannerIdentifier)`")
             completion(Result.success(cachedBanner))
             return
         }
         
         do {
-            let parameters = LCRequestParameters.Banner(customerId: customer.id, bannerSpace: bannerSpaceIdentifier, banner: bannerIdentifier)
+            let parameters = LCRequestParameters.Banner(customerId: customer.id, bannerSpaceId: bannerSpaceIdentifier, bannerId: bannerIdentifier)
             
             let request: LCRequest<Model.Banner> = try network.buildRequest(name: .getBanner,
                                                                             parameters: parameters,
@@ -156,7 +154,6 @@ internal extension LuckyCart {
             self.lastError = error
             completion(.failure(error))
         }
-        
     }
     
     

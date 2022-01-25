@@ -56,7 +56,7 @@ public struct LCCustomer: Codable, LCEntity, Identifiable {
         id = entity.id
     }
 
-    static let guest = LCCustomer(Model.Customer.guest)
+    public static let guest = LCCustomer(Model.Customer.guest)
 }
 
 /// LCCart
@@ -84,6 +84,8 @@ public struct LCLink: Codable {
     public let imageUrl: URL?
     public var isEnabled: Bool = true
 
+    public var targetBoutiqueViewId: LCBoutiqueViewIdentifier?
+    
     /// image
     ///
     /// Published property. Interface can listen to update when image is available
@@ -94,7 +96,6 @@ public struct LCLink: Codable {
         case imageUrl
         case isEnabled
     }
-    
 }
 
 // MARK: - Game
@@ -225,6 +226,14 @@ public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
 
 /// LCBannerAction
 
+public extension NSNotification.Name {
+    static let bannerAction = NSNotification.Name(rawValue: "LCBannerActionNotification")
+}
+
+public struct Keys {
+    public static let ref = "ref"
+}
+
 public struct LCBannerAction: Codable, LCEntity {
     
     typealias ModelEntity = Model.BannerAction
@@ -236,9 +245,15 @@ public struct LCBannerAction: Codable, LCEntity {
         self.type = LCBannerActionType(rawValue: entity.type)
         self.ref = entity.ref
     }
+    
+    func execute() {
+        NotificationCenter.default.post(name: .bannerAction, object: nil, userInfo: [Keys.ref: ref])
+    }
 }
 
 /// LCBanner
+///
+/// LuckyCart banner object
 
 public struct LCBanner: Codable, LCEntity, Identifiable {
     
@@ -253,11 +268,14 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
     public var action: LCBannerAction
     
     init(_ entity: Model.Banner) {
-        self.link = LCLink(url: entity.redirect_url, imageUrl: entity.image_url, isEnabled: true)
         self.name = entity.name
         self.campaign = entity.campaign
         self.space = entity.space
+
         self.action = LCBannerAction(entity.action)
+        let targetBoutiqueId = action.ref.isEmpty ? nil : LCBoutiqueViewIdentifier(action.ref)
+        self.link = LCLink(url: entity.redirect_url, imageUrl: entity.image_url, isEnabled: true, targetBoutiqueViewId: targetBoutiqueId)
+
     }
 }
 
@@ -266,7 +284,7 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
 /// - boutique
 ///
 
-public struct LCBannerActionType: RawRepresentable, Codable {
+public struct LCBannerActionType: RawRepresentable, Codable, Equatable {
     public var rawValue: String
     
     public init(rawValue: String) {
@@ -276,6 +294,9 @@ public struct LCBannerActionType: RawRepresentable, Codable {
     public static let boutique = LCBannerActionType(rawValue: "boutique")
 }
 
+/// LCPostCartResponse
+///
+/// The data returned from a succesful postCart request
 
 public struct LCPostCartResponse: Codable, LCEntity {
 
@@ -297,4 +318,3 @@ public struct LCPostCartResponse: Codable, LCEntity {
         self.baseDesktopUrl = URL(string: entity.baseDesktopUrl)
     }
 }
-

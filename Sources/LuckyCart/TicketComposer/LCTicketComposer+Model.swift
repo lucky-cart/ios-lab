@@ -8,31 +8,9 @@
 
 import Foundation
 
-/// LCTicketComposerEntity
+/// LCTicketComposer
 ///
-/// A sub model of the ticket composer.
-/// All objects must implement a `makeDictionary` to export in JSON
-
-protocol LCTicketComposerEntity {
-    func makeDictionary() throws -> [String: Any]
-}
-
-extension LCTicketComposerEntity {
-    
-    /// append
-    ///
-    /// Append the dictionary to a passed dictionary.
-    
-    func append(to dictionary: inout [String: Any]) throws {
-        for (key,value) in try makeDictionary() {
-            if dictionary[key] != nil {
-                print("[luckycart.ticketComposer] Key `\(key)` already set")
-                throw LuckyCart.Err.ticketComposerKeyAlreadyPresent
-            }
-            dictionary[key] = value
-        }
-    }
-}
+/// The ticket composer is the aggregator that prepare the LuckyCart data to send when checking out.
 
 public extension LCTicketComposer {
         
@@ -45,7 +23,7 @@ public extension LCTicketComposer {
     /// - device: "<device>"
     /// - cart: <Cart> [ <ProductOrder> ]
     
-    struct Order: LCTicketComposerEntity {
+    struct Order: LCTicketComposerScope {
         public var shippingMethod: LCShippingMethod
         public var shopId: String
         public var device: String
@@ -69,12 +47,12 @@ public extension LCTicketComposer {
     ///
     /// Generates the Customer dictionary to generate ticket json
     ///
-    /// - customerId: "41410788"
+    /// - id: "41410788"
     /// - email: "vincentoliveira@luckycart.com"
     /// - firstName: "VINCENT"
     /// - lastName: "OLIVEIRA"
     
-    struct Customer: LCTicketComposerEntity {
+    struct Customer: LCTicketComposerScope {
         /// The customer id
         public var id: String
         
@@ -83,11 +61,11 @@ public extension LCTicketComposer {
         public var firstName: String
         public var lastName: String
         
-        public init(id: String,
+        public init(id: String?,
                     email: String?,
                     firstName: String?,
                     lastName: String?) {
-            self.id = id
+            self.id = id ?? LCCustomer.guest.id
             self.email = email ?? ""
             self.firstName = firstName ?? ""
             self.lastName = lastName ?? ""
@@ -105,13 +83,13 @@ public extension LCTicketComposer {
 
     /// ProductOrder
     ///
-    /// - productId: "14917412"
+    /// - id: "14917412"
     /// - ttc: "12.0",
     /// - ht: "10.0",
     /// - quantity: "1.00"
     /// - id: "14917412"
     
-    struct ProductOrder: LCTicketComposerEntity {
+    struct ProductOrder: LCTicketComposerScope {
         public var id: String
         public var quantity: String
         public var ttc: String
@@ -163,20 +141,20 @@ public extension LCTicketComposer {
     /// - ht: "10.0"
     /// - products: [ <ProductOrder> ]
     
-    struct Cart: LCTicketComposerEntity {
-        public var id: String
+    struct Cart: LCTicketComposerScope {
+        public let id: String
         
         /// The currency set for this cart ( "EUR" )
-        public var currency: String
+        public let currency: String
         
         /// The total price, all taxes included
-        public var ttc: String // Key in dict is "totalAti"
+        public let ttc: String // Key in dict is "totalAti"
         
         /// The total price, without taxes
-        public var ht: String
+        public let ht: String
         
         /// The product orders ( Product, Quantity )
-        public var products: [ProductOrder]
+        public let products: [ProductOrder]
         
         public init(id: String,
                     currency: String,
@@ -205,7 +183,7 @@ public extension LCTicketComposer {
     ///
     /// Free Dictionary encodable as json
 
-    struct MetaData: LCTicketComposerEntity {
+    struct MetaData: LCTicketComposerScope {
         
         public var dictionary: [String: Any]
 

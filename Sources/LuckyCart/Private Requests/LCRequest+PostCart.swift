@@ -8,48 +8,15 @@
 
 import Foundation
 
-typealias Keys = PostCartBodyKeys
-
-struct PostCartBodyKeys {
-    
-    static let auth_key = "auth_key"
-    
-    // Auth
-    static let auth_ts = "auth_ts"
-    static let auth_v = "auth_v"
-    static let auth_sign = "auth_sign"
-    static let auth_nonce = "auth_nonce"
-    
-    // Customer
-    static let customerClientId = "customerClientId"
-    static let lastName = "lastName"
-    static let firstName = "firstName"
-    static let email = "email"
-    
-    // Cart
-    static let cartId = "cartId"
-    static let cartClientId = "cartClientId"
-    static let totalAti = "totalAti"
-    static let currency = "currency"
-    static let products = "products"
-
-    static let loyaltyCart = "loyaltyCart" // Is this a custom tag sample, or a real model key
-    
-    // Product
-    static let quantity = "quantity"
-    static let id = "id"
-    static let ht = "ht"
-    static let ttc = "ttc"
-    
-    // Order
-    static let shopId = "shopId"
-    static let shippingMethod = "shippingMethod"
-    static let customerId = "customerId"
-    
-    static let device = "device" // Any defined format for this?
-}
-
 // MARK: - postCart -
+
+/// LCRequestName
+///
+/// Defines the request primitives
+/// - the name ("myrequest")
+/// - the server to use ( api or promomatching )
+/// - the path to access resource from server base
+/// - the method ( "GET", "POST" )
 
 extension LCRequestName {
     
@@ -134,9 +101,6 @@ extension LCRequestParameters {
     
     
     struct PostCart: LCRequestParametersBase {
-        
-        var cart: LCCart
-        var customer: LCCustomer
 
         // The json dictionary to send in ticket json
         var ticketComposer: LCTicketComposer
@@ -149,7 +113,6 @@ extension LCRequestParameters {
             return ""
         }
         
-        
         func dictionary(for request: LCRequestBase) throws -> [String: Any] {
             guard let auth = request.connection.authorization else {
                 throw LuckyCart.Err.authorizationMissing
@@ -158,15 +121,13 @@ extension LCRequestParameters {
             let signature = auth.computeSignature()
             
             var out: [String: Any] = [
-                Keys.auth_ts: signature.timestamp,
-                Keys.auth_key: signature.key,
-                Keys.auth_sign: signature.hex,
-                Keys.auth_nonce: signature.timestamp,
-                Keys.auth_v: auth.version,
-                Keys.cartId: cart.id,
-                Keys.customerId: customer.id,
+                LCTicketComposer.Keys.auth_ts: signature.timestamp,
+                LCTicketComposer.Keys.auth_key: signature.key,
+                LCTicketComposer.Keys.auth_sign: signature.hex,
+                LCTicketComposer.Keys.auth_nonce: signature.timestamp,
+                LCTicketComposer.Keys.auth_v: auth.version,
             ]
-            
+
             try ticketComposer.append(to: &out)
             
             return out

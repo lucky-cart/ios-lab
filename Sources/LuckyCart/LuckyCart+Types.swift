@@ -18,19 +18,28 @@ public protocol LCIdentifier : RawRepresentable, Codable, Hashable, CustomString
     
 }
 
+/// LCIdentifier
+///
+/// A generic path style identifier helper
+
 public extension LCIdentifier where RawValue == String {
     
-    /// append
+    /// byAppending
     /// Append characters to the identifier
     
     func byAppending(_ string: String) -> Self {
         Self(rawValue: "\(rawValue)\(Self.transform(string))")!
     }
     
+    /// byAppendingComponent
+    /// Append a new path extension to the identifier ( separate by .)
+
     func byAppendingComponent(_ string: String) -> Self {
         Self(rawValue: "\(rawValue).\(Self.transform(string))")!
     }
     
+    /// description
+    /// Returns the String representation
     var description: String {
         rawValue
     }
@@ -192,4 +201,8 @@ public struct LCBoutiqueViewIdentifier: LCIdentifier {
     
     public static let boutique = LCBoutiqueViewIdentifier(rawValue: "boutique")
 
+}
+
+public protocol LCBoutiqueView {
+    var boutiquePageIdentifier: LCBoutiqueViewIdentifier { get }
 }

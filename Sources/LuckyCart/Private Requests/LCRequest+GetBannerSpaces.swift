@@ -10,18 +10,38 @@ import Foundation
 
 // MARK: - getBannerSpaces -
 
+/// LCRequestName
+///
+/// Defines the request primitives
+/// - the name ("myrequest")
+/// - the server to use ( api or promomatching )
+/// - the path to access resource from server base
+/// - the method ( "GET", "POST" )
+
 extension LCRequestName {
     
     /// getBannerSpaces
     ///
-    /// The name of the request that retrieves banner spaces
+    /// The `getBannerSpaces` request needs some parameters, passed via a `LCRequestParameters` object
+    /// 
+    /// - `LCRequestParametersBase.BannerSpaces`
+    ///     - customerId
     ///
-    /// Scheme:
+    /// **Example:**
+    /// ```swift
+    /// let parameters = LCRequestParameters.BannerSpaces(customerId: customerId)
+    /// let request: LCRequest<Model.Banner> = try network.buildRequest(name: .getBannerSpaces, parameters: parameters)
+    /// network.run(request) {
+    ///    // completion(Result<Model.BannerSpaces, Error>)
+    /// }
+    /// ```
+    ///
+    /// **Scheme:**
     /// ```
     /// https://promomatching.luckycart.com/{{auth_key}}/{{customer_id}}/banners/mobile/list
     /// ```
     ///
-    /// Results:
+    /// **Results:**
     /// ```
     /// {
     ///     "homepage": [
@@ -46,19 +66,17 @@ extension LCRequestParameters {
     
     /// BannerSpaces
     ///
-    /// Parameters structure to pass to a `getBanner` request
+    /// Parameters structure to pass to a `getBannerSpaces` request
+    /// - Parameter customerId: The id of the customer
     ///
-    /// name:
+    /// **Resource Name:**
     /// ```
-    /// banner
-    /// ```
-    /// path extension:
-    /// ```
-    /// \(authKey)/\(customerId)/\(banner)/mobile/homepage/banner
-    /// ```
-    /// url parameters:
+    /// banners
     /// ```
     ///
+    /// **Path Extension:**
+    /// ```
+    /// {authKey}{customerId}/{resourceName}/mobile/list
     /// ```
 
     struct BannerSpaces: LCRequestParametersBase {
