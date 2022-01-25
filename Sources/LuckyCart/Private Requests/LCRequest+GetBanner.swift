@@ -75,6 +75,7 @@ extension LCRequestParameters {
     /// - Parameter customerId: The user customer id
     /// - Parameter bannerId: the banner id
     /// - Parameter bannerSpaceId: the banner space id
+    /// - Parameter format: the banner format
     ///
     /// **Resource Name:**
     /// ```
@@ -90,7 +91,8 @@ extension LCRequestParameters {
         var customerId: String
         var bannerSpaceId: LCBannerSpaceIdentifier
         var bannerId: LCBannerIdentifier
-
+        var format: LCBannerFormat
+        
         func pathExtension(for request: LCRequestBase) throws -> String {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing

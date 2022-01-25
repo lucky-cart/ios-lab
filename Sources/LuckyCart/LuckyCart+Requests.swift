@@ -118,6 +118,7 @@ internal extension LuckyCart {
     
     func getBanner(bannerSpaceIdentifier: LCBannerSpaceIdentifier,
                    bannerIdentifier: LCBannerIdentifier,
+                   format: LCBannerFormat,
                    completion: @escaping (Result<LCBanner, Error>)->Void) {
         
         if cacheEnabled, let cachedBanner = bannerSpaces?.banners[bannerIdentifier] {
@@ -127,7 +128,10 @@ internal extension LuckyCart {
         }
         
         do {
-            let parameters = LCRequestParameters.Banner(customerId: customer.id, bannerSpaceId: bannerSpaceIdentifier, bannerId: bannerIdentifier)
+            let parameters = LCRequestParameters.Banner(customerId: customer.id,
+                                                        bannerSpaceId: bannerSpaceIdentifier,
+                                                        bannerId: bannerIdentifier,
+                                                        format: format)
             
             let request: LCRequest<Model.Banner> = try network.buildRequest(name: .getBanner,
                                                                             parameters: parameters,
@@ -188,37 +192,6 @@ internal extension LuckyCart {
         }
         catch {
             completion(.failure(error))
-        }
-    }
-    
-}
-
-// MARK: - Extra Requests
-
-extension LuckyCart {
-
-    /// Load all banners
-    ///
-    /// All banners definitions for a given space are loaded as soon as a banner space view is displayed
-    
-    private func loadAllBanners(for spaceIdentifier: LCBannerSpaceIdentifier,
-                                failure: @escaping (Error)->Void,
-                                success: @escaping (LCBanner)->Void) {
-        loadBannerSpaces(failure: failure) { bannerSpaces in
-            bannerSpaces[spaceIdentifier]?.bannerIds.forEach { identifier in
-                self.getBanner(bannerSpaceIdentifier: spaceIdentifier, bannerIdentifier: identifier) { result in
-                    switch result {
-                    case .failure(let error):
-                        self.lastError = error
-                        print("[luckycart.load.banners] GetBanner(`\(identifier)`) Error:\r\(error.localizedDescription)")
-                        failure(error)
-                    case .success(let banner):
-                        self.lastError = nil
-                        print("[luckycart.load.banners] GetBanner(`\(identifier)`) succeed:\r\(banner)")
-                        success(banner)
-                    }
-                }
-            }
         }
     }
     

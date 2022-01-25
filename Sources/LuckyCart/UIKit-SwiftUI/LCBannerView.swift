@@ -24,12 +24,12 @@ public struct LCSimpleBannerView: LCBannerView {
         LCLinkView(link: .constant(banner.link)) { link in
             switch banner.action.type {
             case .boutique:
-                //                if !banner.action.ref.isEmpty {
-                banner.action.execute()
-                return false
-                //               }
-                //return true
-                // Open the sheet if no action set
+                if !banner.action.ref.isEmpty {
+                    banner.action.execute()
+                    return false
+                }
+                return true
+            // Open the sheet if no action set
             default:
                 return true
             }
@@ -41,11 +41,15 @@ public struct LCSimpleBannerView: LCBannerView {
 public struct LCAsyncSimpleBannerView: View {
     @State var bannerSpaceId: LCBannerSpaceIdentifier
     @State var bannerId: LCBannerIdentifier
+    @State var format: LCBannerFormat
     @State var banner: LCBanner?
-    
-    public init(bannerSpaceId: LCBannerSpaceIdentifier, bannerId: LCBannerIdentifier) {
+
+    public init(bannerSpaceId: LCBannerSpaceIdentifier,
+                bannerId: LCBannerIdentifier,
+                format: LCBannerFormat) {
         _bannerSpaceId = State(initialValue: bannerSpaceId)
         _bannerId = State(initialValue: bannerId)
+        _format = State(initialValue: format)
     }
     
     public var body: some View {
@@ -62,6 +66,7 @@ public struct LCAsyncSimpleBannerView: View {
         .task {
             LuckyCart.shared.banner(with: bannerId,
                                     bannerSpaceIdentifier: bannerSpaceId,
+                                    format: format,
                                     failure: { error in
             }) { banner in
                 self.banner = banner

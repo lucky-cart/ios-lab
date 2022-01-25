@@ -89,10 +89,13 @@ extension LuckyCart {
     
     public func banner(with identifier: LCBannerIdentifier,
                        bannerSpaceIdentifier: LCBannerSpaceIdentifier,
+                       format: LCBannerFormat,
                        failure: @escaping (Error)->Void,
                        success: @escaping (LCBanner)->Void) {
         getBannerSpaces { [weak self] _ in
-            self?.getBanner(bannerSpaceIdentifier: bannerSpaceIdentifier, bannerIdentifier: identifier) { result in
+            self?.getBanner(bannerSpaceIdentifier: bannerSpaceIdentifier,
+                            bannerIdentifier: identifier,
+                            format: format) { result in
                 switch result {
                 case .failure(let error):
                     print("[luckycart.load.banner] GetBanner `\(identifier.rawValue)` Error:\r\(error.localizedDescription)")

@@ -231,6 +231,7 @@ public extension NSNotification.Name {
 }
 
 public struct Keys {
+    public static let action = "action"
     public static let ref = "ref"
 }
 
@@ -247,7 +248,10 @@ public struct LCBannerAction: Codable, LCEntity {
     }
     
     func execute() {
-        NotificationCenter.default.post(name: .bannerAction, object: nil, userInfo: [Keys.ref: ref])
+        NotificationCenter.default.post(name: .bannerAction, object: nil, userInfo: [
+            Keys.ref: ref,
+            Keys.action: type
+        ])
     }
 }
 

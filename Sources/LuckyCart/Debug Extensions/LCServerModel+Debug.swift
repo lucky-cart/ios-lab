@@ -33,7 +33,7 @@ extension Model {
     )
     
     static let testBannerSpaces:  [String : [String]] = [
-        LCBannerSpaceIdentifier.homePage.rawValue : ["banner"] ,
+        "homepage": ["banner"] ,
         "categories": ["banner_100",
                        "banner_200",
                        "search_100",
