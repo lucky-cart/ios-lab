@@ -118,9 +118,9 @@ internal extension LuckyCart {
     ///
     /// Will return cached version if available
     
-    func getBanner(bannerSpaceIdentifier: LCBannerSpaceIdentifier,
-                   bannerIdentifier: LCBannerIdentifier,
-                   format: LCBannerFormat,
+    func getBanner(bannerSpaceIdentifier: String,
+                   bannerIdentifier: String,
+                   format: String,
                    completion: @escaping (Result<LCBanner, Error>)->Void) {
         
         if cacheEnabled, let cachedBanner = bannerSpaces?.banners[bannerIdentifier] {
@@ -161,7 +161,6 @@ internal extension LuckyCart {
             completion(.failure(error))
         }
     }
-    
     
     /// getImage
     ///

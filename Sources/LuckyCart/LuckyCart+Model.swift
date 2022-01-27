@@ -84,7 +84,7 @@ public struct LCLink: Codable {
     public let imageUrl: URL?
     public var isEnabled: Bool = true
 
-    public var targetBoutiqueViewId: LCBoutiqueViewIdentifier?
+    public var targetBoutiqueViewId: String?
     
     /// image
     ///
@@ -154,8 +154,8 @@ public struct LCGameResult: RawRepresentable, Codable, Equatable {
 
 public struct LCBannerSpace: Codable, Identifiable {
     public var id: UUID = UUID()
-    public var identifier: LCBannerSpaceIdentifier
-    public var bannerIds: [LCBannerIdentifier]
+    public var identifier: String
+    public var bannerIds: [String]
 }
 
 /// LCEntity
@@ -176,17 +176,17 @@ public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
     ///
     /// The loaded spaces.
     
-    public var spaces = [LCBannerSpaceIdentifier: LCBannerSpace]()
+    public var spaces = [String: LCBannerSpace]()
 
     /// banners
     ///
     /// The loaded banners.
     
-    public var banners = [LCBannerIdentifier: LCBanner]()
+    public var banners = [String: LCBanner]()
     
     public var sortedSpaces: [LCBannerSpace] {
         return Array(spaces.values).sorted { lhs, rhs in
-            return lhs.identifier.rawValue < rhs.identifier.rawValue
+            return lhs.identifier < rhs.identifier
         }
     }
 
@@ -194,19 +194,19 @@ public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
         
         let lines: [String] = spaces.map { key, bannerSpace in
             let bannerids = bannerSpace.bannerIds.map { "`\($0)`" }
-            return "`\(key.rawValue)` : \(bannerids.joined(separator: ", "))"
+            return "`\(key)` : \(bannerids.joined(separator: ", "))"
         }
         return lines.joined(separator: "\r")
     }
 
-    /// subscript by LCBannerSpaceIdentifier
+    /// subscript by String
     ///
     /// Allow usage of brackets on banner spaces object
     /// ```
     /// let homePageBanners = myBannerSpaces[.homepage]
     /// ```
     
-    public subscript (key: LCBannerSpaceIdentifier) -> LCBannerSpace? {
+    public subscript (key: String) -> LCBannerSpace? {
         return spaces[key]
     }
 
@@ -214,9 +214,9 @@ public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
     
     init(_ entity: ModelEntity) {
         entity.forEach { key, value in
-            let spaceIdentifier = LCBannerSpaceIdentifier(key)
+            let spaceIdentifier = String(key)
             spaces[spaceIdentifier] = LCBannerSpace(identifier: spaceIdentifier, bannerIds: value.map {
-                LCBannerIdentifier($0)
+                String($0)
             })
         }
     }
@@ -263,7 +263,7 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
     
     public var id = UUID()
     
-    public var identifier: LCBannerIdentifier?
+    public var identifier: String?
 
     public var link: LCLink
     public var name: String
@@ -277,7 +277,7 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
         self.space = entity.space
 
         self.action = LCBannerAction(entity.action)
-        let targetBoutiqueId = action.ref.isEmpty ? nil : LCBoutiqueViewIdentifier(action.ref)
+        let targetBoutiqueId = action.ref.isEmpty ? nil : String(action.ref)
         self.link = LCLink(url: entity.redirect_url, imageUrl: entity.image_url, isEnabled: true, targetBoutiqueViewId: targetBoutiqueId)
 
     }

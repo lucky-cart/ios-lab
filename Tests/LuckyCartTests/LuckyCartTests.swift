@@ -140,7 +140,7 @@ final class LuckyCartTests: XCTestCase {
     
     func testGetCategoriesBanner() throws {
         facadeCall(.getBanner) { name, expectation in
-            LuckyCart.test.getBanner(bannerSpaceIdentifier: "categories", bannerIdentifier: "banner_100", format: "banner") { result in
+            LuckyCart.test.getBanner(bannerSpaceIdentifier: "categories", bannerIdentifier: "100", format: "banner") { result in
                 self.facadeTestCompletion(name, responseType: LCBanner.self, result: result, expectation: expectation) { result in
                     print("----- Received Banner")
                     print(result)

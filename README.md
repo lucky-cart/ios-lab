@@ -4,7 +4,7 @@
 
 ## <font color='#1E72AD'>Installation:</font>
 
-### <font color='#1E72AD'>1 - Install Package</font>
+### <font color='#EF1020'>1 - Install Package</font>
 
 #### Swift Package:
 
@@ -16,7 +16,7 @@
  pod 'LuckyCart'
  ``` 
  
-### <font color='#1E72AD'>2 - Download or clone the sample application</font>
+### <font color='#EF1020'>2 - Download or clone the sample application</font>
 
 All the sample code in this documentation is extracted from the [Client App Sample](https://github.com/lucky-cart/lucky-cart-client-sample-ios) project</font>
 
@@ -27,7 +27,7 @@ It is a simple shopping application draft using a trivial shop model ( Shop, Cus
 ## <font color='#1E72AD'>Use in Client Application:</font>
 
 
-### <font color='#1E72AD'>1 - Conform to the `LuckyCartClient` protocol</font>
+### <font color='#EF1020'>1 - Conform to the `LuckyCartClient` protocol</font>
 
 You can make the application, your main shop manager, or even a newManager class that conform to this protocol to use LuckyCart
 
@@ -52,7 +52,7 @@ public protocol LuckyCartClient {
 ```
 
 
-### <font color='#1E72AD'>1 - Start LuckyCart </font>
+### <font color='#EF1020'>2 - Start LuckyCart </font>
 
 Starts the LuckyCart framework using authorization, luckyCart customer and cart ids. 
 
@@ -66,7 +66,7 @@ class MyShopManager: LuckyCartClient {
 }
 ```
 
-### <font color='#1E72AD'>2 - Set the current user</font>
+### <font color='#EF1020'>3 - Set the current user</font>
 
 If customer id is not passed in init, you can set it by calling the `setUserId()` function.
 Customer id is required to send cart information at checkout time.
@@ -84,29 +84,28 @@ Customer id is required to send cart information at checkout time.
     }
 ```
 
-### <font color='#1E72AD'>3 - Display Banners</font>
+### <font color='#EF1020'>4 - Display Banners</font>
 
 ##### Make the views that should display <b>LuckyCart</b> banners conform to the `BannerSpaceView`.
 
 ```swift
 public protocol LCBannersView: View {
-    var bannerSpaceId: LCBannerSpaceIdentifier { get }
+    var bannerSpaceId: String { get }
     var banners: [LCBanner] { get set }
 }
 ```
 
 ##### Implement the properties
 
-    - bannerSpaceId: The bannerSpace identifier associated to this view
-    - banners: A published array of banners.
+- bannerSpaceId: The bannerSpace identifier associated to this view
+- banners: A published array of banners.
 
 ##### Load the banners
 
-    - Call the `loadBanner` function for desired ids when view appears
-    - Update the views using the received banners and/or errors
+- Call the `loadBanner` function for desired ids when view appears
+- Update the views using the received banners and/or errors
     
-In this example, the homepage view displays a logo and welcome message.
-It then displays all available banners in a list.
+In this example, a view displays all available banners in a list.
 
 ##### Code Sample
 
@@ -117,7 +116,7 @@ struct HomePageView: LCBannersView {
     var banners: State<[LCBanner]> = State(initialValue: [])
     
     // BannerSpaceView
-    var bannerSpaceId: LCBannerSpaceIdentifier = LuckyShop.homepage
+    var bannerSpaceId: String = LuckyShop.homepage
 
     var body: some View {        
 ...
@@ -139,7 +138,7 @@ struct HomePageView: LCBannersView {
     }
 ```
 
-### <font color='#1E72AD'>4 - Execute banners action</font>
+### <font color='#EF1020'>5 - Execute banners action</font>
 
 To make an object receive banner actions, make it conform to `LCActionListener` protocol.
 
@@ -161,7 +160,7 @@ struct ShopView: View, LCActionListener {
     func handleBannerAction(action: LCBannerAction) {
         switch action.type {
         case .boutique:
-            page = .boutique(identifier: LCBoutiqueViewIdentifier(action.ref))
+            page = .boutique(identifier: String(action.ref))
             break
         default:
             return
@@ -190,9 +189,9 @@ struct ShopView: View, LCActionListener {
 
 ```
 
-### <font color='#1E72AD'>5 - Send relevant cart data to LuckyCart</font>
+### <font color='#EF1020'>6 - Send relevant cart data to LuckyCart</font>
 
-#### <font color='#1E72AD'>A - Prepare the data</font>
+#### <font color='#AF1020'>A - Prepare the data</font>
 
 Each time your application does a check out, some data are sent to LuckyCart.
 The LuckyCart framework uses a simple composer object. `LCTicketComposer` is a utility protocol that aggregates dictionaries and throw some exceptions if duplicate keys are found.
@@ -273,7 +272,7 @@ For example you can extract some properties of a customer object in your own mod
 
 
 
-#### <font color='#1E72AD'>B - Send the data</font>
+#### <font color='#AF1020'>B - Send the data</font>
 
 Once your application did a succesful checkout, call this function to send ticket information to LuckyCart and receive an aknowledgment.
 
@@ -301,7 +300,7 @@ extension MyShopManager {
 }
 ```
 
-### <font color='#1E72AD'>6 - Display Games</font>
+### <font color='#EF1020'>7 - Display Games</font>
 
 
 ```swift
@@ -339,7 +338,14 @@ struct MyGamesView: GamesView {
 
 
 
-### <font color='#1E72AD'>7 - Update Game State</font>
+### <font color='#EF1020'>8 - Update Game State</font>
+
+When a game view is closed, games are reloaded with their new state ( playable, lost or won ).
+Just update the interface to reflect new games properties.
+
+Advanced Documentation
+
+[LuckyCart Framework Documentation](Documentation.md)
 
 --
 

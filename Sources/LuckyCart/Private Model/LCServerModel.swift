@@ -59,9 +59,9 @@ struct Model {
 
     /// The BannerSpaces as sent by server
     ///
-    /// A banner ids dictionary keyed by LCBannerSpaceIdentifier
+    /// A banner ids dictionary keyed by String
     ///
-    /// LCBannerSpaceIdentifier is a string that can be freely created
+    /// String is a string that can be freely created
     ///
     /// However, a collection of sample names and formats for banner spaces identification
     

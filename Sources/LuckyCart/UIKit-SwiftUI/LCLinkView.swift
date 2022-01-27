@@ -21,7 +21,7 @@ public struct LCLinkView: View {
     var didClose: ((Double)->Void)?
     
     @State var placeHolder: Image?
-
+    
     @State var displayedImage: Image?
     
     var clickAction: ((LCLink)->Bool)?
@@ -39,12 +39,11 @@ public struct LCLinkView: View {
     public var body: some View {
         ZStack(alignment: .center) {
             
-                if let image = displayedImage  {
-                    image.resizable()
-                }
-
-                if link.isEnabled {
-                    
+            if let image = displayedImage  {
+                image.resizable().scaledToFit()
+            }
+            
+            if link.isEnabled {
                 Button("") {
                     // If a click action closure is set, we execute it, else default is to open a sheet
                     // to display the link.
@@ -68,7 +67,6 @@ public struct LCLinkView: View {
         }
         .grayscale(link.isEnabled ? 0 : 0.9)
         .opacity(computeOpacity())
-        .scaledToFit()
         .cornerRadius(10)
         .task {
             guard link.image == nil, let imageURL = link.imageUrl else {

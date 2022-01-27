@@ -34,19 +34,19 @@ public struct LCSimpleBannerView: LCBannerView {
                 return true
             }
         }
-        .frame(minWidth:32, maxWidth: 2000, minHeight:32, maxHeight: 360, alignment: .center)
+        //.frame(minWidth:32, maxWidth: 2000, minHeight:32, maxHeight: 300, alignment: .center)
     }
 }
 
 public struct LCAsyncSimpleBannerView: View {
-    @State var bannerSpaceId: LCBannerSpaceIdentifier
-    @State var bannerId: LCBannerIdentifier
-    @State var format: LCBannerFormat
+    @State var bannerSpaceId: String
+    @State var bannerId: String
+    @State var format: String
     @State var banner: LCBanner?
 
-    public init(bannerSpaceId: LCBannerSpaceIdentifier,
-                bannerId: LCBannerIdentifier,
-                format: LCBannerFormat) {
+    public init(bannerSpaceId: String,
+                bannerId: String,
+                format: String) {
         _bannerSpaceId = State(initialValue: bannerSpaceId)
         _bannerId = State(initialValue: bannerId)
         _format = State(initialValue: format)
@@ -60,7 +60,6 @@ public struct LCAsyncSimpleBannerView: View {
                 HStack {
                     Text("Loading Banner").font(.title2).foregroundColor(.gray)
                 }
-                .frame(minWidth:32, maxWidth: 2000, minHeight:32, maxHeight: 360, alignment: .center)
             }
         }
         .task {

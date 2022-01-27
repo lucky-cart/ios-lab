@@ -26,8 +26,8 @@ extension LCRequestName {
     ///
     /// - `LCRequestParametersBase.Banner`
     ///     - customerId: String
-    ///     - bannerSpace: LCBannerSpaceIdentifier
-    ///     - banner: LCBannerIdentifier
+    ///     - bannerSpace: String banner space identifier ( key to an array of banner ids )
+    ///     - banner: String banner identifier
     ///
     /// **Example:**
     /// ```swift
@@ -89,15 +89,16 @@ extension LCRequestParameters {
 
     struct Banner: LCRequestParametersBase {
         var customerId: String
-        var bannerSpaceId: LCBannerSpaceIdentifier
-        var bannerId: LCBannerIdentifier
-        var format: LCBannerFormat
-        
+        var bannerSpaceId: String
+        var bannerId: String
+        var format: String
+                
         func pathExtension(for request: LCRequestBase) throws -> String {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing
             }
-            return "\(authKey)/\(customerId)/banner/mobile/\(bannerSpaceId.rawValue)/\(bannerId.rawValue)"
+            let underscore = bannerId.isEmpty ? "" : "_"
+            return "\(authKey)/\(customerId)/banner/mobile/\(bannerSpaceId)/\(format)\(underscore)\(bannerId)"
         }
 
         func parametersString(for request: LCRequestBase) throws -> String { "" }

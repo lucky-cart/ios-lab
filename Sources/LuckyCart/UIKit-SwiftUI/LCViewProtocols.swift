@@ -12,7 +12,7 @@ import SwiftUI
 public protocol LCBannersView: View {
     
     /// The banner space identifier containing the banner ids for this view
-    var bannerSpaceId: LCBannerSpaceIdentifier { get }
+    var bannerSpaceId: String { get }
     
     /// The banners array.
     var banners: State<[LCBanner]> { get set }
@@ -21,7 +21,7 @@ public protocol LCBannersView: View {
 
 public extension LCBannersView {
     
-    func loadBanner(bannerId: LCBannerIdentifier, format: LCBannerFormat) {
+    func loadBanner(bannerId: String, format: String) {
         LuckyCart.shared.banner(with: bannerId,
                                 bannerSpaceIdentifier: self.bannerSpaceId,
                                 format: format,
@@ -35,7 +35,7 @@ public extension LCBannersView {
 
 /// Make your view conform to this protocol to display LuckyCart games
 
-public protocol GamesView: View {
+public protocol LCGamesView: View {
     var games: [LCGame] { get set }
 }
 
@@ -43,6 +43,6 @@ public protocol GamesView: View {
 /// Make your view conform to this protocol to display a "Boutique View"
 /// A Boutique View is a custom view provided by client application.
 
-public protocol BoutiqueView: View {
-    var identifier: LCBoutiqueViewIdentifier { get set }
+public protocol LCBoutiqueView: View {
+    var boutiquePageIdentifier: String { get set }
 }

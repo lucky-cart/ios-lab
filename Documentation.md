@@ -92,21 +92,21 @@ Wraps a link to an url and an optional image url
 ### <font color='#007F00'>LCBannerSpaces</font>
 
 - id `UUID`
-- identifier `LCBannerSpaceIdentifier`
-- bannerIds `[LCBannerIdentifier]`
+- identifier `String`
+- bannerIds `[String]`
 
 ### <font color='#007F00'>LCEntity</font>
 
 ### <font color='#007F00'>LCBannerSpaces</font>
 
-- spaces `[LCBannerSpaceIdentifier: LCBannerSpace]`
-- banners `[LCBannerIdentifier: LCBanner]`
+- spaces `[String: LCBannerSpace]`
+- banners `[String: LCBanner]`
     
 - sortedSpaces `[LCBannerSpace]` { get }
 - var description `String` { get }
 
     
-- subscript (key: `LCBannerSpaceIdentifier`) -> `LCBannerSpace?`
+- subscript (key: `String`) -> `LCBannerSpace?`
 
 ### <font color='#007F00'>LCBannerAction</font>
 - type `LCBannerActionType`
@@ -115,7 +115,7 @@ Wraps a link to an url and an optional image url
 ### <font color='#007F00'>LCBanner</font>
 
 - id `UUID`
-- identifier `LCBannerIdentifier?`
+- identifier `String?`
 
 - link `LCLink`
 - name `String`
@@ -203,8 +203,8 @@ The link image can be clicked/tapped which, by default, opens the link in a web 
 The view protocols that client app can use to integrate LuckyCart.
 
 - BannerSpaceView - Make your view conform to this protocol to load and display LuckyCart banners
-   - bannerSpaceId `LCBannerSpaceIdentifier`
-   - bannerIds `[LCBannerIdentifier]`
+   - bannerSpaceId `String`
+   - bannerIds `[String]`
    - banners `[LCBanner]`
 
 #### <font color='#007F00'>GamesView</font>
@@ -220,7 +220,7 @@ Make your view conform to this protocol to display a "Boutique View".<br>
 A Boutique View is a custom view provided by client application that can be accessed via LuckCart banners.
 
 - LCBoutiqueView
-	- identifier `LCBoutiqueViewIdentifier`
+	- identifier `String`
 
 ### <font color='#007F00'>LCWebView</font>
 

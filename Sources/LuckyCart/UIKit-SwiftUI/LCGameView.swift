@@ -7,14 +7,16 @@
 //
 
 import SwiftUI
-//import LuckyCart
 
 public struct LCGameView: View {
     @State var cartId: String?
     @Binding var game: LCGame
     
-    public init(game: Binding<LCGame>) {
+    var reloadGamesOnClose: Bool = true
+    
+    public init(cartId: String, game: Binding<LCGame>) {
         self._game = game
+        self._cartId = State(initialValue: cartId)
         print("[luckycart.gameview] Init game view ( \(game.id) - Playable : \(game.isGamePlayable) - Result : \(game.gameResult)")
     }
     
@@ -25,14 +27,13 @@ public struct LCGameView: View {
         let link = $game.mobileLink
 #endif
         
-            LCLinkView(link: link,
-                       didClose: { timeInSecondsSpentInGame in
-                print("[luckycart.gameview] User has spent \(timeInSecondsSpentInGame) seconds in game.")
-                if let cartId = cartId {
-                    LuckyCart.shared.reloadGames(cartId: cartId)
-                }
-            },
-                       placeHolder: Image("luckyCartGame"))
+        LCLinkView(link: link,
+                   didClose: { timeInSecondsSpentInGame in
+            print("[luckycart.gameview] User has spent \(timeInSecondsSpentInGame) seconds in game.")
+            if let cartId = cartId, reloadGamesOnClose{
+                LuckyCart.shared.reloadGames(cartId: cartId)
+            }
+        }, placeHolder: Image("luckyCartGame"))
     }
 }
 
@@ -40,7 +41,7 @@ public struct LCGameView: View {
 
 struct LCGameView_Previews: PreviewProvider {
     static var previews: some View {
-        LCGameView(game: .constant(LuckyCart.testGame))
+        LCGameView(cartId: LuckyCart.testCart.id, game: .constant(LuckyCart.testGame))
     }
 }
 
