@@ -192,18 +192,18 @@ https://api.luckycart.com/cart/games?authKey={{auth_key}}&cartId={{cart_id}}&cus
 }
 ```
 
-###  <font color='#DF0040'>LCRequest+PostCart</font>
+###  <font color='#DF0040'>LCRequest+SendCart</font>
 
 Send a subset of cart data to LuckyCart.
 
 ##### Example
 
 ```
-let body = LCRequestParameters.PostCart(cart: cart,
+let body = LCRequestParameters.SendCart(cart: cart,
                                           customer: customer,
                                           ticketComposer: ticketComposer)
 
-let request: LCRequest<Model.BannerSpaces> = try network.buildRequest(name: .postCart,
+let request: LCRequest<Model.BannerSpaces> = try network.buildRequest(name: .sendCart,
                                                                       parameters: nil,
                                                                       body: body)
 try network.run(request) { response in

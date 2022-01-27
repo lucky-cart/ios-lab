@@ -1,5 +1,5 @@
 //
-//  LCRequest+PostCart.swift
+//  LCRequest+SendCart.swift
 //
 //  LuckyCart Framework - (c)2022 Lucky Cart
 //
@@ -8,7 +8,7 @@
 
 import Foundation
 
-// MARK: - postCart -
+// MARK: - sendCart -
 
 /// LCRequestName
 ///
@@ -53,7 +53,7 @@ extension LCRequestName {
     /// }
     ///
     
-    static let postCart = LCRequestName(rawValue: "postCart",
+    static let sendCart = LCRequestName(rawValue: "sendCart",
                                         server: .api,
                                         path: "cart/ticket.json",
                                         method: "POST")
@@ -79,9 +79,9 @@ extension Model {
 
 extension LCRequestParameters {
     
-    /// PostCart
+    /// SendCart
     ///
-    /// Parameters structure to pass to a `postCart` request
+    /// Parameters structure to pass to a `sendCart` request
     ///
     /// - Parameter banner: the banner id
     /// - Parameter customerId: The user customer id
@@ -100,7 +100,10 @@ extension LCRequestParameters {
     /// ```
     
     
-    struct PostCart: LCRequestParametersBase {
+    struct SendCart: LCRequestParametersBase {
+
+        public var customerId: String
+        public var cartId: String
 
         // The json dictionary to send in ticket json
         var ticketComposer: LCTicketComposer
@@ -117,17 +120,11 @@ extension LCRequestParameters {
             guard let auth = request.connection.authorization else {
                 throw LuckyCart.Err.authorizationMissing
             }
-            
-            let signature = auth.computeSignature()
-            
-            var out: [String: Any] = [
-                LCTicketComposer.Keys.auth_ts: signature.timestamp,
-                LCTicketComposer.Keys.auth_key: signature.key,
-                LCTicketComposer.Keys.auth_sign: signature.hex,
-                LCTicketComposer.Keys.auth_nonce: signature.timestamp,
-                LCTicketComposer.Keys.auth_v: auth.version,
-            ]
+                        
+            // Create the base dictionary for request body
+            var out: [String: Any] = try PostCartJSONComposer(customerId: customerId, cartId: cartId, auth: auth).makeDictionary()
 
+            
             try ticketComposer.append(to: &out)
             
             return out
@@ -135,10 +132,57 @@ extension LCRequestParameters {
 
         func json(for request: LCRequestBase) throws -> Data {
             let dictionary = try self.dictionary(for: request)
-            let json = try JSONSerialization.data(withJSONObject: dictionary, options: [])
-            let dataString = String(data: json, encoding: .utf8) ?? "<no valid utf8 data>"
-            print("[luckycart.network.postCart] Ticket Json :\r--->\r \(dataString)\r<---\r")
+            let json = try JSONSerialization.data(withJSONObject: dictionary, options: [.prettyPrinted])
+            print("[luckycart.sendCart.json] ===>\r\(String(data: json, encoding: .utf8)!)\r<========\r")
             return json
         }
+    }
+}
+
+/// LuckyCart Required Fields Composer
+///
+/// Generates the base dictionary to generate sendCart json
+///
+/// - customerId: String
+/// - cartId: String
+/// - auth: LCAuthorization
+
+struct PostCartJSONComposer: LCTicketComposer {
+    struct Keys {
+        static let auth_key = "auth_key"
+        static let auth_ts = "auth_ts"
+        static let auth_v = "auth_v"
+        static let auth_sign = "auth_sign"
+        static let auth_nonce = "auth_nonce"
+        static let customerId = "customerId"
+        static let cartId = "cartId"
+    }
+    
+    public var customerId: String
+    public var cartId: String
+    public var auth: LCAuthorization
+    
+    public init(customerId: String, cartId: String, auth: LCAuthorization) {
+        self.customerId = customerId
+        self.cartId = cartId
+        self.auth = auth
+    }
+    
+    /// Returns data as Dictionary
+    public func makeDictionary() throws -> [String : Any] {
+        
+        let signature = auth.computeSignature()
+        
+        let out: [String: Any] = [
+            Keys.auth_ts: signature.timestamp,
+            Keys.auth_key: signature.key,
+            Keys.auth_sign: signature.hex,
+            Keys.auth_nonce: signature.timestamp,
+            Keys.auth_v: auth.version,
+            Keys.cartId: cartId,
+            Keys.customerId: customerId
+        ]
+        
+        return out
     }
 }

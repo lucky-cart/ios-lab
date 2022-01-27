@@ -28,7 +28,9 @@ public struct LCGameView: View {
             LCLinkView(link: link,
                        didClose: { timeInSecondsSpentInGame in
                 print("[luckycart.gameview] User has spent \(timeInSecondsSpentInGame) seconds in game.")
-                LuckyCart.shared.reloadGames()
+                if let cartId = cartId {
+                    LuckyCart.shared.reloadGames(cartId: cartId)
+                }
             },
                        placeHolder: Image("luckyCartGame"))
     }

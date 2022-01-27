@@ -48,7 +48,7 @@ final class LuckyCartFlowTests: XCTestCase {
                 if let firstId = bannerSpace.bannerIds.first {
                     
                     
-                    luckyCart.banner(with: firstId, bannerSpaceIdentifier: .homePage) { error in
+                    luckyCart.banner(with: firstId, bannerSpaceIdentifier: "homepage", format: "banner") { error in
                         XCTFail("GetBanner Failed - \(error.localizedDescription)")
                         bannerSpacesExpectation.fulfill()
                         expectation.fulfill()

@@ -230,13 +230,14 @@ public extension NSNotification.Name {
     static let bannerAction = NSNotification.Name(rawValue: "LCBannerActionNotification")
 }
 
-public struct Keys {
-    public static let action = "action"
-    public static let ref = "ref"
-}
 
 public struct LCBannerAction: Codable, LCEntity {
     
+    public struct Keys {
+        public static let action = "action"
+        public static let ref = "ref"
+    }
+
     typealias ModelEntity = Model.BannerAction
 
     public var type: LCBannerActionType
@@ -249,8 +250,7 @@ public struct LCBannerAction: Codable, LCEntity {
     
     func execute() {
         NotificationCenter.default.post(name: .bannerAction, object: nil, userInfo: [
-            Keys.ref: ref,
-            Keys.action: type
+            Keys.action: self
         ])
     }
 }
@@ -300,7 +300,7 @@ public struct LCBannerActionType: RawRepresentable, Codable, Equatable {
 
 /// LCPostCartResponse
 ///
-/// The data returned from a succesful postCart request
+/// The data returned from a succesful sendCart request
 
 public struct LCPostCartResponse: Codable, LCEntity {
 

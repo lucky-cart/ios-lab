@@ -1,5 +1,5 @@
 //
-//  LCServerModel+Debug.swift
+//  LuckyCart+Debug.swift
 //
 //  LuckyCart Framework - (c)2022 Lucky Cart
 //
@@ -8,12 +8,9 @@
 
 import Foundation
 
+// MARK: - Testing Static Entities -
 
-/// "auth_key": "ugjArgGw",
-/// "auth_ts": "1641998862",
-/// "auth_sign": "dd41953d1890072bce9d352edb4fe00aa15a17bea49b65a2ec0a0c87457553d0",
-/// "auth_v": "2.0",
-
+#if DEBUG
 
 /// Static test objects ready to use in SwiftUI previews, UI Tests and Unit Tests
 
@@ -60,3 +57,74 @@ extension Model {
                                                        baseDesktopUrl: "\(goTestUrl)/lc__team__qa/NX5PDN/play/QLWG-SHYR-MGBZ-SLXK")
 }
 
+#endif
+
+#if DEBUG
+
+// MARK: - Public test objects
+
+/// Client model test entitites
+
+public extension LuckyCart {
+    static var testAuthKey = "ugjArgGw"
+    static var testSecret = "p#91J#i&00!QkdSPjgGNJq"
+}
+
+public extension LuckyCart {
+    
+    static let testAuthorization = LCAuthorization(key: testAuthKey, secret: testSecret)
+    
+    internal static let testSignature = testAuthorization.computeSignature(timestamp: "664354523")
+    
+    static var test: LuckyCart {
+        LuckyCart.shared ?? LuckyCart.init(authorization: LuckyCart.testAuthorization,
+                                           customer: LuckyCart.testCustomer)
+    }
+    
+    static let testGame = LCGame(Model.testGame)
+    
+    static let testCustomer = LCCustomer(Model.testCustomer)
+    
+    static let testCart = LCCart(Model.testCart)
+    
+    static let testBannerSpaces = LCBannerSpaces(Model.testBannerSpaces)
+    
+    static let testBanner = LCBanner(Model.testBanner)
+    
+    static let testPostCartResponse = LCPostCartResponse(Model.testPostCartResponse)
+}
+
+// MARK: - Private test objects
+
+extension LCNetwork {
+    static let testApi = LCConnection(server: .api, authorization: LuckyCart.testAuthorization)
+    static let testPromoMatching = LCConnection(server: .promo, authorization: LuckyCart.testAuthorization)
+}
+
+/// Keys for the data sent int the sendCart request
+struct TestKeys {
+    // Customer
+    static let lastName = "lastName"
+    static let firstName = "firstName"
+    static let email = "email"
+    // Cart
+    static let totalAti = "totalAti"
+    static let currency = "currency"
+    static let products = "products"
+    static let loyaltyCart = "loyaltyCart"
+    // Product
+    static let quantity = "quantity"
+    static let id = "id"
+    static let ht = "ht"
+    static let ttc = "ttc"
+    // Order
+    static let shopId = "shopId"
+    static let shippingMethod = "shippingMethod"
+    static let device = "device"
+    
+    static let customerId = "customerId"
+    static let cartId = "cartId"
+}
+
+
+#endif

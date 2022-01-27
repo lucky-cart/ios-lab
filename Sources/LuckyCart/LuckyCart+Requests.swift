@@ -13,13 +13,15 @@ import Foundation
 ///
 internal extension LuckyCart {
     
-    /// postCart
+    /// sendCart
     
-    func postCart(ticketComposer: LCTicketComposer, completion: @escaping (Result<LCPostCartResponse, Error>)->Void) {
+    func sendCart(cartId: String, ticketComposer: LCTicketComposer, completion: @escaping (Result<LCPostCartResponse, Error>)->Void) {
         
-        let body = LCRequestParameters.PostCart(ticketComposer: ticketComposer)
+        let body = LCRequestParameters.SendCart(customerId: customer.id,
+                                                cartId: cartId,
+                                                ticketComposer:  ticketComposer)
         do {
-            let request: LCRequest<Model.PostCartResponse> = try network.buildRequest(name: .postCart,
+            let request: LCRequest<Model.PostCartResponse> = try network.buildRequest(name: .sendCart,
                                                                                       parameters: nil,
                                                                                       body: body)
             try network.run(request) { response in
@@ -43,7 +45,7 @@ internal extension LuckyCart {
     ///
     /// Will return cached version if available
     
-    func getGames(reload: Bool = false, completion: @escaping (Result<[LCGame], Error>)->Void) {
+    func getGames(cartId: String, reload: Bool = false, completion: @escaping (Result<[LCGame], Error>)->Void) {
         if cacheEnabled, let cachedGames = games, reload == false {
             print("[luckycart.cache] Return cached games")
             completion(Result.success(cachedGames))
@@ -52,7 +54,7 @@ internal extension LuckyCart {
         
         do {
             let request: LCRequest<Model.Games> = try network.buildRequest(name: .getGames,
-                                                                           parameters: LCRequestParameters.Games(customerId: customer.id, cartId: cart.id),
+                                                                           parameters: LCRequestParameters.Games(customerId: customer.id, cartId: cartId),
                                                                            body: nil)
             try network.run(request) { response in
                 switch response {

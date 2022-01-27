@@ -21,37 +21,36 @@ extension LuckyCart {
     ///
     /// Sends the ticket in LuckyCart format
     
-    public func checkOut(ticketComposer: LCTicketComposer,
+    public func sendCart(cartId: String,
+                         ticketComposer: LCTicketComposer,
                          failure: @escaping (Error)->Void,
                          success: @escaping (LCPostCartResponse)->Void) {
-        postCart(ticketComposer: ticketComposer) { result in
+        sendCart(cartId: cartId, ticketComposer: ticketComposer) { result in
             switch result {
             case .failure(let error):
-                print("[luckycart.checkout] CheckOut Error:\r\(error.localizedDescription)")
-                self.lastCheckOutResponse = nil
+                print("[luckycart.checkout] SendCart Error:\r\(error.localizedDescription)")
                 failure(error)
             case .success(let response):
-                print("[luckycart.checkout] CheckOut succeed:---->\r\(response)\r<----\r")
-                self.lastCheckOutResponse = response
+                print("[luckycart.checkout] SendCart succeed:---->\r\(response)\r<----\r")
                 success(response)
             }
         }
     }
     
-    
     /// Load all games
     ///
     /// Games are usually loaded just after the check out
 
-    public func loadGames(failure: @escaping (Error)->Void,
+    public func loadGames(cartId: String,
+                          failure: @escaping (Error)->Void,
                           success: @escaping ([LCGame])->Void) {
-        getGames { result in
+        getGames(cartId: cartId) { result in
             switch result {
             case .failure(let error):
-                print("[luckycart.checkout] PostCart Error : \(error.localizedDescription)")
+                print("[luckycart.checkout] LoadGames Error : \(error.localizedDescription)")
                 failure(error)
             case .success(let response):
-                print("[luckycart.checkout] PostCart succeed:---->\r\(response)\r<----\r")
+                print("[luckycart.checkout] LoadGames succeed:---->\r\(response)\r<----\r")
                 success(response)
             }
         }
@@ -61,8 +60,8 @@ extension LuckyCart {
     ///
     /// Observe the `LuckyCart.games` property to do interface refresh if needed
     
-    public func reloadGames() {
-        getGames(reload: true) { _ in }
+    public func reloadGames(cartId: String) {
+        getGames(cartId: cartId, reload: true) { _ in }
     }
     
     /// Load all banner spaces

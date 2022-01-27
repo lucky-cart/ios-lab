@@ -37,6 +37,8 @@ extension Dictionary {
 
 final class LuckyCartTests: XCTestCase {
     
+    
+    
     /// testSignature
     ///
     /// Test then signature encoding algorithm
@@ -54,50 +56,49 @@ final class LuckyCartTests: XCTestCase {
     
     func testTicketComposer() throws {
         
-        let composer = LCTicketComposer.test
+        let composer = LuckyCartTests.testSendCartComposer
         
-        let parameters = LCRequestParameters.PostCart(cart: LuckyCart.testCart,
-                                                      customer:  LuckyCart.testCustomer,
+        let parameters = LCRequestParameters.SendCart(customerId: LuckyCart.testCustomer.id,
+                                                      cartId: LuckyCart.testCart.id,
                                                       ticketComposer: composer)
         
         // We create a request to inspect the final body ( ticket composer info + authorization )
-        let request: LCRequest<Model.PostCartResponse> = try LCNetwork(authorization: LuckyCart.testAuthorization).buildRequest(name: .postCart,
-                                                                                      parameters: nil,
-                                                                                      body: parameters)
+        let request: LCRequest<Model.PostCartResponse> = try LCNetwork(authorization: LuckyCart.testAuthorization).buildRequest(name: .sendCart,
+                                                                                                                                parameters: nil,
+                                                                                                                                body: parameters)
         let dict = try parameters.dictionary(for: request)
         
-        dict.testNotNil(name: "dict", key: Keys.auth_ts)
-        dict.testNotNil(name: "dict", key: Keys.auth_sign)
-        dict.testNotNil(name: "dict", key: Keys.auth_nonce)
+        dict.testNotNil(name: "dict", key: PostCartJSONComposer.Keys.auth_ts)
+        dict.testNotNil(name: "dict", key: PostCartJSONComposer.Keys.auth_sign)
+        dict.testNotNil(name: "dict", key: PostCartJSONComposer.Keys.auth_nonce)
         
-        dict.test(name: "dict", key: Keys.auth_key, match: LuckyCart.testAuthKey)
-        dict.test(name: "dict", key: Keys.auth_v, match: "2.0")
+        dict.test(name: "dict", key: PostCartJSONComposer.Keys.auth_key, match: LuckyCart.testAuthKey)
+        dict.test(name: "dict", key: PostCartJSONComposer.Keys.auth_v, match: "2.0")
         
-        dict.test(name: "dict", key: Keys.customerId, match: LuckyCart.testCustomer.id)
-        dict.test(name: "dict", key: Keys.customerClientId, match: "41410788")
-        dict.test(name: "dict", key: Keys.email, match: "vincentoliveira@luckycart.com")
-        dict.test(name: "dict", key: Keys.lastName, match: "OLIVEIRA")
-        dict.test(name: "dict", key: Keys.firstName, match: "VINCENT")
+        dict.test(name: "dict", key: PostCartJSONComposer.Keys.customerId, match: LuckyCart.testCustomer.id)
+        dict.test(name: "dict", key: PostCartJSONComposer.Keys.cartId, match: LuckyCart.testCart.id)
         
-        dict.test(name: "dict", key: Keys.cartId, match: LuckyCart.testCart.id)
-        dict.test(name: "dict", key: Keys.cartClientId, match: "client_cart_5c1e51fda")
+        dict.test(name: "dict", key: TestKeys.email, match: "vincentoliveira@luckycart.com")
+        dict.test(name: "dict", key: TestKeys.lastName, match: "OLIVEIRA")
+        dict.test(name: "dict", key: TestKeys.firstName, match: "VINCENT")
+    
         
-        dict.test(name: "dict", key: Keys.totalAti, match: "12.00")
-        dict.test(name: "dict", key: Keys.loyaltyCart, match: "")
-        dict.test(name: "dict", key: Keys.currency, match: "EUR")
-        dict.test(name: "dict", key: Keys.ht, match: "10.00")
+        dict.test(name: "dict", key: TestKeys.totalAti, match: "12.00")
+        dict.test(name: "dict", key: TestKeys.loyaltyCart, match: "")
+        dict.test(name: "dict", key: TestKeys.currency, match: "EUR")
+        dict.test(name: "dict", key: TestKeys.ht, match: "10.00")
         
-        dict.test(name: "dict", key: Keys.shopId, match: "A75710")
-        dict.test(name: "dict", key: Keys.shippingMethod, match: "pickup")
-        dict.test(name: "dict", key: Keys.device, match: "ios-test-optin")
+        dict.test(name: "dict", key: TestKeys.shopId, match: "A75710")
+        dict.test(name: "dict", key: TestKeys.shippingMethod, match: "pickUp")
+        dict.test(name: "dict", key: TestKeys.device, match: "ios-test-optin")
         
-        if let products = dict[Keys.products] as? [String: String] {
-            products.test(name: "products", key: Keys.quantity, match: "1.00")
-            products.test(name: "products", key: Keys.ttc, match: "12.00")
-            products.test(name: "products", key: Keys.ht, match: "10.00")
-            products.test(name: "products", key: Keys.id, match: "14917412")
+        if let products = dict[TestKeys.products] as? [String: String] {
+            products.test(name: "products", key: TestKeys.quantity, match: "1.00")
+            products.test(name: "products", key: TestKeys.ttc, match: "12.00")
+            products.test(name: "products", key: TestKeys.ht, match: "10.00")
+            products.test(name: "products", key: TestKeys.id, match: "14917412")
         }
-
+        
     }
     
     func testGetGames() throws {
@@ -128,7 +129,7 @@ final class LuckyCartTests: XCTestCase {
     
     func testGetHomePageBanner() throws {
         facadeCall(.getBanner) { name, expectation in
-            LuckyCart.test.getBanner(bannerSpaceIdentifier: .homePage, bannerIdentifier: "banner") { result in
+            LuckyCart.test.getBanner(bannerSpaceIdentifier: "homepage", bannerIdentifier: "banner", format: "banner") { result in
                 self.facadeTestCompletion(name, responseType: LCBanner.self, result: result, expectation: expectation) { result in
                     print("----- Received Banner")
                     print(result)
@@ -139,7 +140,7 @@ final class LuckyCartTests: XCTestCase {
     
     func testGetCategoriesBanner() throws {
         facadeCall(.getBanner) { name, expectation in
-            LuckyCart.test.getBanner(bannerSpaceIdentifier: .categories, bannerIdentifier: "banner_100") { result in
+            LuckyCart.test.getBanner(bannerSpaceIdentifier: "categories", bannerIdentifier: "banner_100", format: "banner") { result in
                 self.facadeTestCompletion(name, responseType: LCBanner.self, result: result, expectation: expectation) { result in
                     print("----- Received Banner")
                     print(result)
@@ -150,10 +151,10 @@ final class LuckyCartTests: XCTestCase {
     
     
     func testPostCart() throws {
-        facadeCall(.postCart) { name, expectation in
-            LuckyCart.test.postCart(ticketComposer: LCTicketComposer.test) { result in
-                self.facadeTestCompletion(.postCart, responseType: LCPostCartResponse.self, result: result, expectation: expectation) { result in
-                    print("----- Received PostCart Response")
+        facadeCall(.sendCart) { name, expectation in
+            LuckyCart.test.sendCart(cartId: LuckyCart.testCart.id, ticketComposer: LuckyCartTests.testSendCartComposer) { result in
+                self.facadeTestCompletion(.sendCart, responseType: LCPostCartResponse.self, result: result, expectation: expectation) { result in
+                    print("----- Received SendCart Response")
                     print(result)
                     XCTAssert(result.baseDesktopUrl == LuckyCart.testPostCartResponse.baseDesktopUrl)
                     XCTAssert(result.baseMobileUrl == LuckyCart.testPostCartResponse.baseMobileUrl)
@@ -166,4 +167,54 @@ final class LuckyCartTests: XCTestCase {
             }
         }
     }
+}
+
+extension LuckyCartTests {
+    
+    static var testSendCartComposer: LCTicketComposer {
+        
+        // Returns full json composer
+        return LCDictionaryComposer(dictionary: [
+            TestKeys.loyaltyCart: "",
+            
+            TestKeys.email: "vincentoliveira@luckycart.com",
+            TestKeys.firstName: "VINCENT",
+            TestKeys.lastName: "OLIVEIRA",
+            
+            TestKeys.shippingMethod: "pickUp",
+            TestKeys.shopId: "A75710",
+            TestKeys.device: "ios-test-optin",
+            
+            TestKeys.currency: "EUR",
+            TestKeys.totalAti: LuckyCart.priceString(12),
+            TestKeys.ht: LuckyCart.priceString(10),
+            TestKeys.products : [
+                TestKeys.id: "14917412",
+                TestKeys.quantity: "1.00",
+                TestKeys.ttc: LuckyCart.priceString(12),
+                TestKeys.ht: LuckyCart.priceString(10)
+            ]
+            
+        ])
+    }
+    static let testTicketJson: [String: Any] = [
+        TestKeys.shippingMethod: "pickup",
+        TestKeys.customerId: "41410788",
+        TestKeys.totalAti: "12.00",
+        TestKeys.lastName: "OLIVEIRA",
+        TestKeys.firstName: "VINCENT",
+        TestKeys.ht: "10.00",
+        TestKeys.products: [
+            TestKeys.ttc: "12.00",
+            TestKeys.quantity: "1.00",
+            TestKeys.ht: "10.00",
+            TestKeys.id: "14917412"
+        ],
+        TestKeys.shopId: "A75710",
+        TestKeys.email: "vincentoliveira@luckycart.com",
+        TestKeys.currency: "EUR",
+        TestKeys.device: "ios-test-optin",
+        TestKeys.cartId: LuckyCart.testCart.id,
+        TestKeys.loyaltyCart: ""
+    ]
 }

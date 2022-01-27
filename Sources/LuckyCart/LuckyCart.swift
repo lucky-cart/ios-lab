@@ -10,6 +10,7 @@
 import Combine
 import Foundation
 
+// MARK: - LuckyCart Client Protocol -
 
 /// Make your app/manager/controller object conform to this protocol to use LuckyCart
 
@@ -20,7 +21,10 @@ public protocol LuckyCartClient {
     
     /// Generates the information needed by LuckyCart when checking out
     func luckyCartTicket(cartId: String) throws -> LCTicketComposer
+
 }
+
+// MARK: - LuckyCart Object -
 
 /// LuckyCart API
 ///
@@ -28,9 +32,9 @@ public protocol LuckyCartClient {
 
 public class LuckyCart: ObservableObject {
     
-    public static var shared: LuckyCart!
+    /// LuckyCart shared instance
     
-    public var cacheEnabled: Bool = false
+    public static var shared: LuckyCart!
     
     /// Err
     ///
@@ -38,10 +42,7 @@ public class LuckyCart: ObservableObject {
     
     public struct Err: RawRepresentable, Error {
         public var rawValue: String
-        
-        public  init(rawValue: String) {
-            self.rawValue = rawValue
-        }
+        public  init(rawValue: String) { self.rawValue = rawValue }
         
         static let cantFormURL = Err(rawValue: "cantFormURL")
         static let unknownRequestName = Err(rawValue: "unknownRequestName")
@@ -50,19 +51,14 @@ public class LuckyCart: ObservableObject {
         static let emptyResponse = Err(rawValue: "emptyResponse")
         static let authKeyMissing = Err(rawValue: "authKeyMissing")
         static let authorizationMissing = Err(rawValue: "authorizationMissing")
-
+        
         static let customerIdMissing = Err(rawValue: "customerIdMissing")
         static let cartIdMissing = Err(rawValue: "cartIdMissing")
-
         static let ticketComposerKeyAlreadyPresent = Err(rawValue: "ticketComposer.keyAlreadyPresent")
-        static let ticketComposerCustomerIdDoesNotMatchRequestCustomerId
-        = Err(rawValue: "ticketComposer.customerIdDoesNotMatchRequestCustomerId")
-        static let ticketComposerCartIdDoesNotMatchRequestCartId
-        = Err(rawValue: "ticketComposer.cartIdDoesNotMatchRequestCartId")
-
+        
         static let cantCreateImageWithDownloadedData = Err(rawValue: "cantCreateImageWithDownloadedData")
     }
-
+    
     /// network
     ///
     /// The Network object that manages the session
@@ -71,6 +67,10 @@ public class LuckyCart: ObservableObject {
     
     let network: LCNetwork
     
+    /// lastError
+    ///
+    /// Sticky network error
+    
     @Published public var lastError: Error?
     
     /// customer: The LuckyCart customer
@@ -78,15 +78,7 @@ public class LuckyCart: ObservableObject {
     /// if customer is nil, a lucky cart guest customer will be used in requests
     
     @Published public private(set) var customer: LCCustomer
-    
-    /// cart
-    ///
-    /// The LuckyCart cart
-    
-    @Published var cart: LCCart = LCCart()
-    
-    @Published var lastCheckOutResponse: LCPostCartResponse?
-    
+            
     /// Banner Spaces Cache
     @Published public internal(set) var bannerSpaces: LCBannerSpaces?
     
@@ -94,6 +86,9 @@ public class LuckyCart: ObservableObject {
     ///
     /// Value is published to trigger updates when games are reloaded ( to update game results )
     @Published public internal(set) var games: [LCGame]?
+
+    /// Optional cache
+    public var cacheEnabled: Bool = false
 
     /// Images Cache
     public var images: [URL: LCImage] = [:]
@@ -117,20 +112,12 @@ public class LuckyCart: ObservableObject {
         LuckyCart.shared = self
         
     }
-
-    /// Opens a new cart
-    
-    public func newCart(with id: String = UUID().uuidString) {
-        clearCache()
-        self.cart = LCCart(id: id)
-    }
-
+        
     /// Set current user
-
+    
     public func setUser(_ user: LCCustomer?) {
         clearCache()
         customer = user ?? LCCustomer.guest
-        newCart()
     }
     
     /// Switch to guest user
@@ -138,6 +125,11 @@ public class LuckyCart: ObservableObject {
     public func setGuestUser() {
         setUser(nil)
     }
+}
+
+// MARK: - Cache -
+
+extension LuckyCart {
     
     /// clearCache
     ///
@@ -146,12 +138,24 @@ public class LuckyCart: ObservableObject {
     func clearCache() {
         self.bannerSpaces = nil
         self.games = nil
-    }
-    /// clearImagesCache
-    ///
-    /// Clears all the banner images
-    
-    func clearImagesCache() {
         self.images = [:]
     }
+}
+
+// MARK: - Utilities -
+
+extension LuckyCart {
+    
+    /// priceString
+    ///
+    /// Returns a double price as "xxxxx.xx" string
+    
+    public static func priceString(_ price: Double) -> String {
+        let f = NumberFormatter()
+        f.decimalSeparator = "."
+        f.maximumFractionDigits = 2
+        f.minimumFractionDigits = 2
+        return f.string(for: price) ?? "\(price)"
+    }
+    
 }

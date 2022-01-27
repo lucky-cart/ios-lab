@@ -9,9 +9,28 @@ import SwiftUI
 
 /// Make your view conform to this protocol to display LuckyCart banners
 
-public protocol BannerSpaceView: View {
+public protocol LCBannersView: View {
+    
+    /// The banner space identifier containing the banner ids for this view
     var bannerSpaceId: LCBannerSpaceIdentifier { get }
-    var banners: [LCBanner] { get set }
+    
+    /// The banners array.
+    var banners: State<[LCBanner]> { get set }
+    
+}
+
+public extension LCBannersView {
+    
+    func loadBanner(bannerId: LCBannerIdentifier, format: LCBannerFormat) {
+        LuckyCart.shared.banner(with: bannerId,
+                                bannerSpaceIdentifier: self.bannerSpaceId,
+                                format: format,
+                                failure: { error in
+        }) { banner in
+            self.banners.wrappedValue.append(banner)
+        }
+    }
+    
 }
 
 /// Make your view conform to this protocol to display LuckyCart games
