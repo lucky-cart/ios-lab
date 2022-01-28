@@ -4,12 +4,8 @@
 <b>Lucky Cart Public API</b>
 
 ## <font color='#707080'>LuckyCart API</font>
-    
-### <font color='#007F00'>newCart(with id: String)</font>
-
-Opens a new cart
         
-### <font color='#007F00'>setUser(_ user: LCCustomer?)</font>
+### <font color='#007F00'>setUser(_ user: String?)</font>
     
 Set current user
     
@@ -19,13 +15,13 @@ Switch to guest user
     
 ## Public Network API Calls ( Defined in `LuckyCart+Facade` )
 
-### <font color='#007F00'>Check Out</font>
+### <font color='#007F00'>Send Cart</font>
 
 Sends the ticket in LuckyCart format
 
 ```
 
-checkOut(ticketComposer: myTicketComposer,
+sendCart(ticketComposer: myTicketComposer,
                          failure: { error in },
                          success: { postCartResponse in })
 ```    
@@ -35,17 +31,18 @@ checkOut(ticketComposer: myTicketComposer,
 Games are usually loaded just after the check out
 
 ```
-loadGames(failure: { error in },
+loadGames(cartId: cartId,
+          failure: { error in },
           success: { games in })
 ```          
     
-### <font color='#007F00'>Load banner spaces</font>
+### <font color='#007F00'>List available banners</font>
 
 Banner spaces are loaded as soon as the LuckyCart instance is created.
     
 ```
 listAvailableBanners(failure: { error in },
-                 success: { bannerSpaces in })
+                     success: { bannerSpaces in })
 ```
               
 ### <font color='#007F00'>Load a banner</font>
@@ -59,16 +56,6 @@ banner(with identifier: myBannerIdentifier,
 ```
 
 ## <font color='#707080'>Public Model</font>
-
-### <font color='#007F00'>LCCustomer</font>
-
-- id: String
-
-- static guest `LCCustomer(Model.Customer.guest)`
-
-### <font color='#007F00'>LCCart</font>
-
-- id: String
 
 ### <font color='#007F00'>LCLink</font>
 
@@ -94,8 +81,6 @@ Wraps a link to an url and an optional image url
 - id `UUID`
 - identifier `String`
 - bannerIds `[String]`
-
-### <font color='#007F00'>LCEntity</font>
 
 ### <font color='#007F00'>LCBannerSpaces</font>
 
