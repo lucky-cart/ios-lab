@@ -21,7 +21,7 @@ public struct LCSimpleBannerView: LCBannerView {
     }
     
     public var body: some View {
-        LCLinkView(link: .constant(banner.link)) { link in
+        LCLinkView(link: .constant(banner.link), clickAction: { link in
             switch banner.action.type {
             case .boutique:
                 if !banner.action.ref.isEmpty {
@@ -29,12 +29,11 @@ public struct LCSimpleBannerView: LCBannerView {
                     return false
                 }
                 return true
-            // Open the sheet if no action set
+                // Open the sheet if no action set
             default:
                 return true
             }
-        }
-        //.frame(minWidth:32, maxWidth: 2000, minHeight:32, maxHeight: 300, alignment: .center)
+        })
     }
 }
 
@@ -43,7 +42,7 @@ public struct LCAsyncSimpleBannerView: View {
     @State var bannerId: String
     @State var format: String
     @State var banner: LCBanner?
-
+    
     public init(bannerSpaceId: String,
                 bannerId: String,
                 format: String) {

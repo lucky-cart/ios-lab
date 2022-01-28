@@ -21,6 +21,15 @@ typealias PlatformViewReprentable = NSViewRepresentable
 typealias PlatformViewReprentable = UIViewRepresentable
 #endif
 
+
+/// LCWebView
+///
+/// A multiplatform WebView
+///
+/// For now, A LuckyCart application can be build on any platform, but
+/// HTML being forbidden on tvOS and watchOS apps, content should be provided in apple TVML.
+/// If there is a need for compatibility, complete this class.
+
 struct LCWebView : PlatformViewReprentable {
     
     let request: URLRequest

@@ -10,17 +10,19 @@ import Foundation
 
 /// LCServer
 ///
-/// The different servers that can be accessed from client
+/// The different servers that can be accessed from client are declared as static.
+/// - api : https://api.luckycart.com
+/// - promoMatching : https://promomatching.luckycart.com
 
 struct LCServer: RawRepresentable {
     var rawValue: String
-        
+    
     init(rawValue: String) {
         self.rawValue = rawValue
     }
     
     static let any = LCServer(rawValue: "")
-
+    
     static let api = LCServer(rawValue: "https://api.luckycart.com/")
     
     static let promo = LCServer(rawValue: "https://promomatching.luckycart.com/")
@@ -39,6 +41,13 @@ struct LCServer: RawRepresentable {
         return url
     }
 }
+
+/// LCConnection
+///
+/// Associates a server and an authorization.
+/// LCConnection is then associated to `LCRequest` objects to finalize it
+/// - compose final path using server url
+/// - authorize request
 
 class LCConnection {
     var server: LCServer

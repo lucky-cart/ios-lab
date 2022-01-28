@@ -44,7 +44,7 @@ loadGames(failure: { error in },
 Banner spaces are loaded as soon as the LuckyCart instance is created.
     
 ```
-loadBannerSpaces(failure: { error in },
+listAvailableBanners(failure: { error in },
                  success: { bannerSpaces in })
 ```
               

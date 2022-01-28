@@ -55,7 +55,7 @@ public struct LCCustomer: Codable, LCEntity, Identifiable {
     init(_ entity: ModelEntity) {
         id = entity.id
     }
-
+    
     public static let guest = LCCustomer(Model.Customer.guest)
 }
 
@@ -69,7 +69,7 @@ public struct LCCart: Codable, LCEntity, Identifiable {
     public init(id: String = UUID().uuidString) {
         self.id = id
     }
-
+    
     init(_ entity: ModelEntity) {
         id = entity.id
     }
@@ -83,7 +83,7 @@ public struct LCLink: Codable {
     public let url: URL
     public let imageUrl: URL?
     public var isEnabled: Bool = true
-
+    
     public var targetBoutiqueViewId: String?
     
     /// image
@@ -104,7 +104,7 @@ public struct LCLink: Codable {
 
 public class LCGame: Codable, LCEntity, LCIdentifiable {
     typealias ModelEntity = Model.Game
-
+    
     public var code: String
     public var isGamePlayable: Bool
     public var gameResult: LCGameResult
@@ -177,7 +177,7 @@ public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
     /// The loaded spaces.
     
     public var spaces = [String: LCBannerSpace]()
-
+    
     /// banners
     ///
     /// The loaded banners.
@@ -189,7 +189,7 @@ public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
             return lhs.identifier < rhs.identifier
         }
     }
-
+    
     public var description: String {
         
         let lines: [String] = spaces.map { key, bannerSpace in
@@ -198,7 +198,7 @@ public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
         }
         return lines.joined(separator: "\r")
     }
-
+    
     /// subscript by String
     ///
     /// Allow usage of brackets on banner spaces object
@@ -209,7 +209,7 @@ public struct LCBannerSpaces: Codable, LCEntity, CustomStringConvertible {
     public subscript (key: String) -> LCBannerSpace? {
         return spaces[key]
     }
-
+    
     /// Init with server model object
     
     init(_ entity: ModelEntity) {
@@ -237,9 +237,9 @@ public struct LCBannerAction: Codable, LCEntity {
         public static let action = "action"
         public static let ref = "ref"
     }
-
+    
     typealias ModelEntity = Model.BannerAction
-
+    
     public var type: LCBannerActionType
     public var ref: String
     
@@ -264,7 +264,7 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
     public var id = UUID()
     
     public var identifier: String?
-
+    
     public var link: LCLink
     public var name: String
     public var campaign: String
@@ -275,11 +275,11 @@ public struct LCBanner: Codable, LCEntity, Identifiable {
         self.name = entity.name
         self.campaign = entity.campaign
         self.space = entity.space
-
+        
         self.action = LCBannerAction(entity.action)
         let targetBoutiqueId = action.ref.isEmpty ? nil : String(action.ref)
         self.link = LCLink(url: entity.redirect_url, imageUrl: entity.image_url, isEnabled: true, targetBoutiqueViewId: targetBoutiqueId)
-
+        
     }
 }
 
@@ -303,7 +303,7 @@ public struct LCBannerActionType: RawRepresentable, Codable, Equatable {
 /// The data returned from a succesful sendCart request
 
 public struct LCPostCartResponse: Codable, LCEntity {
-
+    
     var ticket: String
     var mobileUrl: URL?
     var tabletUrl: URL?

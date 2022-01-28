@@ -1,5 +1,5 @@
 //
-//  LCRequest+GetBannerSpaces.swift
+//  LCRequest+ListAvailableBanners.swift
 //
 //  LuckyCart Framework - (c)2022 Lucky Cart
 //
@@ -8,7 +8,7 @@
 
 import Foundation
 
-// MARK: - getBannerSpaces -
+// MARK: - ListAvailableBanners -
 
 /// LCRequestName
 ///
@@ -20,9 +20,9 @@ import Foundation
 
 extension LCRequestName {
     
-    /// getBannerSpaces
+    /// ListAvailableBanners
     ///
-    /// The `getBannerSpaces` request needs some parameters, passed via a `LCRequestParameters` object
+    /// The `ListAvailableBanners` request needs some parameters, passed via a `LCRequestParameters` object
     /// 
     /// - `LCRequestParametersBase.BannerSpaces`
     ///     - customerId
@@ -30,7 +30,7 @@ extension LCRequestName {
     /// **Example:**
     /// ```swift
     /// let parameters = LCRequestParameters.BannerSpaces(customerId: customerId)
-    /// let request: LCRequest<Model.Banner> = try network.buildRequest(name: .getBannerSpaces, parameters: parameters)
+    /// let request: LCRequest<Model.Banner> = try network.buildRequest(name: .ListAvailableBanners, parameters: parameters)
     /// network.run(request) {
     ///    // completion(Result<Model.BannerSpaces, Error>)
     /// }
@@ -56,7 +56,7 @@ extension LCRequestName {
     /// }
     /// ```
     
-    static let getBannerSpaces = LCRequestName(rawValue: "getBannerSpaces",
+    static let ListAvailableBanners = LCRequestName(rawValue: "ListAvailableBanners",
                                                server: .promo,
                                                path: "",
                                                method: "GET")
@@ -66,7 +66,7 @@ extension LCRequestParameters {
     
     /// BannerSpaces
     ///
-    /// Parameters structure to pass to a `getBannerSpaces` request
+    /// Parameters structure to pass to a `ListAvailableBanners` request
     /// - Parameter customerId: The id of the customer
     ///
     /// **Resource Name:**

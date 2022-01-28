@@ -116,9 +116,9 @@ final class LuckyCartTests: XCTestCase {
         }
     }
     
-    func testGetBannerSpaces() throws {
-        facadeCall(.getBannerSpaces) { name, expectation in
-            LuckyCart.test.getBannerSpaces { result in
+    func testListAvailableBanners() throws {
+        facadeCall(.ListAvailableBanners) { name, expectation in
+            LuckyCart.test.ListAvailableBanners { result in
                 self.facadeTestCompletion(name, responseType: LCBannerSpaces.self, result: result, expectation: expectation) { result in
                     print("----- Received Banner Spaces")
                     print(result)

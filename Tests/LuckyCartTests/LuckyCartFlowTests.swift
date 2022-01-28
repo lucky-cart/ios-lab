@@ -28,12 +28,12 @@ final class LuckyCartFlowTests: XCTestCase {
             
             print(" === 2 Get Banners")
             
-            luckyCart.loadBannerSpaces(failure: { error in
-                XCTFail("GetBannerSpaces Failed - \(error.localizedDescription)")
+            luckyCart.listAvailableBanners(failure: { error in
+                XCTFail("ListAvailableBanners Failed - \(error.localizedDescription)")
                 bannerSpacesExpectation.fulfill()
                 expectation.fulfill()
             }, success: { bannerSpaces in
-                print("GetBannerSpaces Succeed")
+                print("ListAvailableBanners Succeed")
                 bannerSpacesExpectation.fulfill()
 
             })

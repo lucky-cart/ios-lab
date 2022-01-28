@@ -21,7 +21,7 @@ public protocol LuckyCartClient {
     
     /// Generates the information needed by LuckyCart when checking out
     func luckyCartTicket(cartId: String) throws -> LCTicketComposer
-
+    
 }
 
 // MARK: - LuckyCart Object -
@@ -78,7 +78,7 @@ public class LuckyCart: ObservableObject {
     /// if customer is nil, a lucky cart guest customer will be used in requests
     
     @Published public private(set) var customer: LCCustomer
-            
+    
     /// Banner Spaces Cache
     @Published public internal(set) var bannerSpaces: LCBannerSpaces?
     
@@ -86,10 +86,10 @@ public class LuckyCart: ObservableObject {
     ///
     /// Value is published to trigger updates when games are reloaded ( to update game results )
     @Published public internal(set) var games: [LCGame]?
-
+    
     /// Optional cache
     public var cacheEnabled: Bool = false
-
+    
     /// Images Cache
     public var images: [URL: LCImage] = [:]
     
@@ -112,7 +112,7 @@ public class LuckyCart: ObservableObject {
         LuckyCart.shared = self
         
     }
-        
+    
     /// Set current user
     
     public func setUser(_ user: LCCustomer?) {

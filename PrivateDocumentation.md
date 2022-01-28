@@ -111,12 +111,12 @@ https://api.luckycart.com/cart/games?authKey={{auth_key}}&cartId={{cart_id}}&cus
 ```
 
 
-###  <font color='#DF0040'>LCRequest+GetBannerSpaces.swift</font>
+###  <font color='#DF0040'>LCRequest+ListAvailableBanners.swift</font>
 
 Fetch all banner spaces. The first executed request.
 
 ```
-let request: LCRequest<Model.BannerSpaces> = try network.buildRequest(name: .getBannerSpaces,
+let request: LCRequest<Model.BannerSpaces> = try network.buildRequest(name: .ListAvailableBanners,
                                                                       parameters: parameters,
                                                                       body: nil)
 try network.run(request) { response in

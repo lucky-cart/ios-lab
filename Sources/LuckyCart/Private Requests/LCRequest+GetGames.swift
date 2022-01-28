@@ -4,7 +4,6 @@
 //  LuckyCart Framework - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 12/01/2022.
-//
 
 import Foundation
 
@@ -67,7 +66,7 @@ extension LCRequestName {
 }
 
 extension LCRequestParameters {
-
+    
     
     /// Games
     ///
@@ -85,7 +84,7 @@ extension LCRequestParameters {
     /// ```
     /// ?authKey={authKey}&cartId={cartId}&customerId={customerId}
     /// ```
-
+    
     struct Games: LCRequestParametersBase {
         var customerId: String
         var cartId: String
@@ -93,7 +92,7 @@ extension LCRequestParameters {
         func pathExtension(for request: LCRequestBase) throws -> String {
             return ""
         }
-
+        
         func parametersString(for request: LCRequestBase) throws -> String {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing

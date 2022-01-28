@@ -12,8 +12,6 @@ import Foundation
 /// The LuckyCart network layer
 ///
 /// The network layer manage a LuckyCart networking session
-///
-/// It opens two connection with api and promoMatching servers
 
 internal class LCNetwork {
     
@@ -27,21 +25,13 @@ internal class LCNetwork {
         self.authorization = authorization
     }
     
-    lazy var api: LCConnection = {
-        return LCConnection.api(authorization: authorization)
-    }()
-    
-    lazy var promoMatching: LCConnection = {
-        return LCConnection.promo(authorization: authorization)
-    }()
-    
     // MARK: - Run Requests
     
     /// run
     ///
     /// Runs the request.
     ///
-    /// Completion is called with the decoded object, passed as generic Codable
+    /// Completion is called with the decoded server model object, or the error if any occured.
     
     func run<T>(_ request: LCRequest<T>, completion: @escaping (Result<T, Error>)->Void) throws {
         
@@ -83,11 +73,15 @@ internal class LCNetwork {
         task.resume()
     }
     
+    /// downloadData
+    ///
+    /// Fetch data asynchronously.
+    /// This is used to download banners imaga data.
+    
     func downloadData(url: URL, completion: @escaping (Result<Data, Error>)->Void) throws {
         let urlRequest = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad)
-        print("[luckycart.network] - Download Data \(url.absoluteString)")
         
-        let task = URLSession(configuration: URLSessionConfiguration.default).dataTask(with: urlRequest) { data, response, error in
+        let task = session.dataTask(with: urlRequest) { data, response, error in
             if let error = error {
                 DispatchQueue.main.async {
                     completion(.failure(error))

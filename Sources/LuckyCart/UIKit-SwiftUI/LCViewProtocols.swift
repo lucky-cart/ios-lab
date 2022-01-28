@@ -1,6 +1,7 @@
 //
-//  File.swift
-//  
+//  LCViewProtocols.swift
+//
+//  LuckyCartLab - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 19/01/2022.
 //
@@ -16,7 +17,6 @@ public protocol LCBannersView: View {
     
     /// The banners array.
     var banners: State<[LCBanner]> { get set }
-    
 }
 
 public extension LCBannersView {
@@ -30,7 +30,6 @@ public extension LCBannersView {
             self.banners.wrappedValue.append(banner)
         }
     }
-    
 }
 
 /// Make your view conform to this protocol to display LuckyCart games
@@ -39,9 +38,10 @@ public protocol LCGamesView: View {
     var games: [LCGame] { get set }
 }
 
-
 /// Make your view conform to this protocol to display a "Boutique View"
 /// A Boutique View is a custom view provided by client application.
+///
+/// The identifier will be used to match the view with an action reference
 
 public protocol LCBoutiqueView: View {
     var boutiquePageIdentifier: String { get set }

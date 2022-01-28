@@ -26,7 +26,7 @@ public protocol LCTicketComposer {
 }
 
 public extension LCTicketComposer {
-
+    
     /// Access property in the dictionary by key
     
     subscript (key: String) -> Any? {
@@ -34,7 +34,7 @@ public extension LCTicketComposer {
             return try? makeDictionary()[key]
         }
     }
-
+    
     /// append
     ///
     /// Append the dictionary to a passed dictionary.
@@ -61,7 +61,7 @@ public struct LCDictionaryComposer: LCTicketComposer {
     public init(dictionary: [String: Any?]) {
         self.dictionary = dictionary
     }
-                             
+    
     public func makeDictionary() throws -> [String: Any] {
         return (dictionary.filter { $0.value != nil }) as [String: Any]
     }

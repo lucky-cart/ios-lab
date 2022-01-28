@@ -8,9 +8,13 @@
 
 import Foundation
 
-/// First version requests
+/// The requests on client side.
 ///
+/// These functions calls the private requests, and transform the results from server model to client model.
+/// They should not be called from the app.
 ///
+/// The final public API to be used by client app is provided in the file `LuckyCart+Facade`.
+
 internal extension LuckyCart {
     
     /// sendCart
@@ -76,11 +80,11 @@ internal extension LuckyCart {
         }
     }
     
-    /// getBannerSpaces
+    /// ListAvailableBanners
     ///
     /// Will return cached version if available
     
-    func getBannerSpaces(completion: @escaping (Result<LCBannerSpaces, Error>)->Void) {
+    func ListAvailableBanners(completion: @escaping (Result<LCBannerSpaces, Error>)->Void) {
         
         if cacheEnabled, let cachedBannerSpaces = bannerSpaces {
             print("[luckycart.cache] Return cached banner spaces")
@@ -90,7 +94,7 @@ internal extension LuckyCart {
         
         do {
             let parameters = LCRequestParameters.BannerSpaces(customerId: customer.id)
-            let request: LCRequest<Model.BannerSpaces> = try network.buildRequest(name: .getBannerSpaces,
+            let request: LCRequest<Model.BannerSpaces> = try network.buildRequest(name: .ListAvailableBanners,
                                                                                   parameters: parameters,
                                                                                   body: nil)
             
@@ -195,5 +199,4 @@ internal extension LuckyCart {
             completion(.failure(error))
         }
     }
-    
 }

@@ -7,12 +7,17 @@
 //
 
 import SwiftUI
-//import LuckyCart
+
+/// LCLinkView
+///
+/// Displays a LCLink ( target and image urls pair)
 
 public struct LCLinkView: View {
     
     @Binding var link: LCLink
     
+    /// Controls the state of the HTML view.
+    /// If no particular action is set, a click on the link will open the target url in a `LCWebView`
     @State var isOpen: Bool = false
     
     /// The handler that gets called when the user closes the game view.
@@ -20,10 +25,13 @@ public struct LCLinkView: View {
     /// The time spent by the user on the view is returned in the callback closure
     var didClose: ((Double)->Void)?
     
+    /// The image to display if no image is set in the link
     @State var placeHolder: Image?
     
+    /// The currently displayed image
     @State var displayedImage: Image?
     
+    /// The action that will be called when the view is clicked/tapped
     var clickAction: ((LCLink)->Bool)?
     
     public init(link: Binding<LCLink>, didClose: ((Double)->Void)? = nil, placeHolder: Image? = nil, clickAction: ((LCLink)->Bool)? = nil) {

@@ -101,10 +101,10 @@ extension LCRequestParameters {
     
     
     struct SendCart: LCRequestParametersBase {
-
+        
         public var customerId: String
         public var cartId: String
-
+        
         // The json dictionary to send in ticket json
         var ticketComposer: LCTicketComposer
         
@@ -120,16 +120,16 @@ extension LCRequestParameters {
             guard let auth = request.connection.authorization else {
                 throw LuckyCart.Err.authorizationMissing
             }
-                        
+            
             // Create the base dictionary for request body
             var out: [String: Any] = try PostCartJSONComposer(customerId: customerId, cartId: cartId, auth: auth).makeDictionary()
-
+            
             
             try ticketComposer.append(to: &out)
             
             return out
         }
-
+        
         func json(for request: LCRequestBase) throws -> Data {
             let dictionary = try self.dictionary(for: request)
             let json = try JSONSerialization.data(withJSONObject: dictionary, options: [.prettyPrinted])

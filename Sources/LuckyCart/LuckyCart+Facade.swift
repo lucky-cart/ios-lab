@@ -7,13 +7,18 @@
 //
 
 import Foundation
-import CryptoKit
 
 /// LuckyCart Facade Requests
 ///
 /// Public request calls.
 ///
-/// When request is called, the private request is called, then the result is casted to client model, and finally cached
+/// When request is called, the private request is called, then the result is casted from server model to client model
+///
+/// - listAvailableBanners : Load available banner ids
+/// - banner : load a specific banner
+/// - sendCart : send cart data
+/// - loadGames : load games for a given cart id
+/// - reloadGames : load games without completion. Use to refresh games UI if needed.
 
 extension LuckyCart {
     
@@ -40,7 +45,7 @@ extension LuckyCart {
     /// Load all games
     ///
     /// Games are usually loaded just after the check out
-
+    
     public func loadGames(cartId: String,
                           failure: @escaping (Error)->Void,
                           success: @escaping ([LCGame])->Void) {
@@ -68,21 +73,21 @@ extension LuckyCart {
     ///
     /// Banner spaces are loaded as soon as the LuckyCart instance is created.
     
-    public func loadBannerSpaces(failure: @escaping (Error)->Void,
-                                 success: @escaping (LCBannerSpaces)->Void) {
-        getBannerSpaces { result in
+    public func listAvailableBanners(failure: @escaping (Error)->Void,
+                                     success: @escaping (LCBannerSpaces)->Void) {
+        ListAvailableBanners { result in
             switch result {
             case .failure(let error):
-                print("[luckycart.load.bannerSpaces] GetBannerSpaces Error:\r\(error.localizedDescription)")
+                print("[luckycart.load.bannerSpaces] ListAvailableBanners Error:\r\(error.localizedDescription)")
                 failure(error)
             case .success(let spaces):
-                print("[luckycart.load.bannerSpaces] GetBannerSpaces succeed :\r\(spaces)")
+                print("[luckycart.load.bannerSpaces] ListAvailableBanners succeed :\r\(spaces)")
                 success(spaces)
             }
         }
     }
     
-    /// Load all banner spaces
+    /// Load a specific banner
     ///
     /// Banner spaces are loaded as soon as the LuckyCart instance is created.
     
@@ -91,20 +96,18 @@ extension LuckyCart {
                        format: String,
                        failure: @escaping (Error)->Void,
                        success: @escaping (LCBanner)->Void) {
-        getBannerSpaces { [weak self] _ in
-            self?.getBanner(bannerSpaceIdentifier: bannerSpaceIdentifier,
-                            bannerIdentifier: identifier,
-                            format: format) { result in
-                switch result {
-                case .failure(let error):
-                    print("[luckycart.load.banner] GetBanner `\(identifier)` Error:\r\(error.localizedDescription)")
-                    failure(error)
-                case .success(let banner):
-                    print("[luckycart.load.banner] GetBanner `\(identifier)` Succeed :\r\(banner)")
-                    success(banner)
-                }
+        getBanner(bannerSpaceIdentifier: bannerSpaceIdentifier,
+                  bannerIdentifier: identifier,
+                  format: format) { result in
+            switch result {
+            case .failure(let error):
+                print("[luckycart.load.banner] GetBanner `\(identifier)` Error:\r\(error.localizedDescription)")
+                failure(error)
+            case .success(let banner):
+                print("[luckycart.load.banner] GetBanner `\(identifier)` Succeed :\r\(banner)")
+                success(banner)
             }
         }
     }
-
+    
 }

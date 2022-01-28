@@ -1,12 +1,14 @@
 //
-//  File.swift
-//  
+//  LCGameResultViewModifier.swift
+//
+//  LuckyCartLab - (c)2022 Lucky Cart
 //
 //  Created by Tristan Leblanc on 23/01/2022.
-//
 
 import SwiftUI
 
+/// A view that displays either a red cross or a red mark on a game view
+/// This is not configurable yet, but can be easily duplicated and modified to fulfill your needs
 public struct LCGameResultViewModifier: ViewModifier {
 
     var gameResult: LCGameResult

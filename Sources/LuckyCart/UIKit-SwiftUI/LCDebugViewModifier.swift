@@ -1,5 +1,5 @@
 //
-//  LCDebugLensModifier.swift
+//  LCDebugViewModifier.swift
 //
 //  LuckyCartLab - (c)2022 Lucky Cart
 //

@@ -29,7 +29,8 @@ public struct LCAuthorization {
     
     let version = "2.0"
     
-    #if !DEBUG
+#if !DEBUG
+    
     func computeSignature() -> LCSignature {
         // TODO: Finish Encryption and move in private part
         
@@ -42,8 +43,9 @@ public struct LCAuthorization {
         
         return LCSignature(key: self.key, timestamp: timestamp, hex: signatureHex)
     }
-
-    #else
+    
+#else
+    
     /// Compute the HMAC Signature
     ///
     /// In DEBUG mode, a timestamp can be passed to the function
@@ -59,5 +61,6 @@ public struct LCAuthorization {
         
         return LCSignature(key: self.key, timestamp: timestamp, hex: signatureHex)
     }
-    #endif
+    
+#endif
 }

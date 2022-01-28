@@ -28,13 +28,13 @@ struct Model {
         
         static let guest = Customer(id: "unknown")
     }
-
+    
     /// LCCart
     
     struct Cart: Codable, Identifiable {
         public let id: String
     }
-
+    
     // MARK: - Game
     
     /// LCGame
@@ -48,7 +48,7 @@ struct Model {
         internal var mobileGameUrl: URL
         internal var mobileGameImage: URL
     }
-
+    
     /// The Games as sent by server
     
     struct Games: Codable {
@@ -56,7 +56,7 @@ struct Model {
     }
     
     // MARK: - Banner Spaces
-
+    
     /// The BannerSpaces as sent by server
     ///
     /// A banner ids dictionary keyed by String
@@ -66,18 +66,18 @@ struct Model {
     /// However, a collection of sample names and formats for banner spaces identification
     
     typealias BannerSpaces = [String: [String]]
-
+    
     // MARK: - Banner and BannerAction
-
+    
     /// Banner action
-
+    
     struct BannerAction: Codable {
         var type: String
         var ref: String
     }
-
+    
     /// LCBanner
-
+    
     struct Banner: Codable {
         var image_url: URL
         var redirect_url: URL
@@ -86,5 +86,5 @@ struct Model {
         var space: String
         var action: BannerAction
     }
-
+    
 }

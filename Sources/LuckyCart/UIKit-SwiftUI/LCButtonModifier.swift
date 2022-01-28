@@ -13,7 +13,7 @@ import SwiftUI
 /// The view modifier applied to buttons in LuckyCart sheets
 
 public struct LCButtonModifier: ViewModifier {
-
+    
     var color: Color = .blue
     
     public init(color: Color = .blue) {
@@ -21,7 +21,7 @@ public struct LCButtonModifier: ViewModifier {
     }
     
     public func body(content: Content) -> some View {
-            content
+        content
             .buttonStyle(PlainButtonStyle())
             .padding([.leading, .trailing], 16)
             .padding([.top, .bottom], 8)
