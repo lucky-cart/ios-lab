@@ -96,7 +96,7 @@ extension LCRequestParameters {
             guard let authKey = request.connection.authorization?.key else {
                 throw LuckyCart.Err.authKeyMissing
             }
-            let underscore = bannerId.isEmpty ? "" : "_"
+            let underscore = (bannerId.isEmpty || format.isEmpty) ? "" : "_"
             return "\(authKey)/\(customerId)/banner/mobile/\(bannerSpaceId)/\(format)\(underscore)\(bannerId)"
         }
         
