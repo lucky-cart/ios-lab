@@ -41,7 +41,7 @@ public struct LCGameView: View {
 
 struct LCGameView_Previews: PreviewProvider {
     static var previews: some View {
-        LCGameView(cartId: LuckyCart.testCart.id, game: .constant(LuckyCart.testGame))
+        LCGameView(cartId: LuckyCart.testCart, game: .constant(LuckyCart.testGame))
     }
 }
 

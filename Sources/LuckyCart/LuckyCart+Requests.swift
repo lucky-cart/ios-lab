@@ -21,7 +21,7 @@ internal extension LuckyCart {
     
     func sendCart(cartId: String, ticketComposer: LCTicketComposer, completion: @escaping (Result<LCPostCartResponse, Error>)->Void) {
         
-        let body = LCRequestParameters.SendCart(customerId: customer.id,
+        let body = LCRequestParameters.SendCart(customerId: customer,
                                                 cartId: cartId,
                                                 ticketComposer:  ticketComposer)
         do {
@@ -57,9 +57,9 @@ internal extension LuckyCart {
         }
         
         do {
-            let request: LCRequest<Model.Games> = try network.buildRequest(name: .getGames,
-                                                                           parameters: LCRequestParameters.Games(customerId: customer.id, cartId: cartId),
-                                                                           body: nil)
+            let parameters = LCRequestParameters.Games(customerId: customer, cartId: cartId)
+            let request: LCRequest<Model.Games> =
+            try network.buildRequest(name: .getGames, parameters: parameters, body: nil)
             try network.run(request) { response in
                 switch response {
                 case .success(let result):
@@ -93,7 +93,7 @@ internal extension LuckyCart {
         }
         
         do {
-            let parameters = LCRequestParameters.BannerSpaces(customerId: customer.id)
+            let parameters = LCRequestParameters.BannerSpaces(customerId: customer)
             let request: LCRequest<Model.BannerSpaces> = try network.buildRequest(name: .ListAvailableBanners,
                                                                                   parameters: parameters,
                                                                                   body: nil)
@@ -134,7 +134,7 @@ internal extension LuckyCart {
         }
         
         do {
-            let parameters = LCRequestParameters.Banner(customerId: customer.id,
+            let parameters = LCRequestParameters.Banner(customerId: customer,
                                                         bannerSpaceId: bannerSpaceIdentifier,
                                                         bannerId: bannerIdentifier,
                                                         format: format)

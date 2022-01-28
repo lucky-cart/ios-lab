@@ -33,9 +33,9 @@ public extension LuckyCart {
     
     static let testGame = LCGame(Model.testGame)
     
-    static let testCustomer = LCCustomer(Model.testCustomer)
+    static let testCustomer = Model.testCustomer
     
-    static let testCart = LCCart(Model.testCart)
+    static let testCart = Model.testCart
     
     static let testBannerSpaces = LCBannerSpaces(Model.testBannerSpaces)
     
@@ -86,7 +86,7 @@ struct TestKeys {
 
 extension Model {
     
-    static let promoTestUrl = "https://promomatching.luckycart.com/61d6c677baa1676dd46bfee6/\(testCustomer.id)"
+    static let promoTestUrl = "https://promomatching.luckycart.com/61d6c677baa1676dd46bfee6/\(testCustomer)"
     static let apiTestUrl = "https://api.luckycart.com"
     static let goTestUrl = "https://go.luckycart.com"
     
@@ -107,9 +107,9 @@ extension Model {
                        "search_200"
                       ]]
     
-    static let testCustomer = Model.Customer(id: "customer1234")
+    static let testCustomer = "customer1234"
     
-    static let testCart = Model.Cart(id: "cart_1234")
+    static let testCart = "cart_1234"
     
     static let testBanner = Model.Banner(image_url: URL( string: "\(promoTestUrl)/image?meta=61bb057807879bee01ed5298&test=true&noCache1641942555414")!,
                                          redirect_url: URL(string: "\(promoTestUrl)/jump?meta=61bb057807879bee01ed5298&test=true")!,

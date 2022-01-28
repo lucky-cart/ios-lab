@@ -77,7 +77,7 @@ public class LuckyCart: ObservableObject {
     ///
     /// if customer is nil, a lucky cart guest customer will be used in requests
     
-    @Published public private(set) var customer: LCCustomer
+    @Published public private(set) var customer: String
     
     /// Banner Spaces Cache
     @Published public internal(set) var bannerSpaces: LCBannerSpaces?
@@ -103,11 +103,11 @@ public class LuckyCart: ObservableObject {
     
     @discardableResult
     public init(authorization: LCAuthorization,
-                customer: LCCustomer? = nil) {
+                customer: String? = nil) {
         if LuckyCart.shared != nil {
             fatalError("LuckyCart already initialized")
         }
-        self.customer = customer ?? LCCustomer.guest
+        self.customer = customer ?? "unknown"
         self.network = LCNetwork(authorization: authorization)
         LuckyCart.shared = self
         
@@ -115,9 +115,9 @@ public class LuckyCart: ObservableObject {
     
     /// Set current user
     
-    public func setUser(_ user: LCCustomer?) {
+    public func setUser(_ user: String?) {
         clearCache()
-        customer = user ?? LCCustomer.guest
+        customer = user ?? "unknown"
     }
     
     /// Switch to guest user

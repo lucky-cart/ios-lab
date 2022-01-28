@@ -17,24 +17,8 @@ import Foundation
 /// - Games
 /// - Banners
 
-//extension LCNetwork {
-
 struct Model {
-    
-    // MARK: - Customer and Cart
-    
-    struct Customer: Codable, Identifiable {
-        public let id: String
-        
-        static let guest = Customer(id: "unknown")
-    }
-    
-    /// LCCart
-    
-    struct Cart: Codable, Identifiable {
-        public let id: String
-    }
-    
+
     // MARK: - Game
     
     /// LCGame

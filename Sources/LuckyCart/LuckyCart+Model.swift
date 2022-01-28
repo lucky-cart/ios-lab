@@ -32,48 +32,10 @@ extension LCIdentifiable {
 /// The server model describes the Lucky cart entities as created/stored on device
 ///
 /// This set of objects is public and can be freely accessed by LuckyCart API clients
-/// - Customer
-/// - Cart
 /// - Link
 /// - Game
 /// - BannerSpaces
 /// - Banner
-
-// MARK: - Customer, Cart and Link
-
-/// LCCustomer
-
-public struct LCCustomer: Codable, LCEntity, Identifiable {
-    typealias ModelEntity = Model.Customer
-    
-    public let id: String
-    
-    public init(id: String) {
-        self.id = id
-    }
-    
-    init(_ entity: ModelEntity) {
-        id = entity.id
-    }
-    
-    public static let guest = LCCustomer(Model.Customer.guest)
-}
-
-/// LCCart
-
-public struct LCCart: Codable, LCEntity, Identifiable {
-    typealias ModelEntity = Model.Cart
-    
-    public let id: String
-    
-    public init(id: String = UUID().uuidString) {
-        self.id = id
-    }
-    
-    init(_ entity: ModelEntity) {
-        id = entity.id
-    }
-}
 
 /// LCLink
 ///
