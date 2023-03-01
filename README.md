@@ -1,354 +1,392 @@
-# <font color='#1E72AD'>Lucky Cart</font>
+# LuckyCartSDK
 
-### <font color='#1E72AD'>LuckyCart Framework and Client Sample Application</font>
+Lucky Cart iOS SDK is a Framework to implement Lucky Cart Services into your shopping App.
 
-## <font color='#1E72AD'>Installation:</font>
+## Installation
 
-### <font color='#EF1020'>1 - Install Package</font>
+The package is a Swift Package that you can include into your projet
 
-#### Swift Package:
+On your Xcode Menu clic on "File" and "Add Packages ..." 
+In the search field you can paste the Github repo URL to add the Package into your Project.
 
- Add the <b>LuckyCart</b> Package using xCode
+## Dependencies
 
-#### CocoaPods:
+LuckyCart uses [SDWebImage](https://github.com/SDWebImage/SDWebImage) to upload and display banner images. 
 
- ```
- pod 'LuckyCart'
- ``` 
+## How to use it
+
+### Workflow for using Lucky Cart
+
+![Lucky Cart Workflow](./luckycart-workflow.png)
+
+When your identified customer navigate into your market place, at the openning of the homepage or categories pages you can send an PageViewed Event. once the Event's completion block is called, you can request for a single banner or a list of banners. It is then up to you to integrate the banner view into your page and configure it.
+
+Once the customer has placed an order, you can send a CartValidated event. Once the response is received, you can request a game experience from Lucky Cart. A completion block will inform you of the template to send to the banner view in order to give your customer access to the game.
+
+### Configuration
+
+Into the AppDelegate you have to set your SiteKey to access to Lucky Cart API
+
+```
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        LuckyCart.shared.setSiteKey("siteKeyToken")
+        ....
+        return true
+    }
+```
+At the customer login you have to set the user to allowed Lucky Cart to send you banners or games experiences. 
+
+```
+LuckyCart.shared.setUser(customerId)
+```
+
+**To use Lucky Cart, you have to set your siteKey and the user identifier.**
+
+
+It's possible to configure some other parameters of the SDK like the number of retries, delay beween each retry and base URL for Lucky Cart's APIs.
+
+```
+LuckCart.shared.configuration.apiRetries = 5 //Int
+LuckCart.shared.configuration.apiRetryDelay = 0.5 //Double
+LuckCart.shared.configuration.eventBaseUrl = "https://shopper-events.luckycart.com/v1" //String
+LuckCart.shared.configuration.displayerBaseUrl = "https://displayer.luckycart.com" //String
+LuckCart.shared.configuration.gameBaseUrl = "https://game-experience-api.luckycart.com/v1" //String
+```
  
-### <font color='#EF1020'>2 - Download or clone the sample application</font>
+### Single banner experience
 
-All the sample code in this documentation is extracted from the [Client App Sample](https://github.com/lucky-cart/lucky-cart-client-sample-ios) project</font>
+#### PageViewed Event
 
-It is a simple shopping application draft using a trivial shop model ( Shop, Customer, Cart, Products and Orders ).<br>The project is SwiftUI based and thus runs on iOS and macOS platforms.
+Event to be sent at each page opening of your store or those you will have chosen.
 
-![LuckyCart Client App Screenshots](docImages/ClientAppDocumentationHeader.png)
+You will need to fill in your payload to call this function as follows (you can find implementation exemple with the sample app) :
 
-## <font color='#1E72AD'>Use in Client Application:</font>
+```
+// Exemple for a homepage 
+let payload = LCEventPayload(pageType: "Homepage", 
+							storeType: "1234", 
+							  storeId: "sup")
 
+LuckyCart.shared.sendShopperEvent(eventName: .pageViewed, 
+										   payload: payload) { [weak self] eventSended in
+     // Do something
+}
 
-### <font color='#EF1020'>1 - Conform to the `LuckyCartClient` protocol</font>
+// Exemple for a category page
+let payload = LCEventPayload(pageType: "categories", 
+								pageId: "id100", 
+								storeType: "1234", 
+								storeId: "sup")
+LuckyCart.shared.sendShopperEvent(eventName: .pageViewed, 
+									payload: payload) { [weak self] eventSended in
+    // Do Something
+}
+									 
+```
 
-You can make the application, your main shop manager, or even a newManager class that conform to this protocol to use LuckyCart
+#### Request the banner data
 
-This protocol is required at some place in your code to :
+After sending a PageViewed event, you can request a banner to display on your page with the following function:
 
-- Initialize LuckyCart with your credentials
-- Generate the data required by the LuckyCart platform
-- Send cart data to the LuckyCart server
-
- 
-```swift
-public protocol LuckyCartClient {
-    
-    /// Starts the LuckyCart framework with your ahtentification settings
-
-    func initLuckyCart()
-    
-    /// Generates the information needed by LuckyCart when checking out
-
-    func luckyCartTicket(cartId: String) throws -> LCTicketComposer
+```
+LuckyCart.shared.getBannerExperienceDetail(pageType: pageType,
+                                                   format: "banner",
+                                                   pageId: pageId,
+                                                   store: storeId,
+                                               storeType: storeType) { [weak self] bannerExperience in
+    // This block is executing when you receive the banner data 
+    // that you have to forward to the bannerView
 }
 ```
 
+#### display the banner
 
-### <font color='#EF1020'>2 - Start LuckyCart </font>
+To display the banner on your page you can use the LCBannerView. It can be used as a simple view, a TableViewCell or a CollectionViewCell.
 
-Starts the LuckyCart framework using authorization, luckyCart customer and cart ids. 
 
-```swift
-class MyShopManager: LuckyCartClient {
+```
+let bannerView = LCBannerView.load(owner: self)
+bannerView.storeId = storeId
+bannerView.storeType = storeType
+bannerView.pageId = pageId
+bannerView.pageType = pageType
+bannerView.bannerExperience = singleBannerExperience
 
-    func initLuckyCart() {
-        let auth = LCAuthorization(key: <authKey>, secret: <secret>)
-        LuckyCart(authorization: auth)
-    }
+// In a Table View implementation
+tableView.register(LCContainerCell.self, 
+					forCellReuseIdentifier: LCBannerView.identifier())
+let cell = bannerView.dequeue(tableView, indexPath)
+
+// In a Collection View implementation
+collectionView.register(LCContainerCollectionViewCell.self, 
+						forCellReuseIdentifier: LCBannerView.identifier())
+let cell = bannerView.dequeue(collectionView, indexPath)
+```
+
+Depending on your implementation, you should refresh your layout to show the banner view. It is possible to receive a Notification to update the interface.
+
+```
+NotificationCenter.default.addObserver(self,
+                                       selector: #selector(reloadViews(_:)),
+                                       name: NSNotification.Name("LuckyCartBannerImageLoadedNotification"),
+                                       object: nil)
+// Exemple for TableView
+@objc
+func reloadViews(_ notification: Notification) {
+    self.tableView.beginUpdates()
+    self.tableView.setNeedsDisplay()
+    self.tableView.endUpdates()
+}
+
+```
+
+The BannerView will itself send the BannerViewed and BannerClicked events to Lucky Cart. For this, it is important to give the right values storeId, storeType, pageId and pageType.
+
+#### Navigation
+
+When clicking on a banner, it is possible to redirect the user to a landing page of your store. Since navigation is dependent on the technical implementation of your application, Lucky Cart has chosen to notify the host application to let it manage the navigation. 
+
+Here is an example of management: 
+
+```
+NotificationCenter.default.addObserver(self,
+                                   selector: #selector(inShopAction(_:)),
+                                   name: NSNotification.Name("LuckyCartBannerInShopAction"),
+                                   object: nil)
+// The notification will send a userInfo dictionary 
+// with "shopInShopRedirectMobile" key and a string value                               
+@objc
+func inShopAction(_ notification: Notification) {
+	guard let dict = notification.userInfo,
+	      let inShopPath = dict["shopInShopRedirectMobile"] as? String,
+	isVisible() else { return }
+	    
+	if inShopPath == "query_200" {
+	    //Open the destination page
+	}
+	else if inShopPath == "query_100" {
+	    //Open the destination page
+	}
 }
 ```
 
-### <font color='#EF1020'>3 - Set the current user</font>
+### Multiple banners experience
 
-If customer id is not passed in init, you can set it by calling the `setUserId()` function.
-Customer id is required to send cart information at checkout time.
+#### PageViewed Event
 
-```swift
-    /// The current customer
-    ///
-    /// When the current customer currently browsing the shop changes,
-    /// we also set the current LuckyCart share instance customer id property.
-    
-    @Published var customer: Customer? {
-        didSet {
-            LuckyCart.shared.setUser(customer == nil ? nil : LuckyCart.testCustomer)
-        }
-    }
+Event to be sent at each page opening of your store or those you will have chosen.
+
+You will need to fill in your payload to call this function as follows (you can find implementation exemple with the sample app) :
+
+```
+// Exemple for a homepage 
+let payload = LCEventPayload(pageType: "Homepage", 
+							storeType: "1234", 
+							  storeId: "sup")
+
+LuckyCart.shared.sendShopperEvent(eventName: .pageViewed, 
+										   payload: payload) { [weak self] eventSended in
+     // Do something
+}
+
+// Exemple for a category page
+let payload = LCEventPayload(pageType: "categories", 
+								pageId: "id100", 
+								storeType: "1234", 
+								storeId: "sup")
+LuckyCart.shared.sendShopperEvent(eventName: .pageViewed, 
+									payload: payload) { [weak self] eventSended in
+    // Do Something
+}
+									 
 ```
 
-### <font color='#EF1020'>4 - Display Banners</font>
+#### Request the banners list data
 
-##### Make the views that should display <b>LuckyCart</b> banners conform to the `BannerSpaceView`.
+After sending a PageViewed event, you can request a list of banners to display on your page with the following function:
 
-```swift
-public protocol LCBannersView: View {
-    var bannerSpaceId: String { get }
-    var banners: [LCBanner] { get set }
+```
+LuckyCart.shared.getBannersExperience(pageType: pageType,
+                                                   format: "banner",
+                                                   pageId: pageId,
+                                                   store: storeId,
+                                               storeType: storeType) { [weak self] bannerExperiences in
+    // This block is executing when you receive the array of banner data 
+    // that you have to forward to the bannersView
 }
 ```
 
-##### Implement the properties
+#### display the banners list
 
-- bannerSpaceId: The bannerSpace identifier associated to this view
-- banners: A published array of banners.
+To display the list of banners on your page you can use the LCBannersView. It can be used as a simple view, a TableViewCell or a CollectionViewCell.
 
-##### Load the banners
+```
+let bannersView = LCBannersView.load(owner: self)
+bannersView.storeId = storeId
+bannersView.storeType = storeType
+bannersView.pageId = pageId
+bannersView.pageType = pageType
+bannersView.bannerExperiences = multipleBannerExperiences
 
-- Call the `loadBanner` function for desired ids when view appears
-- Update the views using the received banners and/or errors
-    
-In this example, a view displays all available banners in a list.
+// In a Table View implementation
+tableView.register(LCContainerCell.self, 
+					forCellReuseIdentifier: LCBannersView.identifier())
+let cell = bannersView.dequeue(tableView, indexPath)
 
-##### Code Sample
-
-```swift
-struct HomePageView: LCBannersView {
-    
-    // The banners array
-    var banners: State<[LCBanner]> = State(initialValue: [])
-    
-    // BannerSpaceView
-    var bannerSpaceId: String = LuckyShop.homepage
-
-    var body: some View {        
-...
-
-         // MARK: - Display the list of LuckyCart banners -->
-                
-         List(banners.wrappedValue) { banner in
-         		LCSimpleBannerView(banner: banner)
-         }
-...
-        
-        // MARK: - Load the LuckyCart banners when the view appears -->
-        
-        .task {
-	        // We add the homePage banner to the list
-            loadBanner(bannerId: LuckyShop.homePageBanner, format: LuckyShop.bannerFormat)
-        }
-        
-    }
+// In a Collection View implementation
+collectionView.register(LCContainerCollectionViewCell.self, 
+						forCellReuseIdentifier: LCBannersView.identifier())
+let cell = bannersView.dequeue(collectionView, indexPath)
 ```
 
-### <font color='#EF1020'>5 - Execute banners action</font>
+Depending on your implementation, you should refresh your layout to show the banner view. It is possible to receive a Notification to update the interface.
 
-To make an object receive banner actions, make it conform to `LCActionListener` protocol.
+```
+NotificationCenter.default.addObserver(self,
+                                       selector: #selector(reloadViews(_:)),
+                                       name: NSNotification.Name("LuckyCartBannerImageLoadedNotification"),
+                                       object: nil)
+```
 
-If an action `LCBannerAction` is set on a clicked banner, then the default html view pop up is skipped. Instead a notification is sent to the all `LCActionListener` objects.
+The BannersView will itself send the BannerViewed and BannerClicked events to Lucky Cart for each banner. For this, it is important to give the right values storeId, storeType, pageId and pageType. 
 
-```swift
-protocol LCActionListener {
-    func handleBannerAction(action: LCBannerAction)
+#### Navigation
+
+When clicking on a banner, it is possible to redirect the user to a landing page of your store. Since navigation is dependent on the technical implementation of your application, Lucky Cart has chosen to notify the host application to let it manage the navigation. 
+
+Here is an example of management: 
+
+```
+NotificationCenter.default.addObserver(self,
+                                   selector: #selector(inShopAction(_:)),
+                                   name: NSNotification.Name("LuckyCartBannerInShopAction"),
+                                   object: nil)
+// The notification will send a userInfo dictionary 
+// with "shopInShopRedirectMobile" key and a string value                               
+@objc
+func inShopAction(_ notification: Notification) {
+	guard let dict = notification.userInfo,
+	      let inShopPath = dict["shopInShopRedirectMobile"] as? String,
+	isVisible() else { return }
+	    
+	if inShopPath == "query_200" {
+	    //Open the destination page
+	}
+	else if inShopPath == "query_100" {
+	    //Open the destination page
+	}
 }
 ```
 
-This is how the top container receive action in the sample application project.
+### Game experience
 
-```swift
-struct ShopView: View, LCActionListener {
-    
-    // MARK: - Handle banners actions -->
+#### CartValidated Event
 
-    func handleBannerAction(action: LCBannerAction) {
-        switch action.type {
-        case .boutique:
-            page = .boutique(identifier: String(action.ref))
-            break
-        default:
-            return
-        }
-    }
-    
-    var body: some View {
-        VStack(alignment: .center, spacing: 16) {
-            switch page {
-...
-            case .boutique(let targetId):
-                BoutiqueView(boutiquePageIdentifier: targetId) {
-                    page = .shopping
-                }
-...                
-            }
-        }
-        
-        // MARK: - Start to listen to notifications when the view appears -->
-        
-        .task {
-            listenLuckyCartActions()
-        }
-        .padding()
-    }
+Event to be sent following the payment of the cart so that Lucky Cart generates the game corresponding to the customer's order.
+
+You will need to fill in your payload to call this function as follows (you can find implementation exemple with the sample app) :
 
 ```
+let payload = Cart.shared.cartToLuckyCartPayload() 
+            LuckyCart.shared.sendShopperEvent(eventName: .cartValidated, 
+            									payload: payload) { eventSended in
+     // Do Something
+}
 
-### <font color='#EF1020'>6 - Send relevant cart data to LuckyCart</font>
+// Exemple of convertion function of cart
 
-#### <font color='#AF1020'>A - Prepare the data</font>
-
-Each time your application does a check out, some data are sent to LuckyCart.
-The LuckyCart framework uses a simple composer object. `LCTicketComposer` is a utility protocol that aggregates dictionaries and throw some exceptions if duplicate keys are found.
-A generic DictionariesComposer is provided to pass a simple dictionary.
-
-In this exemple, we create a simple LCDictionaryComposer with the sample data from the LuckyCart application sample.
-It will then be merged with LuckyCart required fields before being sent.
-
-
-```swift
-extension MyShopManager {
-
-    func luckyCartTicket(cartId: String) throws -> LCTicketComposer {
-        
-        // 1 - Make the array of product json dictionaries
-        
-        let productComposers = cart.productOrders.map { order in
-            [
-                Keys.id: order.id.uuidString,
-                Keys.quantity: "\(order.quantity)",
-                Keys.ttc: LuckyCart.priceString(order.totalPrice),
-                Keys.ht: LuckyCart.priceString(order.totalPriceWithoutTax)
-            ]
+func cartToLuckyCartPayload() -> LCEventPayload {
+    var payload = LCEventPayload()
+    payload.cartId = cartId
+    payload.currency = "EUR"
+    payload.device = "iPhone12.2"
+    payload.finalAtiAmount = finalAtiAmount
+    payload.deliveryAtiAmount = 0.0
+    payload.deliveryTfAmount = 0.0
+    
+    var payloadProducts: [LCEventPayloadProduct] = []
+    
+    if let products = products {
+        for product in products {
+            let p = LCEventPayloadProduct(productId: product.productId,
+                                          unitAtiAmount: product.unitAtiAmount,
+                                          unitTfAmount: product.unitTfAmount,
+                                          finalAtiAmount: product.finalAtiAmount,
+                                          finalTfAmount: product.finalTfAmount,
+                                          discountAtiAmount: product.discountAtiAmount,
+                                          discountTfAmount: product.discountTfAmount,
+                                          quantity: product.quantity,
+                                          category: product.category,
+                                          brand: product.brand,
+                                          ean: product.ean)
+            payloadProducts.append(p)
         }
-        
-        // 2 - Returns full json composer
-        return LCDictionaryComposer(dictionary: [
-            Keys.loyaltyCart: "myLoyaltyCart",
-            
-            Keys.email: customer?.eMail,
-            Keys.firstName: customer?.firstName,
-            Keys.lastName: customer?.lastName,
-            
-            Keys.shippingMethod: "pickUp",
-            Keys.shopId: shopId,
-            Keys.device: "ios-sim",
-            
-            Keys.currency: currency,
-            Keys.ttc: LuckyCart.priceString(cart.totalPrice),
-            Keys.ht: LuckyCart.priceString(cart.totalPriceWithoutTax),
-            Keys.products : productComposers
-        ])
-    }    
+    }
+    
+    payload.products = payloadProducts
+    
+    return payload
 }
 ```
 
-Client can implement its own composer to make structure based composer.
-For example you can extract some properties of a customer object in your own model.
+#### Request the Game Experiences
 
-```swift
-    struct ProductOrder: LCTicketComposerScope {
-        public var id: String
-        public var quantity: String
-        public var ttc: String
-        public var ht: String
-        
-        public init(id: String,
-                    quantity: String,
-                    ttc: String,
-                    ht: String) {
-            self.id = id
-            self.quantity = quantity
-            self.ttc = ttc
-            self.ht = ht
-        }
-        
-        public func makeLuckyCartDictionary() throws -> [String : Any] {
-            [
-                "quantity": quantity,
-                "ttc": ttc,
-                "id" : id
-            ]
-        }
-    }
-
+After sending a CartValidated event, you can request a Game Experience to display on your payement validation page with the following function:
 
 ```
-
-
-
-#### <font color='#AF1020'>B - Send the data</font>
-
-Once your application did a succesful checkout, call this function to send ticket information to LuckyCart and receive an aknowledgment.
-
-```swift
-extension MyShopManager {
-    
-    /// Send a request to check out and wait for the result
-    func checkOut(failure: @escaping (Error)->Void,
-                  success: @escaping (LCPostCartResponse)->Void) {
-        
-        // Sample shop does not send any request, it simply marks the cart as paid
-        LuckyCart.shared.checkOut(ticketComposer: ticketComposerForLuckyCart,
-                                  failure: { error in
-            DispatchQueue.main.async { 
-                 // Deal with the error and update your UI 
-            }
-        }, success: { response in
-            DispatchQueue.main.async { 
-                 // Deal with LuckyCart answer ( LCPostCartResponse ) and update your UI
-                 // This is where the user can browse and play the available games
-             }
-        })
-    }
-
+let gameFilter = LCGameFilter(filters: [
+                    LCFilter(filterProperty: "cartId",
+                             filterValue: Cart.shared.cartId)
+                ])
+LuckyCart.shared.getGamesAccess(filters: gameFilter) { [weak self] gamesExperiences in
+    // This block is executing when you receive the array of game data 
+    // that you have to forward one to the bannerView
+    // by default this request ask for only one experience
 }
 ```
 
-### <font color='#EF1020'>7 - Display Games</font>
+#### Display the game experience
 
+The Game Experience is like presenting a banner to the user but the action will be different with the opening of a webview containing the game for the client.
+To display the banner on your page you can use the LCBannerView. It can be used as a simple view, a TableViewCell or a CollectionViewCell.
 
-```swift
-struct MyGamesView: GamesView {
-        
-    @State var games: [LCGame] = []
-    
-    var body: some View {
-        HStack {
-            VStack(alignment: .center, spacing: 16) {
-                Image("logo").resizable().frame(width: 160, height: 160, alignment: .center)
-                Text("Thanks for your purchase")
-                
-                // Displays the LuckyCart game banners
-
-                // --->
-                
-                List(games) { game in
-                    LCGameView(game: game)
-                    .frame(height: 80, alignment: .center)
-                }
-                
-                // <---
-            }
-        }.task {
-            LuckyCart.shared.loadGames { _ in
-                print("\(error.localizedDescription)")
-            } success: { games in
-                self.games = games
-            }
-        }
-    }
-}
 ```
+let bannerView = LCBannerView.load(owner: self)
+bannerView.gameExperience = gameExperience
+bannerView.parentViewController = self
 
+// In a Table View implementation
+tableView.register(LCContainerCell.self, 
+					forCellReuseIdentifier: LCBannerView.identifier())
+let cell = bannerView.dequeue(tableView, indexPath)
 
+// In a Collection View implementation
+collectionView.register(LCContainerCollectionViewCell.self, 
+						forCellReuseIdentifier: LCBannerView.identifier())
+let cell = bannerView.dequeue(collectionView, indexPath)
+```
+Depending on your implementation, you should refresh your layout to show the banner view. It is possible to receive a Notification to update the interface.
 
-### <font color='#EF1020'>8 - Update Game State</font>
+```
+NotificationCenter.default.addObserver(self,
+                                       selector: #selector(reloadViews(_:)),
+                                       name: NSNotification.Name("LuckyCartBannerImageLoadedNotification"),
+                                       object: nil)
+// Exemple for TableView
+@objc
+func reloadViews(_ notification: Notification) {
+    self.tableView.beginUpdates()
+    self.tableView.setNeedsDisplay()
+    self.tableView.endUpdates()
+}
 
-When a game view is closed, games are reloaded with their new state ( playable, lost or won ).
-Just update the interface to reflect new games properties.
+```
+The BannerView with gameExperience model will itself open the game in a modal page over the current page.
 
-Advanced Documentation
+### Sample App
 
-[LuckyCart Framework Documentation](Documentation.md)
+You can find the Lucky Cart Sample App for iOS at [https://github.com/lucky-cart/lucky-cart-client-sample-ios](https://github.com/lucky-cart/lucky-cart-client-sample-ios)
 
---
-
-©2022 Lucky Cart
-
+**Thank you to use Lucky Cart**
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LCBannersView" customModule="LuckyCartSDK">
+            <connections>
+                <outlet property="scrollView" destination="FxG-uf-fuj" id="mAD-iR-Ak0"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="251"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" placeholderIntrinsicWidth="240" placeholderIntrinsicHeight="128" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FxG-uf-fuj">
+                    <rect key="frame" x="76" y="68" width="240" height="128"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="190" id="Sgw-Hn-CJH"/>
+                    </constraints>
+                    <viewLayoutGuide key="contentLayoutGuide" id="svE-XF-rIr"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="sWq-e6-FBO"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="2OC-MU-n3B"/>
+                    </connections>
+                </scrollView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="FxG-uf-fuj" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="C0R-9b-Lw1"/>
+                <constraint firstItem="FxG-uf-fuj" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Hwe-8x-F8v"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="FxG-uf-fuj" secondAttribute="trailing" id="Qun-OC-vCt"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="FxG-uf-fuj" secondAttribute="bottom" id="juZ-9b-7xj"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="110.68702290076335" y="-191.19718309859155"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
